@@ -40,14 +40,39 @@ class DiscoveryApiTest extends TestCase
             ->assertJsonPath('featured_events.0.title', 'Milan Signal');
     }
 
-    public function test_city_discovery_uses_route_city_as_filter(): void
+    public function test_city_discovery_by_slug_uses_route_city_as_filter(): void
+    {
+        [$rome] = $this->seedDiscoveryGraph();
+
+        $this->getJson('/api/discovery/city/'.$rome->slug)
+            ->assertOk()
+            ->assertJsonPath('featured_events.0.city.id', $rome->id)
+            ->assertJsonPath('collectives_near_you.0.city.id', $rome->id);
+    }
+
+    public function test_city_discovery_keeps_numeric_id_url_compatibility(): void
     {
         [$rome] = $this->seedDiscoveryGraph();
 
         $this->getJson('/api/discovery/city/'.$rome->id)
             ->assertOk()
-            ->assertJsonPath('featured_events.0.city.id', $rome->id)
-            ->assertJsonPath('collectives_near_you.0.city.id', $rome->id);
+            ->assertJsonPath('featured_events.0.city.id', $rome->id);
+    }
+
+    public function test_city_discovery_returns_not_found_for_unknown_slug(): void
+    {
+        $this->seed(GeographySeeder::class);
+
+        $this->getJson('/api/discovery/city/unknown-scene')->assertNotFound();
+    }
+
+    public function test_geography_seeds_city_selector_slugs(): void
+    {
+        $this->seed(GeographySeeder::class);
+
+        foreach (['rome', 'barcelona', 'berlin', 'copenhagen', 'bari'] as $slug) {
+            $this->assertDatabaseHas('cities', ['slug' => $slug]);
+        }
     }
 
     public function test_discovery_filters_artists_events_collaborations_and_collectives(): void

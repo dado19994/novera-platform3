@@ -21,6 +21,22 @@ class City extends Model
         ];
     }
 
+    public function resolveRouteBinding($value, $field = null)
+    {
+        if ($field === 'slug') {
+            $city = $this->newQuery()->where('slug', $value)->first();
+
+            if ($city || ! ctype_digit((string) $value)) {
+                return $city;
+            }
+
+            // Preserve the original numeric discovery URL while clients migrate to slugs.
+            return $this->newQuery()->whereKey($value)->first();
+        }
+
+        return parent::resolveRouteBinding($value, $field);
+    }
+
     public function country(): BelongsTo
     {
         return $this->belongsTo(Country::class);

@@ -40,7 +40,7 @@ Route::get('/tracks/{track}', [TrackController::class, 'show']);
 Route::get('/stories/feed', [StoryController::class, 'feed']);
 
 Route::get('/discovery/home', [DiscoveryController::class, 'home']);
-Route::get('/discovery/city/{city}', [DiscoveryController::class, 'city']);
+Route::get('/discovery/city/{city:slug}', [DiscoveryController::class, 'city']);
 Route::get('/discovery/artists', [DiscoveryController::class, 'artists']);
 Route::get('/discovery/events', [DiscoveryController::class, 'events']);
 Route::get('/discovery/collaborations', [DiscoveryController::class, 'collaborations']);

@@ -6,6 +6,10 @@ export interface CulturalMoment {
   place: string;
   time: string;
   mood: string;
+  format: string;
+  action: "Listen" | "View" | "Join" | "Collaborate" | "Enter room";
+  artists: string[];
+  audio: boolean;
 }
 
 export interface Opportunity {
@@ -64,9 +68,9 @@ export const MOCK_ECOSYSTEM: Record<CityId, CityEcosystem> = {
       { label: "Live visuals", detail: "Collective request rising", confidence: "New" },
     ],
     tonight: [
-      { title: "Ruins in Frequency", kind: "Listening session", place: "Ostiense", time: "21:30", mood: "Textural" },
-      { title: "Afterlight Studies", kind: "Moving image", place: "Pigneto", time: "22:00", mood: "Intimate" },
-      { title: "Courtyard Resonance", kind: "Live set", place: "San Lorenzo", time: "23:15", mood: "Warm" },
+      { title: "Ruins in Frequency", kind: "Listening session", place: "Ostiense", time: "21:30", mood: "Textural", format: "Spatial audio", action: "Enter room", artists: ["AF", "LV", "MS"], audio: true },
+      { title: "Afterlight Studies", kind: "Moving image", place: "Pigneto", time: "22:00", mood: "Intimate", format: "16mm film", action: "View", artists: ["NL", "FA"], audio: false },
+      { title: "Courtyard Resonance", kind: "Live set", place: "San Lorenzo", time: "23:15", mood: "Warm", format: "Live sound", action: "Listen", artists: ["RE", "DU", "AM"], audio: true },
     ],
     opportunities: [
       { title: "Light artist for live score", creator: "Cava Studio", need: "Projection / DMX", deadline: "Closes Sun" },
@@ -97,9 +101,9 @@ export const MOCK_ECOSYSTEM: Record<CityId, CityEcosystem> = {
       { label: "Movement", detail: "Open rehearsal", confidence: "Tonight" },
     ],
     tonight: [
-      { title: "Tidal Rooms", kind: "Installation", place: "Poblenou", time: "20:45", mood: "Luminous" },
-      { title: "Salt Air Tapes", kind: "Live recording", place: "Raval", time: "22:30", mood: "Loose" },
-      { title: "Azotea Motion", kind: "Performance", place: "Gracia", time: "23:00", mood: "Electric" },
+      { title: "Tidal Rooms", kind: "Installation", place: "Poblenou", time: "20:45", mood: "Luminous", format: "Light work", action: "View", artists: ["LB", "PT"], audio: false },
+      { title: "Salt Air Tapes", kind: "Live recording", place: "Raval", time: "22:30", mood: "Loose", format: "Live audio", action: "Listen", artists: ["MB", "SO", "FX"], audio: true },
+      { title: "Azotea Motion", kind: "Performance", place: "Gracia", time: "23:00", mood: "Electric", format: "Movement", action: "Join", artists: ["PA", "LR"], audio: false },
     ],
     opportunities: [
       { title: "Dancer for sea-wall film", creator: "Playa Assembly", need: "Movement", deadline: "48 hours" },
@@ -125,9 +129,9 @@ export const MOCK_ECOSYSTEM: Record<CityId, CityEcosystem> = {
       { label: "Print editions", detail: "Studio visiting hour", confidence: "Local" },
     ],
     tonight: [
-      { title: "Pressure System", kind: "AV work", place: "Friedrichshain", time: "23:40", mood: "Dense" },
-      { title: "Grey Room Editions", kind: "Open studio", place: "Wedding", time: "19:00", mood: "Quiet" },
-      { title: "Subfloor Dialogue", kind: "Listening", place: "Neukolln", time: "00:20", mood: "Deep" },
+      { title: "Pressure System", kind: "AV work", place: "Friedrichshain", time: "23:40", mood: "Dense", format: "Live AV", action: "View", artists: ["NR", "RH", "KK"], audio: true },
+      { title: "Grey Room Editions", kind: "Open studio", place: "Wedding", time: "19:00", mood: "Quiet", format: "Print", action: "Join", artists: ["GE", "MK"], audio: false },
+      { title: "Subfloor Dialogue", kind: "Listening", place: "Neukolln", time: "00:20", mood: "Deep", format: "Audio room", action: "Listen", artists: ["NS", "KS"], audio: true },
     ],
     opportunities: [
       { title: "Projection mapping resident", creator: "Raster Haus", need: "Visual artist", deadline: "Jun 02" },
@@ -153,9 +157,9 @@ export const MOCK_ECOSYSTEM: Record<CityId, CityEcosystem> = {
       { label: "Nordic light", detail: "Installation call", confidence: "New" },
     ],
     tonight: [
-      { title: "Blue Hour Forms", kind: "Installation", place: "Refshaleoen", time: "20:00", mood: "Clear" },
-      { title: "Quiet Current", kind: "Listening", place: "Vesterbro", time: "21:15", mood: "Still" },
-      { title: "Paper and Frost", kind: "Studio", place: "Norrebro", time: "18:30", mood: "Minimal" },
+      { title: "Blue Hour Forms", kind: "Installation", place: "Refshaleoen", time: "20:00", mood: "Clear", format: "Light art", action: "View", artists: ["SV", "NR"], audio: false },
+      { title: "Quiet Current", kind: "Listening", place: "Vesterbro", time: "21:15", mood: "Still", format: "Hi-fi room", action: "Listen", artists: ["SG", "VL"], audio: true },
+      { title: "Paper and Frost", kind: "Studio", place: "Norrebro", time: "18:30", mood: "Minimal", format: "Material", action: "Join", artists: ["LA", "ED"], audio: false },
     ],
     opportunities: [
       { title: "Sound for glass pavilion", creator: "North Room", need: "Composer", deadline: "4 days" },
@@ -181,9 +185,9 @@ export const MOCK_ECOSYSTEM: Record<CityId, CityEcosystem> = {
       { label: "Percussion", detail: "New movement", confidence: "Tonight" },
     ],
     tonight: [
-      { title: "Stone and Salt", kind: "Film score", place: "Madonnella", time: "21:00", mood: "Tender" },
-      { title: "Port Light", kind: "Listening", place: "Porto", time: "22:10", mood: "Open" },
-      { title: "Linea Calda", kind: "Exhibition", place: "Murat", time: "19:30", mood: "Sunlit" },
+      { title: "Stone and Salt", kind: "Film score", place: "Madonnella", time: "21:00", mood: "Tender", format: "Score", action: "Collaborate", artists: ["DL", "AL"], audio: true },
+      { title: "Port Light", kind: "Listening", place: "Porto", time: "22:10", mood: "Open", format: "Sound walk", action: "Listen", artists: ["DU", "PA", "LM"], audio: true },
+      { title: "Linea Calda", kind: "Exhibition", place: "Murat", time: "19:30", mood: "Sunlit", format: "Image", action: "View", artists: ["LL", "AM"], audio: false },
     ],
     opportunities: [
       { title: "Sea-front short film", creator: "Levante Lab", need: "Composer", deadline: "3 days" },
@@ -210,9 +214,9 @@ export const MOCK_ECOSYSTEM: Record<CityId, CityEcosystem> = {
       { label: "Residencies", detail: "New this week", confidence: "Emerging" },
     ],
     tonight: [
-      { title: "Connected Nights", kind: "Editorial trail", place: "5 cities", time: "Now", mood: "Global" },
-      { title: "Soft Signals", kind: "Audio selections", place: "Europe", time: "Tonight", mood: "Warm" },
-      { title: "Studio Windows", kind: "Open spaces", place: "Remote", time: "All night", mood: "Curious" },
+      { title: "Connected Nights", kind: "Editorial trail", place: "5 cities", time: "Now", mood: "Global", format: "Trail", action: "View", artists: ["NV", "SC", "FL"], audio: false },
+      { title: "Soft Signals", kind: "Audio selections", place: "Europe", time: "Tonight", mood: "Warm", format: "Audio", action: "Listen", artists: ["VS", "SN"], audio: true },
+      { title: "Studio Windows", kind: "Open spaces", place: "Remote", time: "All night", mood: "Curious", format: "Open call", action: "Join", artists: ["NE", "FA"], audio: false },
     ],
     opportunities: [
       { title: "Translocal visual archive", creator: "Novera Editions", need: "Image makers", deadline: "Open" },

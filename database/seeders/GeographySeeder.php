@@ -21,6 +21,21 @@ class GeographySeeder extends Seeder
             ['iso3' => 'USA', 'name' => 'United States', 'slug' => 'united-states', 'status' => 'active'],
         );
 
+        $spain = Country::query()->updateOrCreate(
+            ['iso2' => 'ES'],
+            ['iso3' => 'ESP', 'name' => 'Spain', 'slug' => 'spain', 'status' => 'active'],
+        );
+
+        $germany = Country::query()->updateOrCreate(
+            ['iso2' => 'DE'],
+            ['iso3' => 'DEU', 'name' => 'Germany', 'slug' => 'germany', 'status' => 'active'],
+        );
+
+        $denmark = Country::query()->updateOrCreate(
+            ['iso2' => 'DK'],
+            ['iso3' => 'DNK', 'name' => 'Denmark', 'slug' => 'denmark', 'status' => 'active'],
+        );
+
         $rome = City::query()->updateOrCreate(
             ['country_id' => $italy->id, 'slug' => 'rome'],
             [
@@ -50,6 +65,54 @@ class GeographySeeder extends Seeder
                 'timezone' => 'America/New_York',
                 'latitude' => 40.7128000,
                 'longitude' => -74.0060000,
+                'status' => 'active',
+            ],
+        );
+
+        City::query()->updateOrCreate(
+            ['slug' => 'barcelona'],
+            [
+                'country_id' => $spain->id,
+                'name' => 'Barcelona',
+                'timezone' => 'Europe/Madrid',
+                'latitude' => 41.3874000,
+                'longitude' => 2.1686000,
+                'status' => 'active',
+            ],
+        );
+
+        City::query()->updateOrCreate(
+            ['slug' => 'berlin'],
+            [
+                'country_id' => $germany->id,
+                'name' => 'Berlin',
+                'timezone' => 'Europe/Berlin',
+                'latitude' => 52.5200000,
+                'longitude' => 13.4050000,
+                'status' => 'active',
+            ],
+        );
+
+        City::query()->updateOrCreate(
+            ['slug' => 'copenhagen'],
+            [
+                'country_id' => $denmark->id,
+                'name' => 'Copenhagen',
+                'timezone' => 'Europe/Copenhagen',
+                'latitude' => 55.6761000,
+                'longitude' => 12.5683000,
+                'status' => 'active',
+            ],
+        );
+
+        City::query()->updateOrCreate(
+            ['slug' => 'bari'],
+            [
+                'country_id' => $italy->id,
+                'name' => 'Bari',
+                'timezone' => 'Europe/Rome',
+                'latitude' => 41.1171000,
+                'longitude' => 16.8719000,
                 'status' => 'active',
             ],
         );
