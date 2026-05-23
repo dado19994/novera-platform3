@@ -12,6 +12,20 @@ const MOCK_TIMEZONES: Record<CityId, string | null> = {
   berlin: "Europe/Berlin",
   copenhagen: "Europe/Copenhagen",
   bari: "Europe/Rome",
+  london: "Europe/London",
+  paris: "Europe/Paris",
+  amsterdam: "Europe/Amsterdam",
+  lisbon: "Europe/Lisbon",
+  dublin: "Europe/Dublin",
+  prague: "Europe/Prague",
+  bologna: "Europe/Rome",
+  pag: "Europe/Zagreb",
+  athens: "Europe/Athens",
+  warsaw: "Europe/Warsaw",
+  budapest: "Europe/Budapest",
+  zagreb: "Europe/Zagreb",
+  brussels: "Europe/Brussels",
+  vienna: "Europe/Vienna",
 };
 
 export async function getHomeDiscovery(): Promise<DiscoveryHomeResponse> {
