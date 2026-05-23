@@ -63,7 +63,7 @@ function TopBar() {
           <span className="h-3.5 w-3.5 rounded-full border border-(--amber-glow) shadow-[0_0_18px_var(--scene-primary)]" />
         </div>
         <div>
-          <p className="font-[family-name:var(--font-display)] text-xl tracking-wide">Novera</p>
+          <p className="font-[family-name:var(--font-display)] text-2xl tracking-[0.14em] uppercase">Novera</p>
           <p className="text-[0.62rem] uppercase tracking-[0.25em] text-(--muted-ivory)">Creative map</p>
         </div>
       </div>
@@ -87,7 +87,7 @@ function SceneHeader({ media }: { media: CityMedia }) {
             <span className="live-beacon inline-block h-2 w-2 rounded-full bg-(--amber-glow)" />
             Live ecosystem / {media.country}
           </p>
-          <h1 className="font-[family-name:var(--font-display)] text-[clamp(1.55rem,2.6vw,2.2rem)] leading-tight tracking-[-0.03em]">
+          <h1 className="font-[family-name:var(--font-display)] text-[clamp(2rem,3.2vw,3rem)] leading-none tracking-[0.02em] uppercase">
             {media.sceneTitle}
           </h1>
           <p className="mt-2 max-w-2xl text-sm text-(--muted-ivory)">
@@ -106,11 +106,11 @@ function CityStatusStrip({ ecosystem }: { ecosystem: CityEcosystem }) {
       {ecosystem.livePulse.map((signal, index) => (
         <div key={signal.label} className="city-status-cell rounded-[1.2rem] px-4 py-3.5">
           <div className="flex items-center justify-between gap-3">
-            <p className="text-[0.62rem] uppercase tracking-[0.17em] text-(--muted-ivory)">{signal.label}</p>
+            <p className="font-[family-name:var(--font-mono)] text-[0.65rem] uppercase tracking-[0.14em] text-(--muted-ivory)">{signal.label}</p>
             {index === 0 && <span className="live-beacon h-1.5 w-1.5 shrink-0 rounded-full bg-(--amber-glow)" />}
           </div>
           <div className="mt-2 flex items-baseline gap-3">
-            <p className="text-xl font-medium text-(--soft-ivory) sm:text-2xl">{signal.value}</p>
+            <p className="font-[family-name:var(--font-display)] text-2xl sm:text-3xl tracking-[0.04em] text-(--soft-ivory)">{signal.value}</p>
             <p className="truncate text-[0.68rem] text-(--muted-ivory)">{signal.detail}</p>
           </div>
         </div>
