@@ -146,7 +146,7 @@ function FeaturedSceneMoment({
           <span className="featured-format">{moment.format}</span>
         </div>
         <div>
-          <p className="mb-3 text-[0.68rem] font-semibold uppercase tracking-[0.3em] text-(--amber-glow)">
+          <p className="mb-3 text-[0.68rem] font-semibold uppercase tracking-[0.3em] text-(--acid)">
             {moment.place} / {moment.time}
           </p>
           <h2 className="max-w-[19rem] font-[family-name:var(--font-display)] text-[2rem] leading-[1.04] tracking-[-0.04em] text-(--soft-ivory) sm:text-[2.35rem]">
@@ -335,7 +335,7 @@ function CreativeMap({ ecosystem, media, reducedMotion }: {
                 : `${ecosystem.livePulse[2].detail} / ${ecosystem.audio.artist} is live in audio`}
             </motion.span>
           </AnimatePresence>
-          <span className="scene-active hidden shrink-0 text-(--amber-glow) sm:block">Scene active</span>
+          <span className="scene-active hidden shrink-0 text-(--acid) sm:block">Scene active</span>
         </div>
       </div>
     </section>
@@ -462,7 +462,7 @@ function MatchedSignals({ ecosystem }: { ecosystem: CityEcosystem }) {
             <div className="min-w-0">
               <p className="text-sm font-medium text-(--soft-ivory)">{signal.label}</p>
               <p className="mt-1 truncate text-xs text-(--muted-ivory)">{signal.detail}</p>
-              <p className="mt-2 text-[0.6rem] uppercase tracking-[0.2em] text-(--amber-glow)">{signal.confidence}</p>
+              <p className="mt-2 text-[0.6rem] uppercase tracking-[0.2em] text-(--acid)">{signal.confidence}</p>
             </div>
             <span className={`h-2 w-2 shrink-0 rounded-full ${index === 0 ? "live-beacon bg-(--amber-glow)" : "bg-white/25"}`} />
           </CinematicCard>
@@ -502,7 +502,7 @@ function TonightMovement({ ecosystem, media }: { ecosystem: CityEcosystem; media
             <div className="p-4">
               <div className="flex items-center justify-between gap-2">
                 <span className="text-[0.63rem] uppercase tracking-[0.2em] text-(--muted-ivory)">{moment.kind}</span>
-                <span className="text-[0.63rem] uppercase tracking-[0.2em] text-(--amber-glow)">{moment.place}</span>
+                <span className="text-[0.63rem] uppercase tracking-[0.2em] text-(--acid)">{moment.place}</span>
               </div>
               <h3 className="mt-4 font-[family-name:var(--font-display)] text-xl leading-snug text-(--soft-ivory)">
                 {moment.title}
@@ -531,7 +531,7 @@ function OpportunityLayer({ ecosystem }: { ecosystem: CityEcosystem }) {
             <p className="mt-2 text-xs text-(--muted-ivory)">
               {opportunity.creator} / {opportunity.need}
             </p>
-            <p className="mt-3 text-[0.65rem] uppercase tracking-[0.21em] text-(--amber-glow)">
+            <p className="mt-3 text-[0.65rem] uppercase tracking-[0.21em] text-(--acid)">
               <span className="opportunity-badge">{opportunity.deadline}</span>
             </p>
           </div>
@@ -585,7 +585,7 @@ function AudioPreview({ ecosystem }: { ecosystem: CityEcosystem }) {
         <button
           type="button"
           aria-label={`Play ${ecosystem.audio.title}`}
-          className="audio-control relative flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-(--amber-glow) text-(--graphite) shadow-[0_0_27px_color-mix(in_srgb,var(--scene-primary)_38%,transparent)]"
+          className="audio-control relative flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-(--graphite) shadow-[0_0_27px_color-mix(in_srgb,var(--acid)_50%,transparent)]"
         >
           <span className="ml-0.5 text-sm" aria-hidden="true">&#9654;</span>
         </button>

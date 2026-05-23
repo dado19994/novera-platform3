@@ -32,7 +32,7 @@
   --line: rgba(242, 240, 250, 0.08);
   --line-strong: rgba(242, 240, 250, 0.15);
   /* alias backward-compat */
-  --amber-glow: #6C4FD4;
+  --amber-glow: #C8F000;
   --coral-emotion: #FF3D7F;
   --dust-violet: #C4B5FD;
   --soft-ivory: #F2F0FA;
@@ -183,10 +183,10 @@ a {
 }
 
 .scene-header {
-  border: 1px solid color-mix(in srgb, var(--scene-primary) 14%, rgba(242, 240, 250, 0.08));
+  border: 1px solid color-mix(in srgb, var(--scene-primary) 20%, rgba(242, 240, 250, 0.10));
   background:
-    radial-gradient(circle at 14% 22%, color-mix(in srgb, var(--scene-primary) 12%, transparent), transparent 36%),
-    linear-gradient(112deg, rgba(18, 14, 32, 0.80), rgba(8, 6, 16, 0.65));
+    radial-gradient(circle at 14% 22%, color-mix(in srgb, var(--scene-primary) 18%, transparent), transparent 36%),
+    linear-gradient(112deg, rgba(18, 14, 32, 0.85), rgba(8, 6, 16, 0.70));
   backdrop-filter: blur(20px) saturate(0.88);
 }
 
@@ -212,8 +212,8 @@ a {
 
 .city-status-cell {
   background:
-    radial-gradient(circle at 0% 50%, color-mix(in srgb, var(--scene-primary) 7%, transparent), transparent 52%),
-    rgba(200, 190, 255, 0.018);
+    radial-gradient(circle at 0% 50%, color-mix(in srgb, var(--scene-primary) 10%, transparent), transparent 52%),
+    rgba(200, 190, 255, 0.025);
 }
 
 .scene-columns {
@@ -241,7 +241,7 @@ a {
 }
 
 .live-beacon {
-  box-shadow: 0 0 17px color-mix(in srgb, var(--rose) 80%, transparent);
+  box-shadow: 0 0 14px rgba(255, 61, 127, 0.75);
   animation: beacon 2.4s ease-out infinite;
   background: var(--rose) !important;
 }
@@ -260,10 +260,10 @@ a {
 }
 
 .map-panel {
-  border: 1px solid color-mix(in srgb, var(--scene-primary) 16%, rgba(242, 240, 250, 0.08));
+  border: 1px solid color-mix(in srgb, var(--scene-primary) 22%, rgba(242, 240, 250, 0.10));
   background:
-    radial-gradient(circle at 40% 34%, color-mix(in srgb, var(--scene-primary) 16%, transparent), transparent 48%),
-    linear-gradient(132deg, rgba(18, 14, 32, 0.82), rgba(8, 6, 16, 0.70));
+    radial-gradient(circle at 40% 34%, color-mix(in srgb, var(--scene-primary) 22%, transparent), transparent 48%),
+    linear-gradient(132deg, rgba(18, 14, 32, 0.85), rgba(8, 6, 16, 0.72));
   box-shadow: 0 32px 82px rgba(4, 3, 10, 0.35);
   backdrop-filter: blur(22px) saturate(0.88);
 }
@@ -334,16 +334,16 @@ a {
 .ambient-signal {
   height: 0.42rem;
   width: 0.42rem;
-  background: color-mix(in srgb, var(--scene-primary) 68%, var(--ice));
-  box-shadow: 0 0 13px color-mix(in srgb, var(--scene-primary) 44%, transparent);
+  background: var(--acid);
+  box-shadow: 0 0 10px rgba(200, 240, 0, 0.6);
   pointer-events: none;
   animation: ambientSignal 4.8s ease-in-out infinite;
   transition: background 260ms ease, box-shadow 260ms ease, transform 260ms ease;
 }
 
 .ambient-signal.is-linked {
-  background: var(--scene-primary);
-  box-shadow: 0 0 19px color-mix(in srgb, var(--scene-primary) 68%, transparent);
+  background: var(--rose);
+  box-shadow: 0 0 16px rgba(255, 61, 127, 0.75);
   transform: scale(1.22);
 }
 
@@ -455,28 +455,28 @@ a {
 }
 
 .node-live-now {
-  background: var(--scene-primary);
-  box-shadow: 0 0 30px color-mix(in srgb, var(--scene-primary) 72%, transparent);
+  background: var(--rose);
+  box-shadow: 0 0 28px rgba(255, 61, 127, 0.8), 0 0 8px rgba(255, 61, 127, 0.5);
 }
 
 .node-live-room {
-  background: var(--scene-primary);
-  box-shadow: 0 0 30px color-mix(in srgb, var(--scene-primary) 72%, transparent);
+  background: var(--rose);
+  box-shadow: 0 0 28px rgba(255, 61, 127, 0.8), 0 0 8px rgba(255, 61, 127, 0.5);
 }
 
 .node-open-call {
-  background: var(--scene-secondary);
-  box-shadow: 0 0 23px color-mix(in srgb, var(--scene-secondary) 56%, transparent);
+  background: var(--acid);
+  box-shadow: 0 0 24px rgba(200, 240, 0, 0.75), 0 0 8px rgba(200, 240, 0, 0.4);
 }
 
 .node-starting-soon {
   background: var(--ice);
-  box-shadow: 0 0 21px rgba(242, 240, 250, 0.46);
+  box-shadow: 0 0 18px rgba(242, 240, 250, 0.6);
 }
 
 .node-listening-room {
-  background: color-mix(in srgb, var(--scene-secondary) 65%, var(--violet-mist));
-  box-shadow: 0 0 23px color-mix(in srgb, var(--scene-secondary) 48%, transparent);
+  background: var(--teal);
+  box-shadow: 0 0 22px rgba(0, 212, 180, 0.65);
 }
 
 .node-studio-open {
@@ -593,8 +593,8 @@ a {
   width: 1.45rem;
   place-items: center;
   border-radius: 999px;
-  background: var(--scene-primary);
-  color: var(--graphite);
+  background: var(--acid);
+  color: #08070D;
 }
 
 .featured-action:hover,
@@ -619,8 +619,8 @@ a {
 }
 
 .activity-mark {
-  background: var(--acid);
-  box-shadow: 0 0 10px rgba(200, 240, 0, 0.5);
+  background: var(--violet-soft);
+  box-shadow: 0 0 8px rgba(155, 127, 255, 0.5);
 }
 
 .activity-category {
@@ -635,17 +635,20 @@ a {
 
 .activity-collective,
 .activity-collaboration {
-  background: var(--scene-secondary);
-  box-shadow: 0 0 14px color-mix(in srgb, var(--scene-secondary) 46%, transparent);
+  background: var(--acid);
+  box-shadow: 0 0 10px rgba(200, 240, 0, 0.5);
 }
 
 .activity-room,
 .activity-session {
+  background: var(--rose);
+  box-shadow: 0 0 10px rgba(255, 61, 127, 0.5);
   animation: beacon 2.8s ease-in-out infinite;
 }
 
 .activity-arrival {
-  background: var(--violet-mist);
+  background: var(--teal);
+  box-shadow: 0 0 8px rgba(0, 212, 180, 0.4);
 }
 
 .dock-active {
@@ -680,6 +683,11 @@ a {
   background: var(--scene-primary);
   box-shadow: 0 0 16px color-mix(in srgb, var(--scene-primary) 76%, transparent);
   animation: beacon 2.4s ease-in-out infinite;
+}
+
+.audio-control {
+  background: var(--acid) !important;
+  color: #08070D !important;
 }
 
 .audio-control::before {
