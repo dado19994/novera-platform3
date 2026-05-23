@@ -17,7 +17,7 @@ export function CitySelector() {
           <button
             key={cityId}
             type="button"
-            className="relative shrink-0 rounded-full px-3.5 py-2 text-xs font-medium tracking-wide text-(--muted-ivory) transition-colors hover:text-(--soft-ivory) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--amber-glow)"
+            className="relative shrink-0 rounded-full px-4 py-2.5 text-xs tracking-wide text-(--muted-ivory) transition-all hover:text-(--soft-ivory) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--acid)"
             aria-pressed={selected}
             onClick={() => setCity(cityId)}
           >
@@ -32,8 +32,16 @@ export function CitySelector() {
                 transition={reducedMotion ? { duration: 0 } : { type: "spring", bounce: 0.16, duration: 0.48 }}
               />
             )}
-            <span className={`relative flex items-center gap-2 ${selected ? "text-(--soft-ivory)" : ""}`}>
-              {selected && <span className="live-beacon h-1.5 w-1.5 rounded-full bg-(--amber-glow)" />}
+            <span
+              className="relative flex items-center gap-2 font-medium"
+              style={{ color: selected ? "var(--ice)" : undefined, fontSize: selected ? "0.8rem" : "0.75rem" }}
+            >
+              {selected && (
+                <span
+                  className="live-beacon h-1.5 w-1.5 rounded-full"
+                  style={{ background: "var(--rose)" }}
+                />
+              )}
               {CITY_MEDIA[cityId].city}
             </span>
           </button>

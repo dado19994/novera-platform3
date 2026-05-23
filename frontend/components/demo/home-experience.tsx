@@ -101,20 +101,40 @@ function SceneHeader({ media }: { media: CityMedia }) {
 }
 
 function CityStatusStrip({ ecosystem }: { ecosystem: CityEcosystem }) {
+  const cellConfig = [
+    { accent: "var(--violet-soft)", dotColor: "bg-(--rose)", showBeacon: true },
+    { accent: "var(--acid)",        dotColor: "",             showBeacon: false },
+    { accent: "var(--rose)",        dotColor: "",             showBeacon: false },
+    { accent: "var(--teal)",        dotColor: "",             showBeacon: false },
+  ];
+
   return (
     <div className="city-status-strip grid grid-cols-2 gap-px overflow-hidden rounded-[1.4rem] p-1 sm:grid-cols-4">
-      {ecosystem.livePulse.map((signal, index) => (
-        <div key={signal.label} className="city-status-cell rounded-[1.2rem] px-4 py-3.5">
-          <div className="flex items-center justify-between gap-3">
-            <p className="font-[family-name:var(--font-mono)] text-[0.65rem] uppercase tracking-[0.14em] text-(--muted-ivory)">{signal.label}</p>
-            {index === 0 && <span className="live-beacon h-1.5 w-1.5 shrink-0 rounded-full bg-(--amber-glow)" />}
+      {ecosystem.livePulse.map((signal, index) => {
+        const cfg = cellConfig[index] ?? cellConfig[0];
+        return (
+          <div key={signal.label} className="city-status-cell rounded-[1.2rem] px-4 py-3.5">
+            <div className="flex items-center justify-between gap-3">
+              <p
+                className="font-[family-name:var(--font-mono)] text-[0.65rem] uppercase tracking-[0.14em]"
+                style={{ color: cfg.accent }}
+              >
+                {signal.label}
+              </p>
+              {cfg.showBeacon && <span className="live-beacon h-1.5 w-1.5 shrink-0 rounded-full" />}
+            </div>
+            <div className="mt-2 flex items-baseline gap-3">
+              <p
+                className="font-[family-name:var(--font-display)] text-2xl sm:text-3xl tracking-[0.04em]"
+                style={{ color: cfg.accent }}
+              >
+                {signal.value}
+              </p>
+              <p className="truncate text-[0.68rem] text-(--muted-ivory)">{signal.detail}</p>
+            </div>
           </div>
-          <div className="mt-2 flex items-baseline gap-3">
-            <p className="font-[family-name:var(--font-display)] text-2xl sm:text-3xl tracking-[0.04em] text-(--soft-ivory)">{signal.value}</p>
-            <p className="truncate text-[0.68rem] text-(--muted-ivory)">{signal.detail}</p>
-          </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }
@@ -133,7 +153,7 @@ function FeaturedSceneMoment({
       <div
         className="featured-cover absolute inset-0"
         style={{
-          backgroundImage: `linear-gradient(180deg, rgba(12, 12, 15, 0.08), rgba(12, 12, 15, 0.84)), url("${media.imageSrc}")`,
+          backgroundImage: `linear-gradient(180deg, rgba(8, 6, 14, 0.05) 0%, rgba(8, 6, 14, 0.55) 60%, rgba(8, 6, 14, 0.88) 100%), url("${media.imageSrc}")`,
           backgroundPosition: media.focalPoint,
         }}
       />
@@ -400,6 +420,35 @@ function discoveryHint(state: ActivityState) {
   return state === "live now" ? "Explore room" : "Live now";
 }
 
+function activityBadgeStyle(kind: AmbientActivity["kind"]): { [key: string]: string } {
+  if (kind === "room" || kind === "session") {
+    return {
+      background: "rgba(255, 61, 127, 0.12)",
+      border: "0.5px solid rgba(255, 61, 127, 0.35)",
+      color: "var(--rose)",
+    };
+  }
+  if (kind === "collaboration" || kind === "collective") {
+    return {
+      background: "rgba(200, 240, 0, 0.10)",
+      border: "0.5px solid rgba(200, 240, 0, 0.30)",
+      color: "var(--acid)",
+    };
+  }
+  if (kind === "arrival") {
+    return {
+      background: "rgba(0, 212, 180, 0.10)",
+      border: "0.5px solid rgba(0, 212, 180, 0.30)",
+      color: "var(--teal)",
+    };
+  }
+  return {
+    background: "rgba(155, 127, 255, 0.12)",
+    border: "0.5px solid rgba(155, 127, 255, 0.35)",
+    color: "var(--violet-soft)",
+  };
+}
+
 function LivingActivityFeed({ activities }: { activities: AmbientActivity[] }) {
   const reducedMotion = useReducedMotion();
 
@@ -418,7 +467,10 @@ function LivingActivityFeed({ activities }: { activities: AmbientActivity[] }) {
             <span className={`activity-mark activity-${activity.kind} mt-1.5 block h-2 w-2 shrink-0 rounded-full`} />
             <div className="min-w-0 flex-1">
               <div className="mb-1.5 flex items-center justify-between gap-2">
-                <span className="activity-category rounded-full px-2 py-1 text-[0.57rem] uppercase tracking-[0.17em]">
+                <span
+                  className="rounded-full px-2 py-1 text-[0.57rem] uppercase tracking-[0.17em]"
+                  style={activityBadgeStyle(activity.kind)}
+                >
                   {activityCategory(activity.kind)}
                 </span>
                 <time className="activity-time text-[0.61rem] uppercase tracking-[0.18em] text-(--muted-ivory)">
@@ -464,7 +516,17 @@ function MatchedSignals({ ecosystem }: { ecosystem: CityEcosystem }) {
               <p className="mt-1 truncate text-xs text-(--muted-ivory)">{signal.detail}</p>
               <p className="mt-2 text-[0.6rem] uppercase tracking-[0.2em] text-(--acid)">{signal.confidence}</p>
             </div>
-            <span className={`h-2 w-2 shrink-0 rounded-full ${index === 0 ? "live-beacon bg-(--amber-glow)" : "bg-white/25"}`} />
+            <span
+              className="h-2 w-2 shrink-0 rounded-full"
+              style={{
+                background: ["var(--rose)", "var(--acid)", "var(--violet-soft)"][index] ?? "var(--violet-soft)",
+                boxShadow: [
+                  "0 0 8px rgba(255,61,127,0.6)",
+                  "0 0 8px rgba(200,240,0,0.5)",
+                  "0 0 8px rgba(155,127,255,0.5)",
+                ][index] ?? "none",
+              }}
+            />
           </CinematicCard>
         ))}
       </div>
@@ -489,7 +551,14 @@ function TonightMovement({ ecosystem, media }: { ecosystem: CityEcosystem; media
             <div
               className="movement-cover relative min-h-[8.3rem] p-3"
               style={{
-                backgroundImage: `linear-gradient(180deg, rgba(12, 12, 15, 0.04), rgba(12, 12, 15, 0.7)), url("${media.imageSrc}")`,
+                backgroundImage: (() => {
+                  const overlays = [
+                    "linear-gradient(180deg, rgba(255, 61, 127, 0.12) 0%, rgba(12, 12, 15, 0.72) 100%)",
+                    "linear-gradient(180deg, rgba(108, 79, 212, 0.14) 0%, rgba(12, 12, 15, 0.72) 100%)",
+                    "linear-gradient(180deg, rgba(0, 212, 180, 0.12) 0%, rgba(12, 12, 15, 0.72) 100%)",
+                  ];
+                  return `${overlays[index] ?? overlays[0]}, url("${media.imageSrc}")`;
+                })(),
                 backgroundPosition: `${media.focalPoint.split(" ")[0]} ${index === 0 ? "35%" : index === 1 ? "52%" : "68%"}`,
               }}
             >
@@ -501,7 +570,12 @@ function TonightMovement({ ecosystem, media }: { ecosystem: CityEcosystem; media
             </div>
             <div className="p-4">
               <div className="flex items-center justify-between gap-2">
-                <span className="text-[0.63rem] uppercase tracking-[0.2em] text-(--muted-ivory)">{moment.kind}</span>
+                <span
+                  className="text-[0.63rem] uppercase tracking-[0.2em]"
+                  style={{ color: ["var(--rose)", "var(--violet-soft)", "var(--teal)"][index] ?? "var(--violet-soft)" }}
+                >
+                  {moment.kind}
+                </span>
                 <span className="text-[0.63rem] uppercase tracking-[0.2em] text-(--acid)">{moment.place}</span>
               </div>
               <h3 className="mt-4 font-[family-name:var(--font-display)] text-xl leading-snug text-(--soft-ivory)">
@@ -574,8 +648,8 @@ function AudioPreview({ ecosystem }: { ecosystem: CityEcosystem }) {
     <GlassPanel className="audio-presence order-7 overflow-hidden p-6">
       <SectionHeader eyebrow="Immersive audio / live" title={ecosystem.audio.title} />
       <div className="flex items-center justify-between gap-3">
-        <p className="text-sm text-(--soft-ivory)">{ecosystem.audio.artist}</p>
-        <span className="flex items-center gap-2 text-[0.62rem] uppercase tracking-[0.18em] text-(--muted-ivory)">
+        <p className="text-sm font-medium" style={{ color: "var(--teal)" }}>{ecosystem.audio.artist}</p>
+        <span className="flex items-center gap-2 text-[0.62rem] uppercase tracking-[0.18em]" style={{ color: "var(--teal)" }}>
           <span className="audio-live-dot h-1.5 w-1.5 rounded-full" />
           Listening room live
         </span>

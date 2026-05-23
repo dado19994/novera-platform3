@@ -216,6 +216,22 @@ a {
     rgba(200, 190, 255, 0.025);
 }
 
+.city-status-strip > div:nth-child(1) {
+  border-left: 2px solid rgba(155, 127, 255, 0.4);
+}
+
+.city-status-strip > div:nth-child(2) {
+  border-left: 2px solid rgba(200, 240, 0, 0.35);
+}
+
+.city-status-strip > div:nth-child(3) {
+  border-left: 2px solid rgba(255, 61, 127, 0.4);
+}
+
+.city-status-strip > div:nth-child(4) {
+  border-left: 2px solid rgba(0, 212, 180, 0.35);
+}
+
 .scene-columns {
   --scene-section-gap: 1rem;
   gap: var(--scene-section-gap);
@@ -700,7 +716,7 @@ a {
 }
 
 .wave-bar {
-  background: color-mix(in srgb, var(--scene-primary) 64%, var(--ice));
+  background: color-mix(in srgb, var(--teal) 70%, var(--ice));
   transform-origin: bottom;
   animation: waveform 2.2s ease-in-out infinite;
 }
@@ -737,12 +753,12 @@ a {
   height: 1.8rem;
   width: 1.8rem;
   place-items: center;
-  border: 1px solid rgba(242, 240, 250, 0.18);
+  border: 1px solid rgba(155, 127, 255, 0.35);
   border-radius: 999px;
-  background: linear-gradient(132deg, color-mix(in srgb, var(--scene-primary) 29%, #161820), #111219);
-  color: var(--ice);
+  background: linear-gradient(132deg, rgba(108, 79, 212, 0.35), rgba(14, 12, 24, 0.9));
+  color: var(--violet-soft);
   font-size: 0.57rem;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.05em;
 }
 
@@ -764,9 +780,21 @@ a {
   display: block;
   width: 0.18rem;
   border-radius: 999px;
-  background: color-mix(in srgb, var(--scene-primary) 72%, var(--ice));
+  background: var(--rose);
   transform-origin: bottom;
   animation: waveform 2.1s ease-in-out infinite;
+}
+
+.movement-card-0 {
+  border-top: 2px solid rgba(255, 61, 127, 0.45) !important;
+}
+
+.movement-card-1 {
+  border-top: 2px solid rgba(108, 79, 212, 0.45) !important;
+}
+
+.movement-card-2 {
+  border-top: 2px solid rgba(0, 212, 180, 0.45) !important;
 }
 
 .movement-action {
@@ -786,11 +814,13 @@ a {
 
 .opportunity-badge {
   display: inline-flex;
-  border: 0.5px solid rgba(200, 240, 0, 0.3);
+  border: 0.5px solid rgba(200, 240, 0, 0.4);
   border-radius: 999px;
-  background: rgba(200, 240, 0, 0.08);
-  padding: 0.32rem 0.6rem;
-  color: var(--acid-dim);
+  background: rgba(200, 240, 0, 0.10);
+  padding: 0.32rem 0.7rem;
+  color: var(--acid);
+  font-weight: 600;
+  letter-spacing: 0.08em;
 }
 
 .text-acid { color: var(--acid); }
