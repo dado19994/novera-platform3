@@ -1,0 +1,2 @@
+cdUser-agent: *
+Disallow:
