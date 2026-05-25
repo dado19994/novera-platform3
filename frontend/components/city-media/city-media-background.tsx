@@ -89,8 +89,11 @@ function CityMediaLayer({ media, simplified }: { media: CityMedia; simplified: b
         className="city-media-glow"
         style={{ background: `radial-gradient(circle at ${media.focalPoint}, ${media.palette.ambientGlow}27, transparent 42%)` }}
       />
+      <div className="city-media-volume" />
+      <div className="city-media-directional-shadow" />
       <div className="city-media-edge-mask" />
       <div className="city-media-interface-veil" />
+      <div className="city-media-grain" />
     </motion.div>
   );
 }

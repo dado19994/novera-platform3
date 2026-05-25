@@ -31,7 +31,7 @@ export function CityMediaProvider({ children, initialCity = "default" }: CityMed
 
   return (
     <CityMediaContext.Provider value={value}>
-      <div className="city-media-root" style={style}>
+      <div className={`city-media-root city-mood-${media.motionStyle}`} style={style}>
         {children}
       </div>
     </CityMediaContext.Provider>

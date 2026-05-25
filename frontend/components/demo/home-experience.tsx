@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { useState } from "react";
+import { useState, type CSSProperties } from "react";
 import { CitySelector } from "@/components/city-media/city-selector";
 import { useCityMedia } from "@/components/city-media/city-media-provider";
 import { CinematicCard } from "@/components/ui/cinematic-card";
@@ -30,47 +30,59 @@ export function HomeExperience() {
             animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
             exit={reducedMotion ? undefined : { opacity: 0, y: -7, filter: "blur(4px)" }}
             transition={movement}
-            className="space-y-4 sm:space-y-5"
+            className="experience-flow space-y-5 sm:space-y-7"
           >
-            <SceneHeader media={media} />
-            <CityStatusStrip ecosystem={ecosystem} />
+            <div className="scene-intro">
+              <div className="scene-intro-main">
+                <SceneHeader media={media} />
+                <div className="scene-status">
+                  <CityStatusStrip ecosystem={ecosystem} />
+                </div>
+                <div className="scene-selector-row">
+                  <CitySelector />
+                </div>
+              </div>
+              <FeaturedSceneMoment
+                media={media}
+                moment={ecosystem.tonight[0]}
+                ecosystem={ecosystem}
+                className="scene-feature-desktop hidden xl:block"
+              />
+            </div>
 
             <section className="scene-columns">
-              {/* COLONNA PRINCIPALE — visibile sempre */}
               <div className="scene-main">
                 <FeaturedSceneMoment
                   media={media}
                   moment={ecosystem.tonight[0]}
                   ecosystem={ecosystem}
-                  className="xl:hidden"
+                  className="scene-feature-mobile xl:hidden"
                 />
                 <CreativeMap
                   ecosystem={ecosystem}
                   media={media}
                   reducedMotion={Boolean(reducedMotion)}
                 />
-                <LivingActivityFeed
-                  activities={activityFeed}
-                  className="xl:hidden"
-                />
                 <TonightMovement ecosystem={ecosystem} media={media} />
                 <OpportunityLayer
                   ecosystem={ecosystem}
                   className="xl:hidden"
                 />
-                <MatchedSignals ecosystem={ecosystem} />
                 <AudioPreview
                   ecosystem={ecosystem}
                   className="xl:hidden"
                 />
+                <LivingActivityFeed
+                  activities={activityFeed}
+                  className="xl:hidden"
+                />
+                <MatchedSignals ecosystem={ecosystem} />
               </div>
 
-              {/* SIDEBAR — visibile solo su xl desktop, nascosta via CSS */}
               <aside className="scene-rail">
-                <FeaturedSceneMoment media={media} moment={ecosystem.tonight[0]} ecosystem={ecosystem} />
-                <LivingActivityFeed activities={activityFeed} />
                 <OpportunityLayer ecosystem={ecosystem} />
                 <AudioPreview ecosystem={ecosystem} />
+                <LivingActivityFeed activities={activityFeed} />
               </aside>
             </section>
           </motion.div>
@@ -82,8 +94,13 @@ export function HomeExperience() {
 
 function TopBar() {
   return (
-    <header className="flex items-center justify-between">
-      <div className="flex items-center gap-3">
+    <header className="top-bar flex items-center justify-between">
+      <button className="mobile-menu" type="button" aria-label="Open navigation">
+        <span />
+        <span />
+        <span />
+      </button>
+      <div className="top-brand flex items-center gap-3">
         <div className="brand-orbit flex h-10 w-10 items-center justify-center rounded-full border border-white/12 bg-white/[0.04]">
           <span className="h-3.5 w-3.5 rounded-full border border-(--amber-glow) shadow-[0_0_18px_var(--scene-primary)]" />
         </div>
@@ -92,43 +109,43 @@ function TopBar() {
           <p className="text-[0.62rem] uppercase tracking-[0.25em] text-(--muted-ivory)">Creative map</p>
         </div>
       </div>
-      <div className="hidden items-center gap-7 text-sm text-(--muted-ivory) sm:flex">
+      <div className="top-actions hidden items-center gap-7 text-sm text-(--muted-ivory) sm:flex">
         <button className="transition-colors hover:text-(--soft-ivory)">Scenes</button>
         <button className="transition-colors hover:text-(--soft-ivory)">Open calls</button>
-        <button className="rounded-full border border-white/12 px-5 py-2.5 text-(--soft-ivory) transition-colors hover:bg-white/[0.06]">
-          Share work
+        <button className="portal-cta portal-cta-prominent portal-cta-map">
+          <span>Share work</span>
+          <span className="portal-arrow" aria-hidden="true">+</span>
         </button>
       </div>
+      <button className="mobile-profile" type="button" aria-label="Open creator profile">
+        LM
+        <span />
+      </button>
     </header>
   );
 }
 
 function SceneHeader({ media }: { media: CityMedia }) {
   return (
-    <section className="scene-header rounded-[1.8rem] px-5 py-4 sm:px-7 sm:py-5">
-      <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
-        <div>
-          <p className="mb-2 flex items-center gap-2 text-[0.66rem] uppercase tracking-[0.3em] text-(--muted-ivory)">
-            <span className="live-beacon inline-block h-2 w-2 rounded-full" style={{ background: "var(--rose)" }} />
-            Live ecosystem / {media.country}
-          </p>
-          <h1 className="font-[family-name:var(--font-display)] text-[clamp(2rem,3.2vw,3rem)] leading-none tracking-[0.02em] uppercase">
-            {media.sceneTitle.split(" ").map((word, i) => (
-              <span
-                key={i}
-                style={{ color: i % 2 === 1 ? "var(--acid)" : "inherit" }}
-              >
-                {word}{" "}
-              </span>
-            ))}
-          </h1>
-          <p className="mt-2 max-w-2xl text-sm text-(--muted-ivory)">
-            {media.cityStory}
-          </p>
-        </div>
-        <div className="shrink-0">
-          <CitySelector />
-        </div>
+    <section className="scene-header px-1 py-3 sm:px-2 sm:py-5">
+      <div>
+        <p className="mb-2 flex items-center gap-2 text-[0.66rem] uppercase tracking-[0.3em] text-(--muted-ivory)">
+          <span className="live-beacon inline-block h-2 w-2 rounded-full" style={{ background: "var(--rose)" }} />
+          Live ecosystem / {media.country}
+        </p>
+        <h1 className="scene-title font-[family-name:var(--font-display)] text-[clamp(2rem,3.2vw,3rem)] leading-none uppercase">
+          {media.sceneTitle.split(" ").map((word, i) => (
+            <span
+              key={i}
+              style={{ color: word.toLowerCase() === "creative" ? "var(--acid)" : "inherit" }}
+            >
+              {word}{" "}
+            </span>
+          ))}
+        </h1>
+        <p className="mt-3 max-w-2xl text-sm leading-relaxed text-(--muted-ivory)">
+          {media.cityStory}
+        </p>
       </div>
     </section>
   );
@@ -137,13 +154,13 @@ function SceneHeader({ media }: { media: CityMedia }) {
 function CityStatusStrip({ ecosystem }: { ecosystem: CityEcosystem }) {
   const cellConfig = [
     { accent: "var(--violet-soft)", dotColor: "bg-(--rose)", showBeacon: true },
-    { accent: "var(--acid)",        dotColor: "",             showBeacon: false },
+    { accent: "var(--collective)",  dotColor: "",             showBeacon: false },
     { accent: "var(--rose)",        dotColor: "",             showBeacon: false },
     { accent: "var(--teal)",        dotColor: "",             showBeacon: false },
   ];
 
   return (
-    <div className="city-status-strip grid grid-cols-2 gap-px overflow-hidden rounded-[1.4rem] p-1 sm:grid-cols-4">
+    <div className="city-status-strip surface-matte grid grid-cols-2 gap-px overflow-hidden rounded-[1.4rem] p-1 sm:grid-cols-4">
       {ecosystem.livePulse.map((signal, index) => {
         const cfg = cellConfig[index] ?? cellConfig[0];
         return (
@@ -185,7 +202,7 @@ function FeaturedSceneMoment({
   className?: string;
 }) {
   return (
-    <article className={`featured-moment relative overflow-hidden rounded-[1.8rem] ${className}`}>
+    <article className={`featured-moment surface-media depth-card relative overflow-hidden rounded-[1.8rem] ${className}`}>
       <div
         className="featured-cover absolute inset-0"
         style={{
@@ -193,7 +210,7 @@ function FeaturedSceneMoment({
           backgroundPosition: media.focalPoint,
         }}
       />
-      <div className="relative flex min-h-[295px] flex-col justify-between gap-10 p-5 sm:min-h-[330px] sm:p-6">
+      <div className="featured-content relative flex min-h-[295px] flex-col justify-between gap-10 p-5 sm:min-h-[330px] sm:p-6">
         <div className="flex items-center justify-between gap-3">
           <span className="featured-live">
             <span className="live-beacon" />
@@ -213,9 +230,9 @@ function FeaturedSceneMoment({
               <AvatarStack artists={moment.artists} />
               <span className="text-xs text-(--muted-ivory)">{ecosystem.livePulse[0].value} active nearby</span>
             </div>
-            <button className="featured-action" type="button">
-              {moment.action}
-              <span aria-hidden="true">+</span>
+            <button className="featured-action portal-cta portal-cta-live" type="button">
+              <span>{moment.action}</span>
+              <span className="portal-arrow" aria-hidden="true">+</span>
             </button>
           </div>
         </div>
@@ -248,9 +265,9 @@ function CreativeMap({ ecosystem, media, reducedMotion }: {
   ]);
 
   return (
-    <section className="map-panel creative-map-v2 relative min-h-[590px] overflow-hidden rounded-[2rem] p-5 sm:min-h-[680px] sm:p-7 xl:min-h-[740px]">
+    <section className="map-panel surface-deep creative-map-v2 relative min-h-[640px] rounded-[2rem] p-5 sm:min-h-[735px] sm:p-7 xl:min-h-[820px]">
       <div className="relative z-10 flex flex-wrap items-end justify-between gap-4">
-        <SectionHeader eyebrow="Creative map / primary view" title={`${media.city} is moving now`} action="Open full map" />
+        <SectionHeader eyebrow="Creative map / primary view" title={`${media.city} is moving now`} action="Open full map" actionTone="map" />
         <div className="mb-5 flex flex-wrap gap-2">
           <MapLegend state="live room" />
           <MapLegend state="open call" />
@@ -258,9 +275,33 @@ function CreativeMap({ ecosystem, media, reducedMotion }: {
         </div>
       </div>
       <CityMediaLegend media={media} />
-      <div className="map-surface absolute inset-x-3 bottom-3 top-[9.75rem] overflow-hidden rounded-[1.4rem] border border-white/[0.07] sm:inset-x-6 sm:bottom-6 sm:rounded-[1.65rem]">
+      <div className="map-overflow-atmosphere" aria-hidden="true">
+        <span className="map-overflow-route" />
+        <span className="map-overflow-pulse" />
+      </div>
+      <div className="map-surface absolute inset-x-3 bottom-3 top-[9.75rem] overflow-hidden rounded-[1.4rem] sm:inset-x-6 sm:bottom-6 sm:rounded-[1.65rem]">
+        <div
+          className="map-city-layer absolute inset-0"
+          style={{ backgroundImage: `url("${media.imageSrc}")`, backgroundPosition: media.focalPoint }}
+        />
+        <div className="map-volume absolute inset-0" />
+        <div className="map-depth-horizon absolute inset-0" />
+        <div className="map-floor absolute inset-0" />
+        <div className="map-topology absolute inset-0" />
         <div className="map-grid absolute inset-0" />
         <div className="map-haze absolute inset-0" />
+        <div className="map-transient-light absolute inset-0" />
+        <div className="map-foreground-light absolute inset-0" />
+        <div className="map-spatial-fog absolute inset-0" />
+        <div
+          className="map-focus-bloom absolute inset-0"
+          style={selectedNode
+            ? {
+                "--focus-x": `${selectedNode.x}%`,
+                "--focus-y": `${selectedNode.y}%`,
+              } as CSSProperties
+            : undefined}
+        />
         {ecosystem.mapNodes.map((node, index) => (
           <div
             key={`${node.label}-district`}
@@ -271,6 +312,13 @@ function CreativeMap({ ecosystem, media, reducedMotion }: {
           </div>
         ))}
         <svg className="map-connections absolute inset-0 h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+          <polyline
+            className="map-route-depth"
+            points={pathPoints}
+            fill="none"
+            stroke="var(--scene-shadow)"
+            strokeWidth="1.05"
+          />
           <motion.polyline
             className="map-primary-route"
             points={pathPoints}
@@ -340,7 +388,7 @@ function CreativeMap({ ecosystem, media, reducedMotion }: {
             key={node.label}
             type="button"
             aria-label={`${node.label}: ${mapStateLabel(node.state)}, ${discoveryHint(node.state)}`}
-            className={`map-hotspot absolute text-left ${selected ? "is-active" : ""} ${nearby ? "is-nearby" : ""}`}
+            className={`map-hotspot absolute text-left ${selected ? "is-active" : ""} ${nearby ? "is-nearby" : ""} ${node.strength >= 78 ? "is-major" : node.strength < 60 ? "is-subtle" : ""}`}
             style={{ left: `${node.x}%`, top: `${node.y}%` }}
             initial={reducedMotion ? false : { opacity: 0, scale: 0.92 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -351,13 +399,22 @@ function CreativeMap({ ecosystem, media, reducedMotion }: {
           >
             <span className="density-ring density-ring-wide" />
             <span className="density-ring" />
+            <span className="district-orbit district-orbit-halo">
+              <span />
+            </span>
+            <span className="district-orbit district-orbit-outer">
+              <span />
+            </span>
+            <span className="district-orbit district-orbit-inner">
+              <span />
+            </span>
             <span className="cluster-dot cluster-a" />
             <span className="cluster-dot cluster-b" />
             <span
               className={`signal-node node-${stateClass(node.state)} relative block rounded-full`}
               style={{
-                height: `${12 + node.strength / 11}px`,
-                width: `${12 + node.strength / 11}px`,
+                height: `${10 + node.strength / 8}px`,
+                width: `${10 + node.strength / 8}px`,
               }}
             />
             <div className={`map-preview-card ${node.x > 55 ? "map-preview-left" : ""}`}>
@@ -375,7 +432,7 @@ function CreativeMap({ ecosystem, media, reducedMotion }: {
           </motion.button>
         );
         })}
-        <div className="scene-ticker absolute inset-x-4 bottom-4 flex items-center justify-between gap-4 rounded-full px-4 py-3 text-[0.68rem] text-(--muted-ivory) sm:inset-x-6">
+        <div className="scene-ticker surface-glass absolute inset-x-4 bottom-4 flex items-center justify-between gap-4 rounded-full px-4 py-3 text-[0.68rem] text-(--muted-ivory) sm:inset-x-6">
           <span className="uppercase tracking-[0.22em] text-(--soft-ivory)">Scene transmission</span>
           <AnimatePresence mode="wait" initial={false}>
             <motion.span
@@ -400,7 +457,7 @@ function CreativeMap({ ecosystem, media, reducedMotion }: {
 
 function CityMediaLegend({ media }: { media: CityMedia }) {
   return (
-    <div className="media-legend relative z-10 mt-1 flex flex-wrap items-center gap-2.5 rounded-2xl px-3 py-2.5">
+    <div className="media-legend surface-glass relative z-10 mt-1 flex flex-wrap items-center gap-2.5 rounded-2xl px-3 py-2.5">
       <span className="mr-1 text-[0.61rem] uppercase tracking-[0.2em] text-(--muted-ivory)">Cinematic city layer</span>
       <span className="flex items-center gap-2 rounded-full border border-white/[0.07] bg-black/[0.1] px-3 py-1.5">
         <span className="h-1.5 w-1.5 rounded-full bg-(--amber-glow)" />
@@ -466,9 +523,9 @@ function activityBadgeStyle(kind: AmbientActivity["kind"]): { [key: string]: str
   }
   if (kind === "collaboration" || kind === "collective") {
     return {
-      background: "rgba(200, 240, 0, 0.10)",
-      border: "0.5px solid rgba(200, 240, 0, 0.30)",
-      color: "var(--acid)",
+      background: "rgba(245, 155, 61, 0.10)",
+      border: "0.5px solid rgba(245, 155, 61, 0.30)",
+      color: "var(--collective)",
     };
   }
   if (kind === "arrival") {
@@ -495,19 +552,19 @@ function LivingActivityFeed({
   const reducedMotion = useReducedMotion();
 
   return (
-    <GlassPanel className={`activity-panel overflow-hidden p-4 sm:p-5 ${className}`}>
-      <SectionHeader eyebrow="Living activity" title="Scene transmissions" action="See all" />
-      <div className="space-y-1">
+    <GlassPanel className={`editorial-panel surface-matte activity-panel depth-card overflow-hidden p-4 sm:p-5 ${className}`}>
+      <SectionHeader eyebrow="Living activity" title="Scene transmissions" action="See all" actionTone="events" />
+      <div className="activity-list">
         {activities.map((activity, index) => (
           <motion.div
             key={`${activity.actor}-${activity.action}`}
-            className={`activity-item flex gap-3 rounded-2xl px-3 py-3 ${index >= 3 ? "hidden sm:flex" : ""}`}
+            className="activity-item flex gap-3 rounded-2xl px-3 py-3"
             initial={reducedMotion ? false : { opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: reducedMotion ? 0 : index * 0.09, duration: reducedMotion ? 0 : 0.38 }}
           >
             <span className={`activity-mark activity-${activity.kind} mt-1.5 block h-2 w-2 shrink-0 rounded-full`} />
-            <div className="min-w-0 flex-1">
+            <div className="activity-copy min-w-0 flex-1">
               <div className="mb-1.5 flex items-center justify-between gap-2">
                 <span
                   className="rounded-full px-2 py-1 text-[0.57rem] uppercase tracking-[0.17em]"
@@ -523,7 +580,7 @@ function LivingActivityFeed({
                 <span className="font-medium">{activity.actor}</span>{" "}
                 <span className="text-(--muted-ivory)">{activity.action}</span>
               </p>
-              <p className="mt-1 text-[0.65rem] uppercase tracking-[0.16em] text-(--muted-ivory)">
+              <p className="activity-place mt-1 text-[0.65rem] uppercase tracking-[0.16em] text-(--muted-ivory)">
                 {activity.place}
               </p>
             </div>
@@ -548,27 +605,38 @@ function activityCategory(kind: AmbientActivity["kind"]) {
 
 function MatchedSignals({ ecosystem }: { ecosystem: CityEcosystem }) {
   return (
-    <GlassPanel className="practice-strip p-4 sm:p-5">
-      <SectionHeader eyebrow="For your practice" title="Matched signals" action="Tune" />
+    <GlassPanel className="editorial-panel surface-matte practice-strip p-4 sm:p-5">
+      <SectionHeader eyebrow="For your practice" title="Matched signals" action="Tune" actionTone="opportunities" />
+      <p className="practice-intro">
+        Recommendations shaped by your rooms, collaborators and tonight&apos;s nearby activity.
+      </p>
       <div className="practice-signals mt-4 gap-3 sm:grid sm:grid-cols-3">
         {ecosystem.matchedSignals.map((signal, index) => (
-          <CinematicCard key={signal.label} breathe={index === 0} className="practice-signal flex min-w-0 items-center justify-between gap-3 p-3.5">
-            <div className="min-w-0">
-              <p className="text-sm font-medium text-(--soft-ivory)">{signal.label}</p>
-              <p className="mt-1 truncate text-xs text-(--muted-ivory)">{signal.detail}</p>
-              <p className="mt-2 text-[0.6rem] uppercase tracking-[0.2em] text-(--acid)">{signal.confidence}</p>
+          <CinematicCard key={signal.label} breathe={index === 0} className="practice-signal flex min-w-0 flex-col gap-3 p-3.5">
+            <div className="practice-recommendation flex items-start justify-between gap-3">
+              <div className="min-w-0">
+                <p className="practice-match text-[0.6rem] uppercase tracking-[0.2em]">Suggested match</p>
+                <p className="mt-2 text-sm font-medium text-(--soft-ivory)">{signal.label}</p>
+                <p className="mt-1 text-xs text-(--muted-ivory)">{signal.detail}</p>
+              </div>
+              <span
+                className="practice-signal-dot mt-1.5 h-2 w-2 shrink-0 rounded-full"
+                style={{
+                  background: ["var(--rose)", "var(--collective)", "var(--violet-soft)"][index] ?? "var(--violet-soft)",
+                  boxShadow: [
+                    "0 0 8px rgba(255,61,127,0.6)",
+                    "0 0 8px rgba(245,155,61,0.5)",
+                    "0 0 8px rgba(155,127,255,0.5)",
+                  ][index] ?? "none",
+                }}
+              />
             </div>
-            <span
-              className="h-2 w-2 shrink-0 rounded-full"
-              style={{
-                background: ["var(--rose)", "var(--acid)", "var(--violet-soft)"][index] ?? "var(--violet-soft)",
-                boxShadow: [
-                  "0 0 8px rgba(255,61,127,0.6)",
-                  "0 0 8px rgba(200,240,0,0.5)",
-                  "0 0 8px rgba(155,127,255,0.5)",
-                ][index] ?? "none",
-              }}
-            />
+            <div className="practice-footer flex items-center justify-between gap-3">
+              <p className="text-[0.6rem] uppercase tracking-[0.2em] text-(--collective)">{signal.confidence}</p>
+              <button className="practice-action" type="button">
+                View
+              </button>
+            </div>
           </CinematicCard>
         ))}
       </div>
@@ -577,59 +645,52 @@ function MatchedSignals({ ecosystem }: { ecosystem: CityEcosystem }) {
 }
 
 function TonightMovement({ ecosystem, media }: { ecosystem: CityEcosystem; media: CityMedia }) {
-  const reducedMotion = useReducedMotion();
-
   return (
-    <section className="movement-panel rounded-[1.65rem] p-5 sm:p-6">
-      <SectionHeader eyebrow="Tonight" title="Cultural movement" action="See all" />
+    <section className="movement-panel surface-matte rounded-[1.65rem] p-5 sm:p-6">
+      <SectionHeader eyebrow="Tonight" title="Cultural movement" action="See all" actionTone="events" />
       <div className="movement-gallery mt-5">
         {ecosystem.tonight.map((moment, index) => (
-          <motion.article
+          <article
             key={moment.title}
-            className={`movement-card movement-card-${index} overflow-hidden rounded-[1.25rem]`}
-            whileHover={reducedMotion ? undefined : { y: -3 }}
-            transition={{ duration: 0.36, ease: "easeOut" }}
+            className={`movement-card surface-media depth-card movement-card-${index} overflow-hidden rounded-[1.25rem]`}
           >
-            <div
-              className="movement-cover relative min-h-[8.3rem] p-3"
-              style={{
-                backgroundImage: (() => {
-                  const overlays = [
-                    "linear-gradient(180deg, rgba(255, 61, 127, 0.12) 0%, rgba(12, 12, 15, 0.72) 100%)",
-                    "linear-gradient(180deg, rgba(108, 79, 212, 0.14) 0%, rgba(12, 12, 15, 0.72) 100%)",
-                    "linear-gradient(180deg, rgba(0, 212, 180, 0.12) 0%, rgba(12, 12, 15, 0.72) 100%)",
-                  ];
-                  return `${overlays[index] ?? overlays[0]}, url("${media.imageSrc}")`;
-                })(),
-                backgroundPosition: `${media.focalPoint.split(" ")[0]} ${index === 0 ? "35%" : index === 1 ? "52%" : "68%"}`,
-              }}
-            >
-              <div className="flex items-start justify-between gap-2">
+            <div className="movement-cover relative min-h-[10.25rem] p-4">
+              <div
+                className="movement-image absolute inset-0"
+                style={{
+                  backgroundImage: `url("${media.imageSrc}")`,
+                  backgroundPosition: `${media.focalPoint.split(" ")[0]} ${index === 0 ? "35%" : index === 1 ? "52%" : "68%"}`,
+                }}
+              />
+              <div className="movement-media-head relative z-10 flex items-start justify-between gap-2">
                 <span className="movement-badge">{moment.format}</span>
                 <span className="text-[0.68rem] text-(--soft-ivory)/72">{moment.time}</span>
               </div>
-              {moment.audio ? <MiniWaveform /> : null}
+              <MiniWaveform tone={index} />
             </div>
-            <div className="p-4">
-              <div className="flex items-center justify-between gap-2">
+            <div className="movement-body p-4">
+              <div className="movement-meta flex items-center justify-between gap-2">
                 <span
                   className="text-[0.63rem] uppercase tracking-[0.2em]"
                   style={{ color: ["var(--rose)", "var(--violet-soft)", "var(--teal)"][index] ?? "var(--violet-soft)" }}
                 >
                   {moment.kind}
                 </span>
-                <span className="text-[0.63rem] uppercase tracking-[0.2em] text-(--acid)">{moment.place}</span>
+                <span className="text-[0.63rem] uppercase tracking-[0.2em] text-(--collective)">{moment.place}</span>
               </div>
-              <h3 className="mt-4 font-[family-name:var(--font-display)] text-xl leading-snug text-(--soft-ivory)">
+              <h3 className="movement-title mt-4 font-[family-name:var(--font-display)] text-xl leading-snug text-(--soft-ivory)">
                 {moment.title}
               </h3>
-              <p className="mt-2 text-sm text-(--muted-ivory)">{moment.mood}</p>
+              <p className="movement-mood mt-2 text-sm text-(--muted-ivory)">{moment.mood}</p>
               <div className="mt-5 flex items-center justify-between gap-3">
                 <AvatarStack artists={moment.artists} />
-                <button className="movement-action" type="button">{moment.action}</button>
+                <button className="movement-action portal-cta" type="button">
+                  <span>{moment.action}</span>
+                  <span className="portal-arrow" aria-hidden="true">+</span>
+                </button>
               </div>
             </div>
-          </motion.article>
+          </article>
         ))}
       </div>
     </section>
@@ -644,7 +705,7 @@ function OpportunityLayer({
   className?: string;
 }) {
   return (
-    <GlassPanel className={`opportunity-panel p-6 ${className}`}>
+    <GlassPanel className={`editorial-panel surface-matte opportunity-panel depth-card p-5 sm:p-6 ${className}`}>
       <SectionHeader eyebrow="Opportunity layer" title="Ways into the scene" />
       <div className="space-y-4">
         {ecosystem.opportunities.map((opportunity, index) => (
@@ -656,7 +717,7 @@ function OpportunityLayer({
             <p className="mt-2 text-xs text-(--muted-ivory)">
               {opportunity.creator} / {opportunity.need}
             </p>
-            <p className="mt-3 text-[0.65rem] uppercase tracking-[0.21em] text-(--acid)">
+            <p className="mt-3 text-[0.65rem] uppercase tracking-[0.21em] text-(--collective)">
               <span className="opportunity-badge">{opportunity.deadline}</span>
             </p>
           </div>
@@ -678,9 +739,9 @@ function AvatarStack({ artists }: { artists: string[] }) {
   );
 }
 
-function MiniWaveform() {
+function MiniWaveform({ tone = 0 }: { tone?: number }) {
   return (
-    <div className="mini-waveform" aria-hidden="true">
+    <div className={`mini-waveform mini-waveform-${tone}`} aria-hidden="true">
       {[34, 60, 45, 76, 41, 64, 31].map((height, index) => (
         <span
           className="mini-wave-bar"
@@ -702,7 +763,7 @@ function AudioPreview({
   const heights = [35, 62, 42, 78, 56, 93, 51, 74, 42, 66, 38, 58, 29];
 
   return (
-    <GlassPanel className={`audio-presence overflow-hidden p-6 ${className}`}>
+    <GlassPanel className={`editorial-panel surface-luminous audio-presence depth-card overflow-hidden p-5 sm:p-6 ${className}`}>
       <SectionHeader eyebrow="Immersive audio / live" title={ecosystem.audio.title} />
       <div className="flex items-center justify-between gap-3">
         <p className="text-sm font-medium" style={{ color: "var(--teal)" }}>{ecosystem.audio.artist}</p>
@@ -712,15 +773,16 @@ function AudioPreview({
         </span>
       </div>
       <p className="mt-2 text-xs text-(--muted-ivory)">{ecosystem.audio.context}</p>
-      <div className="mt-6 flex items-center gap-4">
+      <div className="audio-energy mt-6 flex items-center gap-4">
+        <span className="audio-resonance" aria-hidden="true" />
         <button
           type="button"
           aria-label={`Play ${ecosystem.audio.title}`}
-          className="audio-control relative flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-(--graphite) shadow-[0_0_27px_color-mix(in_srgb,var(--acid)_50%,transparent)]"
+          className="audio-control relative flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-(--graphite)"
         >
           <span className="ml-0.5 text-sm" aria-hidden="true">&#9654;</span>
         </button>
-        <div className="flex h-10 flex-1 items-end gap-[3px]" aria-hidden="true">
+        <div className="audio-waveform flex h-10 flex-1 items-end gap-[3px]" aria-hidden="true">
           {heights.map((height, index) => (
             <span
               key={`${height}-${index}`}
