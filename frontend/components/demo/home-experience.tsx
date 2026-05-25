@@ -35,13 +35,38 @@ export function HomeExperience() {
             <SceneHeader media={media} />
             <CityStatusStrip ecosystem={ecosystem} />
 
-            <section className="scene-columns grid xl:grid-cols-[minmax(690px,1.78fr)_minmax(322px,0.7fr)]">
-              <div className="scene-main order-2 xl:order-1">
-                <CreativeMap ecosystem={ecosystem} media={media} reducedMotion={Boolean(reducedMotion)} />
+            <section className="scene-columns">
+              {/* COLONNA PRINCIPALE — visibile sempre */}
+              <div className="scene-main">
+                <FeaturedSceneMoment
+                  media={media}
+                  moment={ecosystem.tonight[0]}
+                  ecosystem={ecosystem}
+                  className="xl:hidden"
+                />
+                <CreativeMap
+                  ecosystem={ecosystem}
+                  media={media}
+                  reducedMotion={Boolean(reducedMotion)}
+                />
+                <LivingActivityFeed
+                  activities={activityFeed}
+                  className="xl:hidden"
+                />
                 <TonightMovement ecosystem={ecosystem} media={media} />
+                <OpportunityLayer
+                  ecosystem={ecosystem}
+                  className="xl:hidden"
+                />
                 <MatchedSignals ecosystem={ecosystem} />
+                <AudioPreview
+                  ecosystem={ecosystem}
+                  className="xl:hidden"
+                />
               </div>
-              <aside className="scene-rail order-1 xl:order-2">
+
+              {/* SIDEBAR — visibile solo su xl desktop, nascosta via CSS */}
+              <aside className="scene-rail">
                 <FeaturedSceneMoment media={media} moment={ecosystem.tonight[0]} ecosystem={ecosystem} />
                 <LivingActivityFeed activities={activityFeed} />
                 <OpportunityLayer ecosystem={ecosystem} />
@@ -80,21 +105,30 @@ function TopBar() {
 
 function SceneHeader({ media }: { media: CityMedia }) {
   return (
-    <section className="scene-header overflow-hidden rounded-[1.8rem] px-5 py-4 sm:px-7 sm:py-5">
-      <div className="grid gap-5 xl:grid-cols-[minmax(360px,1fr)_auto] xl:items-center">
+    <section className="scene-header rounded-[1.8rem] px-5 py-4 sm:px-7 sm:py-5">
+      <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
         <div>
           <p className="mb-2 flex items-center gap-2 text-[0.66rem] uppercase tracking-[0.3em] text-(--muted-ivory)">
-            <span className="live-beacon inline-block h-2 w-2 rounded-full bg-(--amber-glow)" />
+            <span className="live-beacon inline-block h-2 w-2 rounded-full" style={{ background: "var(--rose)" }} />
             Live ecosystem / {media.country}
           </p>
           <h1 className="font-[family-name:var(--font-display)] text-[clamp(2rem,3.2vw,3rem)] leading-none tracking-[0.02em] uppercase">
-            {media.sceneTitle}
+            {media.sceneTitle.split(" ").map((word, i) => (
+              <span
+                key={i}
+                style={{ color: i % 2 === 1 ? "var(--acid)" : "inherit" }}
+              >
+                {word}{" "}
+              </span>
+            ))}
           </h1>
           <p className="mt-2 max-w-2xl text-sm text-(--muted-ivory)">
             {media.cityStory}
           </p>
         </div>
-        <CitySelector />
+        <div className="shrink-0">
+          <CitySelector />
+        </div>
       </div>
     </section>
   );
@@ -143,13 +177,15 @@ function FeaturedSceneMoment({
   media,
   moment,
   ecosystem,
+  className = "",
 }: {
   media: CityMedia;
   moment: CulturalMoment;
   ecosystem: CityEcosystem;
+  className?: string;
 }) {
   return (
-    <article className="featured-moment order-1 relative overflow-hidden rounded-[1.8rem]">
+    <article className={`featured-moment relative overflow-hidden rounded-[1.8rem] ${className}`}>
       <div
         className="featured-cover absolute inset-0"
         style={{
@@ -212,7 +248,7 @@ function CreativeMap({ ecosystem, media, reducedMotion }: {
   ]);
 
   return (
-    <section className="map-panel creative-map-v2 order-2 relative min-h-[590px] overflow-hidden rounded-[2rem] p-5 sm:min-h-[635px] sm:p-7">
+    <section className="map-panel creative-map-v2 relative min-h-[590px] overflow-hidden rounded-[2rem] p-5 sm:min-h-[680px] sm:p-7 xl:min-h-[740px]">
       <div className="relative z-10 flex flex-wrap items-end justify-between gap-4">
         <SectionHeader eyebrow="Creative map / primary view" title={`${media.city} is moving now`} action="Open full map" />
         <div className="mb-5 flex flex-wrap gap-2">
@@ -449,17 +485,23 @@ function activityBadgeStyle(kind: AmbientActivity["kind"]): { [key: string]: str
   };
 }
 
-function LivingActivityFeed({ activities }: { activities: AmbientActivity[] }) {
+function LivingActivityFeed({
+  activities,
+  className = "",
+}: {
+  activities: AmbientActivity[];
+  className?: string;
+}) {
   const reducedMotion = useReducedMotion();
 
   return (
-    <GlassPanel className="activity-panel order-3 overflow-hidden p-4 sm:p-5">
+    <GlassPanel className={`activity-panel overflow-hidden p-4 sm:p-5 ${className}`}>
       <SectionHeader eyebrow="Living activity" title="Scene transmissions" action="See all" />
       <div className="space-y-1">
         {activities.map((activity, index) => (
           <motion.div
             key={`${activity.actor}-${activity.action}`}
-            className="activity-item flex gap-3 rounded-2xl px-3 py-3"
+            className={`activity-item flex gap-3 rounded-2xl px-3 py-3 ${index >= 3 ? "hidden sm:flex" : ""}`}
             initial={reducedMotion ? false : { opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: reducedMotion ? 0 : index * 0.09, duration: reducedMotion ? 0 : 0.38 }}
@@ -506,9 +548,9 @@ function activityCategory(kind: AmbientActivity["kind"]) {
 
 function MatchedSignals({ ecosystem }: { ecosystem: CityEcosystem }) {
   return (
-    <GlassPanel className="practice-strip order-5 p-4 sm:p-5">
+    <GlassPanel className="practice-strip p-4 sm:p-5">
       <SectionHeader eyebrow="For your practice" title="Matched signals" action="Tune" />
-      <div className="practice-signals mt-4 grid gap-3 sm:grid-cols-3">
+      <div className="practice-signals mt-4 gap-3 sm:grid sm:grid-cols-3">
         {ecosystem.matchedSignals.map((signal, index) => (
           <CinematicCard key={signal.label} breathe={index === 0} className="practice-signal flex min-w-0 items-center justify-between gap-3 p-3.5">
             <div className="min-w-0">
@@ -538,9 +580,9 @@ function TonightMovement({ ecosystem, media }: { ecosystem: CityEcosystem; media
   const reducedMotion = useReducedMotion();
 
   return (
-    <section className="movement-panel order-4 self-start rounded-[1.65rem] p-5 sm:p-6">
+    <section className="movement-panel rounded-[1.65rem] p-5 sm:p-6">
       <SectionHeader eyebrow="Tonight" title="Cultural movement" action="See all" />
-      <div className="movement-gallery mt-5 grid gap-4 md:grid-cols-3">
+      <div className="movement-gallery mt-5">
         {ecosystem.tonight.map((moment, index) => (
           <motion.article
             key={moment.title}
@@ -594,13 +636,22 @@ function TonightMovement({ ecosystem, media }: { ecosystem: CityEcosystem; media
   );
 }
 
-function OpportunityLayer({ ecosystem }: { ecosystem: CityEcosystem }) {
+function OpportunityLayer({
+  ecosystem,
+  className = "",
+}: {
+  ecosystem: CityEcosystem;
+  className?: string;
+}) {
   return (
-    <GlassPanel className="opportunity-panel order-6 p-6">
+    <GlassPanel className={`opportunity-panel p-6 ${className}`}>
       <SectionHeader eyebrow="Opportunity layer" title="Ways into the scene" />
       <div className="space-y-4">
-        {ecosystem.opportunities.map((opportunity) => (
-          <div key={opportunity.title} className="border-b border-white/8 pb-4 last:border-0 last:pb-0">
+        {ecosystem.opportunities.map((opportunity, index) => (
+          <div
+            key={opportunity.title}
+            className={`border-b border-white/8 pb-4 last:border-0 last:pb-0 ${index >= 1 ? "hidden sm:block" : ""}`}
+          >
             <p className="text-sm text-(--soft-ivory)">{opportunity.title}</p>
             <p className="mt-2 text-xs text-(--muted-ivory)">
               {opportunity.creator} / {opportunity.need}
@@ -641,11 +692,17 @@ function MiniWaveform() {
   );
 }
 
-function AudioPreview({ ecosystem }: { ecosystem: CityEcosystem }) {
+function AudioPreview({
+  ecosystem,
+  className = "",
+}: {
+  ecosystem: CityEcosystem;
+  className?: string;
+}) {
   const heights = [35, 62, 42, 78, 56, 93, 51, 74, 42, 66, 38, 58, 29];
 
   return (
-    <GlassPanel className="audio-presence order-7 overflow-hidden p-6">
+    <GlassPanel className={`audio-presence overflow-hidden p-6 ${className}`}>
       <SectionHeader eyebrow="Immersive audio / live" title={ecosystem.audio.title} />
       <div className="flex items-center justify-between gap-3">
         <p className="text-sm font-medium" style={{ color: "var(--teal)" }}>{ecosystem.audio.artist}</p>

@@ -188,9 +188,24 @@ a {
     radial-gradient(circle at 14% 22%, color-mix(in srgb, var(--scene-primary) 18%, transparent), transparent 36%),
     linear-gradient(112deg, rgba(18, 14, 32, 0.85), rgba(8, 6, 16, 0.70));
   backdrop-filter: blur(20px) saturate(0.88);
+  overflow: hidden;
 }
 
-.city-selector,
+.city-selector-wrap {
+  width: 100%;
+}
+
+.city-more-panel {
+  border: 0.5px solid color-mix(in srgb, var(--scene-primary) 18%, rgba(242, 240, 250, 0.10));
+  background: linear-gradient(145deg, rgba(20, 16, 36, 0.97), rgba(10, 8, 20, 0.96));
+  backdrop-filter: blur(28px) saturate(0.9);
+}
+
+.city-selector {
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
 .floating-dock {
   scrollbar-width: none;
 }
@@ -235,11 +250,22 @@ a {
 .scene-columns {
   --scene-section-gap: 1rem;
   gap: var(--scene-section-gap);
+  display: flex;
+  flex-direction: column;
 }
 
-.scene-main,
+.scene-main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--scene-section-gap);
+  min-width: 0;
+}
+
 .scene-rail {
-  display: contents;
+  display: flex;
+  flex-direction: column;
+  gap: var(--scene-section-gap);
+  min-width: 0;
 }
 
 .cinematic-card {
@@ -280,7 +306,9 @@ a {
   background:
     radial-gradient(circle at 40% 34%, color-mix(in srgb, var(--scene-primary) 22%, transparent), transparent 48%),
     linear-gradient(132deg, rgba(18, 14, 32, 0.85), rgba(8, 6, 16, 0.72));
-  box-shadow: 0 32px 82px rgba(4, 3, 10, 0.35);
+  box-shadow:
+    0 32px 82px rgba(4, 3, 10, 0.40),
+    0 0 0 1px rgba(242, 240, 250, 0.04);
   backdrop-filter: blur(22px) saturate(0.88);
 }
 
@@ -730,6 +758,27 @@ a {
   backdrop-filter: blur(15px) saturate(0.88);
 }
 
+.movement-gallery {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  gap: 1rem;
+}
+
+.movement-gallery::-webkit-scrollbar {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .movement-gallery {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    overflow-x: visible;
+    scroll-snap-type: none;
+  }
+}
+
 .movement-card {
   border: 1px solid color-mix(in srgb, var(--scene-primary) 11%, rgba(242, 240, 250, 0.07));
   background:
@@ -810,6 +859,12 @@ a {
 
 .practice-signal {
   min-height: 4.9rem;
+}
+
+.opportunity-panel > div > div {
+  padding-left: 1rem;
+  border-left: 2px solid color-mix(in srgb, var(--acid) 30%, transparent);
+  margin-left: 0;
 }
 
 .opportunity-badge {
@@ -1008,21 +1063,58 @@ a {
 }
 
 @media (min-width: 1280px) {
+  .scene-columns {
+    display: grid;
+    grid-template-columns: minmax(690px, 1.78fr) minmax(322px, 0.7fr);
+    align-items: start;
+  }
+
   .scene-main,
   .scene-rail {
-    display: grid;
     align-content: start;
-    gap: var(--scene-section-gap);
+  }
+}
+
+@media (max-width: 1279px) {
+  .scene-rail {
+    display: none;
   }
 }
 
 @media (max-width: 639px) {
+  .scene-columns {
+    --scene-section-gap: 0.85rem;
+  }
+
+  .city-status-cell {
+    padding: 0.85rem 0.9rem;
+  }
+
+  .city-status-strip {
+    border-radius: 1.1rem;
+  }
+
+  .city-selector-wrap {
+    width: 100%;
+    max-width: 100%;
+  }
+
   .city-selector {
     width: 100%;
+    max-width: 100%;
+  }
+
+  .city-more-panel {
+    padding: 0.85rem;
+  }
+
+  .scene-header {
+    padding: 1rem 1.1rem;
+    border-radius: 1.3rem;
   }
 
   .creative-map-v2 {
-    min-height: 35.25rem;
+    min-height: 32rem;
   }
 
   .district-zone {
@@ -1063,24 +1155,18 @@ a {
   }
 
   .movement-panel {
+    overflow: hidden;
     padding-inline: 1rem;
   }
 
   .movement-gallery {
-    display: flex;
     margin-inline: -1rem;
-    overflow-x: auto;
-    padding: 0 1rem 0.25rem;
+    padding: 0 1rem 0.5rem;
     scroll-padding-inline: 1rem;
-    scroll-snap-type: x mandatory;
-    scrollbar-width: none;
-  }
-
-  .movement-gallery::-webkit-scrollbar {
-    display: none;
   }
 
   .movement-card {
+    flex-shrink: 0;
     min-width: min(16.5rem, calc(100vw - 3.35rem));
     scroll-snap-align: start;
   }
