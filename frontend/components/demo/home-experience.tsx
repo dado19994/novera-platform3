@@ -30,60 +30,20 @@ export function HomeExperience() {
             animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
             exit={reducedMotion ? undefined : { opacity: 0, y: -7, filter: "blur(4px)" }}
             transition={movement}
-            className="experience-flow space-y-5 sm:space-y-7"
+            className="experience-flow operating-home"
           >
-            <div className="scene-intro">
-              <div className="scene-intro-main">
-                <SceneHeader media={media} />
-                <div className="scene-status">
-                  <CityStatusStrip ecosystem={ecosystem} />
-                </div>
-                <div className="scene-selector-row">
-                  <CitySelector />
-                </div>
-              </div>
-              <FeaturedSceneMoment
-                media={media}
-                moment={ecosystem.tonight[0]}
-                ecosystem={ecosystem}
-                className="scene-feature-desktop hidden xl:block"
-              />
-            </div>
+            <section className="product-hero">
+              <HeroNarrative media={media} ecosystem={ecosystem} />
+              <CreativeMap ecosystem={ecosystem} media={media} reducedMotion={Boolean(reducedMotion)} />
+              <QuickAccess />
+            </section>
 
-            <section className="scene-columns">
-              <div className="scene-main">
-                <FeaturedSceneMoment
-                  media={media}
-                  moment={ecosystem.tonight[0]}
-                  ecosystem={ecosystem}
-                  className="scene-feature-mobile xl:hidden"
-                />
-                <CreativeMap
-                  ecosystem={ecosystem}
-                  media={media}
-                  reducedMotion={Boolean(reducedMotion)}
-                />
-                <TonightMovement ecosystem={ecosystem} media={media} />
-                <OpportunityLayer
-                  ecosystem={ecosystem}
-                  className="xl:hidden"
-                />
-                <AudioPreview
-                  ecosystem={ecosystem}
-                  className="xl:hidden"
-                />
-                <LivingActivityFeed
-                  activities={activityFeed}
-                  className="xl:hidden"
-                />
-                <MatchedSignals ecosystem={ecosystem} />
-              </div>
-
-              <aside className="scene-rail">
-                <OpportunityLayer ecosystem={ecosystem} />
-                <AudioPreview ecosystem={ecosystem} />
-                <LivingActivityFeed activities={activityFeed} />
-              </aside>
+            <section className="ecosystem-dashboard" aria-label="Live ecosystem overview">
+              <FeaturedLiveModule ecosystem={ecosystem} media={media} />
+              <MatchedSignals ecosystem={ecosystem} />
+              <OpportunityLayer ecosystem={ecosystem} />
+              <LivingActivityFeed activities={activityFeed} />
+              <AudioPreview ecosystem={ecosystem} />
             </section>
           </motion.div>
         </AnimatePresence>
@@ -112,7 +72,7 @@ function TopBar() {
       <div className="top-actions hidden items-center gap-7 text-sm text-(--muted-ivory) sm:flex">
         <button className="transition-colors hover:text-(--soft-ivory)">Scenes</button>
         <button className="transition-colors hover:text-(--soft-ivory)">Open calls</button>
-        <button className="portal-cta portal-cta-prominent portal-cta-map">
+        <button className="portal-cta portal-cta-secondary">
           <span>Share work</span>
           <span className="portal-arrow" aria-hidden="true">+</span>
         </button>
@@ -125,27 +85,74 @@ function TopBar() {
   );
 }
 
-function SceneHeader({ media }: { media: CityMedia }) {
+function HeroNarrative({ media, ecosystem }: { media: CityMedia; ecosystem: CityEcosystem }) {
   return (
-    <section className="scene-header px-1 py-3 sm:px-2 sm:py-5">
-      <div>
-        <p className="mb-2 flex items-center gap-2 text-[0.66rem] uppercase tracking-[0.3em] text-(--muted-ivory)">
+    <section className="hero-narrative hero-editorial">
+      <div className="hero-copy">
+        <p className="hero-kicker flex items-center gap-2 text-[0.66rem] uppercase tracking-[0.3em] text-(--muted-ivory)">
           <span className="live-beacon inline-block h-2 w-2 rounded-full" style={{ background: "var(--rose)" }} />
-          Live ecosystem / {media.country}
+          Welcome to Novera / {media.city}
         </p>
-        <h1 className="scene-title font-[family-name:var(--font-display)] text-[clamp(2rem,3.2vw,3rem)] leading-none uppercase">
-          {media.sceneTitle.split(" ").map((word, i) => (
-            <span
-              key={i}
-              style={{ color: word.toLowerCase() === "creative" ? "var(--acid)" : "inherit" }}
-            >
-              {word}{" "}
-            </span>
-          ))}
+        <h1 className="hero-title">
+          Discover.<br />
+          Create.<br />
+          Collaborate.<br />
+          <span>Beyond.</span>
         </h1>
-        <p className="mt-3 max-w-2xl text-sm leading-relaxed text-(--muted-ivory)">
-          {media.cityStory}
+        <p className="hero-description">
+          A living cultural ecosystem for artists, events and creative collectives.
+          Explore scenes, join rooms and shape what moves next.
         </p>
+        <div className="hero-actions">
+          <button className="portal-cta portal-cta-prominent portal-cta-primary" type="button">
+            <span>Explore ecosystem</span>
+            <span className="portal-arrow" aria-hidden="true">+</span>
+          </button>
+          <button className="hero-secondary" type="button">Start a collaboration</button>
+        </div>
+        <div className="hero-city">
+          <CitySelector />
+        </div>
+      </div>
+      <div className="hero-pulse">
+        <CityStatusStrip ecosystem={ecosystem} />
+      </div>
+    </section>
+  );
+}
+
+const QUICK_ACCESS = [
+  { label: "Artists", detail: "Discover voices", status: "148 live", tone: "artists" },
+  { label: "Events", detail: "Tonight nearby", status: "14 soon", tone: "events" },
+  { label: "Live Rooms", detail: "Join sessions", status: "6 live", tone: "live" },
+  { label: "Spaces", detail: "Explore places", status: "New", tone: "spaces" },
+  { label: "Collectives", detail: "Find a circle", status: "9 recruiting", tone: "collectives" },
+  { label: "Audio", detail: "Spatial radio", status: "Live", tone: "audio" },
+  { label: "AI Match", detail: "For your craft", status: "3 matches", tone: "match" },
+  { label: "Open Calls", detail: "Join a project", status: "Open", tone: "opportunities" },
+] as const;
+
+function QuickAccess() {
+  return (
+    <section className="quick-access editorial-band" aria-label="Explore the Novera ecosystem">
+      <header className="quick-access-header">
+        <div>
+          <p className="quick-access-eyebrow">Explore</p>
+          <h2>Quick access</h2>
+        </div>
+        <p>Enter the ecosystem by practice, scene or opportunity.</p>
+      </header>
+      <div className="quick-access-grid">
+        {QUICK_ACCESS.map(({ label, detail, status, tone }) => (
+          <button className={`quick-access-card access-${tone}`} type="button" key={label}>
+            <span className="access-head">
+              <span className={`access-glyph nav-glyph nav-${tone}`} aria-hidden="true" />
+              <span className="access-status">{status}</span>
+            </span>
+            <strong>{label}</strong>
+            <small>{detail}</small>
+          </button>
+        ))}
       </div>
     </section>
   );
@@ -153,14 +160,14 @@ function SceneHeader({ media }: { media: CityMedia }) {
 
 function CityStatusStrip({ ecosystem }: { ecosystem: CityEcosystem }) {
   const cellConfig = [
-    { accent: "var(--violet-soft)", dotColor: "bg-(--rose)", showBeacon: true },
-    { accent: "var(--collective)",  dotColor: "",             showBeacon: false },
-    { accent: "var(--rose)",        dotColor: "",             showBeacon: false },
-    { accent: "var(--teal)",        dotColor: "",             showBeacon: false },
+    { label: "Artists",     accent: "var(--violet-soft)", dotColor: "bg-(--rose)", showBeacon: true },
+    { label: "Collectives", accent: "var(--collective)",  dotColor: "",             showBeacon: false },
+    { label: "Events",      accent: "var(--rose)",        dotColor: "",             showBeacon: false },
+    { label: "Audio rooms", accent: "var(--teal)",        dotColor: "",             showBeacon: false },
   ];
 
   return (
-    <div className="city-status-strip surface-matte grid grid-cols-2 gap-px overflow-hidden rounded-[1.4rem] p-1 sm:grid-cols-4">
+    <div className="city-status-strip grid grid-cols-2 gap-px overflow-hidden sm:grid-cols-4">
       {ecosystem.livePulse.map((signal, index) => {
         const cfg = cellConfig[index] ?? cellConfig[0];
         return (
@@ -170,7 +177,7 @@ function CityStatusStrip({ ecosystem }: { ecosystem: CityEcosystem }) {
                 className="font-[family-name:var(--font-mono)] text-[0.65rem] uppercase tracking-[0.14em]"
                 style={{ color: cfg.accent }}
               >
-                {signal.label}
+                {cfg.label}
               </p>
               {cfg.showBeacon && <span className="live-beacon h-1.5 w-1.5 shrink-0 rounded-full" />}
             </div>
@@ -249,32 +256,27 @@ function CreativeMap({ ecosystem, media, reducedMotion }: {
   const [activeNode, setActiveNode] = useState<number | null>(0);
   const pathPoints = ecosystem.mapNodes.map((node) => `${node.x},${node.y}`).join(" ");
   const selectedNode = activeNode === null ? null : ecosystem.mapNodes[activeNode];
-  const ambientSignals = ecosystem.mapNodes.flatMap((node, index) => [
-    {
-      id: `${node.label}-north`,
-      anchor: index,
-      x: Math.max(9, Math.min(91, node.x + (index % 2 === 0 ? 13 : -11))),
-      y: Math.max(11, node.y - 17 - (index % 2) * 4),
-    },
-    {
-      id: `${node.label}-nearby`,
-      anchor: index,
-      x: Math.max(9, Math.min(91, node.x + (index % 2 === 0 ? -8 : 9))),
-      y: Math.max(13, node.y - 8),
-    },
-  ]);
+  const networkOffsets = [
+    [-15, -13], [-10, 8], [-6, -20], [6, -15],
+    [14, -7], [16, 11], [4, 15], [-13, 17],
+  ] as const;
+  const networkTones = ["artists", "events", "collectives", "spaces", "live-rooms"] as const;
+  const ambientSignals = ecosystem.mapNodes.flatMap((node, anchor) =>
+    networkOffsets.map(([xOffset, yOffset], index) => ({
+      id: `${node.label}-signal-${index}`,
+      anchor,
+      tone: networkTones[(anchor + index) % networkTones.length],
+      x: Math.max(5, Math.min(95, node.x + xOffset)),
+      y: Math.max(7, Math.min(90, node.y + yOffset)),
+    })),
+  );
 
   return (
-    <section className="map-panel surface-deep creative-map-v2 relative min-h-[640px] rounded-[2rem] p-5 sm:min-h-[735px] sm:p-7 xl:min-h-[820px]">
-      <div className="relative z-10 flex flex-wrap items-end justify-between gap-4">
-        <SectionHeader eyebrow="Creative map / primary view" title={`${media.city} is moving now`} action="Open full map" actionTone="map" />
-        <div className="mb-5 flex flex-wrap gap-2">
-          <MapLegend state="live room" />
-          <MapLegend state="open call" />
-          <MapLegend state="starting soon" />
-        </div>
+    <section className="creative-map-v2 signature-map hero-network relative min-h-[640px] rounded-[2rem] p-5 sm:min-h-[735px] sm:p-7 xl:min-h-[820px]">
+      <div className="relative z-10">
+        <SectionHeader eyebrow="Live ecosystem map" title={`${media.city} is moving now`} action="Open live map" actionTone="map" />
       </div>
-      <CityMediaLegend media={media} />
+      <p className="section-purpose map-purpose">Navigate live rooms, open calls and active districts across the cultural city layer.</p>
       <div className="map-overflow-atmosphere" aria-hidden="true">
         <span className="map-overflow-route" />
         <span className="map-overflow-pulse" />
@@ -302,6 +304,11 @@ function CreativeMap({ ecosystem, media, reducedMotion }: {
               } as CSSProperties
             : undefined}
         />
+        <div className="map-status-pills">
+          <MapStatus state="live room" />
+          <MapStatus state="open call" />
+          <MapStatus state="starting soon" />
+        </div>
         {ecosystem.mapNodes.map((node, index) => (
           <div
             key={`${node.label}-district`}
@@ -330,6 +337,8 @@ function CreativeMap({ ecosystem, media, reducedMotion }: {
             animate={{ pathLength: 1, opacity: 1, strokeOpacity: activeNode === null ? 0.42 : 0.6 }}
             transition={{ duration: reducedMotion ? 0 : 1.45, ease: "easeInOut" }}
           />
+          <polyline className="map-route-transmission map-route-transmission-primary" points={pathPoints} fill="none" />
+          <polyline className="map-route-transmission map-route-transmission-secondary" points={pathPoints} fill="none" />
           {ecosystem.mapNodes.slice(0, -1).map((node, index) => {
             const next = ecosystem.mapNodes[index + 1];
 
@@ -355,16 +364,34 @@ function CreativeMap({ ecosystem, media, reducedMotion }: {
             return (
               <motion.line
                 key={`${signal.id}-path`}
+                className={`map-network-link network-${signal.tone}`}
                 x1={signal.x}
                 y1={signal.y}
                 x2={anchor.x}
                 y2={anchor.y}
-                stroke="var(--scene-primary)"
                 strokeWidth="0.12"
                 strokeDasharray="0.6 2"
                 initial={reducedMotion ? false : { pathLength: 0, strokeOpacity: 0 }}
-                animate={{ pathLength: 1, strokeOpacity: linked ? 0.46 : 0.13 }}
+                animate={{ pathLength: 1, strokeOpacity: linked ? 0.68 : 0.23 }}
                 transition={{ duration: reducedMotion ? 0 : 0.7, delay: linked ? 0 : index * 0.04 }}
+              />
+            );
+          })}
+          {ambientSignals.map((signal, index) => {
+            if (index % 2 !== 0) {
+              return null;
+            }
+
+            const next = ambientSignals[(index + 5) % ambientSignals.length];
+
+            return (
+              <line
+                key={`${signal.id}-network`}
+                className={`map-network-thread network-${signal.tone}`}
+                x1={signal.x}
+                y1={signal.y}
+                x2={next.x}
+                y2={next.y}
               />
             );
           })}
@@ -372,7 +399,7 @@ function CreativeMap({ ecosystem, media, reducedMotion }: {
         {ambientSignals.map((signal, index) => (
           <motion.span
             key={signal.id}
-            className={`ambient-signal absolute rounded-full ${activeNode === signal.anchor ? "is-linked" : ""}`}
+            className={`ambient-signal signal-${signal.tone} absolute rounded-full ${activeNode === signal.anchor ? "is-linked" : ""}`}
             style={{ left: `${signal.x}%`, top: `${signal.y}%`, animationDelay: `${index * 320}ms` }}
             initial={reducedMotion ? false : { opacity: 0, scale: 0.7 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -432,6 +459,14 @@ function CreativeMap({ ecosystem, media, reducedMotion }: {
           </motion.button>
         );
         })}
+        <nav className="map-controls" aria-label="Creative map controls">
+          <button type="button" aria-label="Zoom in">+</button>
+          <button type="button" aria-label="Zoom out">&minus;</button>
+          <button type="button" aria-label="Center active district">&#8599;</button>
+        </nav>
+        <div className="map-ecosystem-legend" aria-label="Map ecosystem legend">
+          {networkTones.map((tone) => <MapLegend key={tone} tone={tone} />)}
+        </div>
         <div className="scene-ticker surface-glass absolute inset-x-4 bottom-4 flex items-center justify-between gap-4 rounded-full px-4 py-3 text-[0.68rem] text-(--muted-ivory) sm:inset-x-6">
           <span className="uppercase tracking-[0.22em] text-(--soft-ivory)">Scene transmission</span>
           <AnimatePresence mode="wait" initial={false}>
@@ -455,28 +490,23 @@ function CreativeMap({ ecosystem, media, reducedMotion }: {
   );
 }
 
-function CityMediaLegend({ media }: { media: CityMedia }) {
+type DisplayMapState = "live room" | "open call" | "starting soon";
+type MapTone = "artists" | "events" | "collectives" | "spaces" | "live-rooms";
+
+function MapStatus({ state }: { state: DisplayMapState }) {
   return (
-    <div className="media-legend surface-glass relative z-10 mt-1 flex flex-wrap items-center gap-2.5 rounded-2xl px-3 py-2.5">
-      <span className="mr-1 text-[0.61rem] uppercase tracking-[0.2em] text-(--muted-ivory)">Cinematic city layer</span>
-      <span className="flex items-center gap-2 rounded-full border border-white/[0.07] bg-black/[0.1] px-3 py-1.5">
-        <span className="h-1.5 w-1.5 rounded-full bg-(--amber-glow)" />
-        <span className="text-[0.68rem] text-(--soft-ivory)">{media.mediaDescriptor}</span>
-      </span>
-      <span className="hidden text-[0.64rem] text-(--muted-ivory) lg:inline">
-        {media.character} / {media.ambientParticles.label}
-      </span>
-    </div>
+    <span className="map-state-badge">
+      <span className={`h-1.5 w-1.5 rounded-full node-${stateClass(state)}`} />
+      {state}
+    </span>
   );
 }
 
-type DisplayMapState = "live room" | "open call" | "starting soon";
-
-function MapLegend({ state }: { state: DisplayMapState }) {
+function MapLegend({ tone }: { tone: MapTone }) {
   return (
-    <span className="hidden items-center gap-1.5 rounded-full border border-white/8 bg-black/15 px-2.5 py-1.5 text-[0.62rem] uppercase tracking-[0.16em] text-(--muted-ivory) sm:flex">
-      <span className={`h-1.5 w-1.5 rounded-full node-${stateClass(state)}`} />
-      {state}
+    <span className="map-legend-item">
+      <span className={`map-legend-dot signal-${tone}`} />
+      {tone.replace("-", " ")}
     </span>
   );
 }
@@ -552,8 +582,9 @@ function LivingActivityFeed({
   const reducedMotion = useReducedMotion();
 
   return (
-    <GlassPanel className={`editorial-panel surface-matte activity-panel depth-card overflow-hidden p-4 sm:p-5 ${className}`}>
+    <section className={`editorial-band activity-panel overflow-hidden p-4 sm:p-5 ${className}`}>
       <SectionHeader eyebrow="Living activity" title="Scene transmissions" action="See all" actionTone="events" />
+      <p className="section-purpose">Recent joins, collaborations and live signals from your cultural ecosystem.</p>
       <div className="activity-list">
         {activities.map((activity, index) => (
           <motion.div
@@ -587,7 +618,7 @@ function LivingActivityFeed({
           </motion.div>
         ))}
       </div>
-    </GlassPanel>
+    </section>
   );
 }
 
@@ -605,8 +636,8 @@ function activityCategory(kind: AmbientActivity["kind"]) {
 
 function MatchedSignals({ ecosystem }: { ecosystem: CityEcosystem }) {
   return (
-    <GlassPanel className="editorial-panel surface-matte practice-strip p-4 sm:p-5">
-      <SectionHeader eyebrow="For your practice" title="Matched signals" action="Tune" actionTone="opportunities" />
+    <section className="editorial-band practice-strip p-4 sm:p-5">
+      <SectionHeader eyebrow="For your practice" title="Matched signals" action="Review matches" actionTone="opportunities" />
       <p className="practice-intro">
         Recommendations shaped by your rooms, collaborators and tonight&apos;s nearby activity.
       </p>
@@ -616,7 +647,7 @@ function MatchedSignals({ ecosystem }: { ecosystem: CityEcosystem }) {
             <div className="practice-recommendation flex items-start justify-between gap-3">
               <div className="min-w-0">
                 <p className="practice-match text-[0.6rem] uppercase tracking-[0.2em]">Suggested match</p>
-                <p className="mt-2 text-sm font-medium text-(--soft-ivory)">{signal.label}</p>
+                <p className="practice-title mt-2 text-sm font-medium text-(--soft-ivory)">{signal.label}</p>
                 <p className="mt-1 text-xs text-(--muted-ivory)">{signal.detail}</p>
               </div>
               <span
@@ -633,46 +664,75 @@ function MatchedSignals({ ecosystem }: { ecosystem: CityEcosystem }) {
             </div>
             <div className="practice-footer flex items-center justify-between gap-3">
               <p className="text-[0.6rem] uppercase tracking-[0.2em] text-(--collective)">{signal.confidence}</p>
-              <button className="practice-action" type="button">
-                View
+              <button className="practice-action" type="button" aria-label={`Review match: ${signal.label}`}>
+                Review match
               </button>
             </div>
           </CinematicCard>
         ))}
       </div>
-    </GlassPanel>
+    </section>
   );
 }
 
-function TonightMovement({ ecosystem, media }: { ecosystem: CityEcosystem; media: CityMedia }) {
+function FeaturedLiveModule({ ecosystem, media }: { ecosystem: CityEcosystem; media: CityMedia }) {
   return (
-    <section className="movement-panel surface-matte rounded-[1.65rem] p-5 sm:p-6">
-      <SectionHeader eyebrow="Tonight" title="Cultural movement" action="See all" actionTone="events" />
+    <section className="featured-live-module module-panel" aria-label="Featured and live now">
+      <SectionHeader eyebrow="Featured & live now" title="Cultural movement" action="See all" actionTone="events" />
+      <p className="section-purpose">Active rooms, screenings and listening sessions happening tonight.</p>
+      <div className="featured-live-cards">
+        <FeaturedSceneMoment
+          media={media}
+          moment={ecosystem.tonight[0]}
+          ecosystem={ecosystem}
+          className="featured-live-primary"
+        />
+        <TonightMovement ecosystem={ecosystem} media={media} supporting embedded />
+      </div>
+    </section>
+  );
+}
+
+function TonightMovement({ ecosystem, media, supporting = false, embedded = false }: {
+  ecosystem: CityEcosystem;
+  media: CityMedia;
+  supporting?: boolean;
+  embedded?: boolean;
+}) {
+  const moments = supporting ? ecosystem.tonight.slice(1) : ecosystem.tonight;
+
+  return (
+    <section className={`movement-panel editorial-band rounded-[1.65rem] p-5 sm:p-6 ${supporting ? "supporting-movement" : ""} ${embedded ? "embedded-movement" : ""}`}>
+      {!embedded && <SectionHeader eyebrow="Featured & live now" title="Cultural movement" action="See all" actionTone="events" />}
+      {!embedded && <p className="section-purpose">Enter tonight&apos;s active rooms, screenings and listening sessions.</p>}
       <div className="movement-gallery mt-5">
-        {ecosystem.tonight.map((moment, index) => (
+        {moments.map((moment, index) => {
+          const toneIndex = supporting ? index + 1 : index;
+
+          return (
           <article
             key={moment.title}
-            className={`movement-card surface-media depth-card movement-card-${index} overflow-hidden rounded-[1.25rem]`}
+            className={`movement-card surface-media depth-card movement-card-${toneIndex} overflow-hidden rounded-[1.25rem]`}
           >
             <div className="movement-cover relative min-h-[10.25rem] p-4">
               <div
                 className="movement-image absolute inset-0"
                 style={{
                   backgroundImage: `url("${media.imageSrc}")`,
-                  backgroundPosition: `${media.focalPoint.split(" ")[0]} ${index === 0 ? "35%" : index === 1 ? "52%" : "68%"}`,
+                  backgroundPosition: `${media.focalPoint.split(" ")[0]} ${toneIndex === 0 ? "35%" : toneIndex === 1 ? "52%" : "68%"}`,
                 }}
               />
               <div className="movement-media-head relative z-10 flex items-start justify-between gap-2">
                 <span className="movement-badge">{moment.format}</span>
                 <span className="text-[0.68rem] text-(--soft-ivory)/72">{moment.time}</span>
               </div>
-              <MiniWaveform tone={index} />
+              <MiniWaveform tone={toneIndex} />
             </div>
             <div className="movement-body p-4">
               <div className="movement-meta flex items-center justify-between gap-2">
                 <span
                   className="text-[0.63rem] uppercase tracking-[0.2em]"
-                  style={{ color: ["var(--rose)", "var(--violet-soft)", "var(--teal)"][index] ?? "var(--violet-soft)" }}
+                  style={{ color: ["var(--rose)", "var(--violet-soft)", "var(--teal)"][toneIndex] ?? "var(--violet-soft)" }}
                 >
                   {moment.kind}
                 </span>
@@ -691,7 +751,8 @@ function TonightMovement({ ecosystem, media }: { ecosystem: CityEcosystem; media
               </div>
             </div>
           </article>
-        ))}
+        );
+        })}
       </div>
     </section>
   );
@@ -705,8 +766,9 @@ function OpportunityLayer({
   className?: string;
 }) {
   return (
-    <GlassPanel className={`editorial-panel surface-matte opportunity-panel depth-card p-5 sm:p-6 ${className}`}>
-      <SectionHeader eyebrow="Opportunity layer" title="Ways into the scene" />
+    <section className={`editorial-band opportunity-panel p-5 sm:p-6 ${className}`}>
+      <SectionHeader eyebrow="Collaboration / open calls" title="Opportunities for you" action="Browse calls" actionTone="opportunities" />
+      <p className="section-purpose">Join projects, find collaborators and respond to creator opportunities.</p>
       <div className="space-y-4">
         {ecosystem.opportunities.map((opportunity, index) => (
           <div
@@ -723,7 +785,7 @@ function OpportunityLayer({
           </div>
         ))}
       </div>
-    </GlassPanel>
+    </section>
   );
 }
 

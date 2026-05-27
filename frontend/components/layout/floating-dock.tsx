@@ -4,17 +4,16 @@ import { useState, type CSSProperties } from "react";
 
 const DESKTOP_LINKS = [
   { label: "Home", tone: "home" },
-  { label: "Map", tone: "map" },
+  { label: "Explore", tone: "explore" },
+  { label: "Artists", tone: "artists" },
+  { label: "Events", tone: "events" },
+  { label: "Creative Map", tone: "map" },
   { label: "Live rooms", tone: "live" },
-  { label: "Opportunities", tone: "opportunities" },
+  { label: "Spaces", tone: "spaces" },
+  { label: "Collectives", tone: "collectives" },
+  { label: "Open Calls", tone: "opportunities" },
+  { label: "AI Match", tone: "match" },
   { label: "Activity", tone: "activity" },
-  { label: "Resources", tone: "resources" },
-] as const;
-
-const SPACE_LINKS = [
-  { label: "My rooms", tone: "live" },
-  { label: "Saved", tone: "saved" },
-  { label: "Following", tone: "profile" },
 ] as const;
 
 const MOBILE_LINKS = [
@@ -49,18 +48,8 @@ export function FloatingDock() {
               onClick={() => setActiveItem(label)}
             >
               <span className={`nav-glyph nav-${tone}`} aria-hidden="true" />
-              {label}
-            </button>
-          ))}
-        </nav>
-
-        <div className="sidebar-divider" />
-        <p className="sidebar-group-label">Your spaces</p>
-        <nav className="sidebar-nav sidebar-spaces" aria-label="Your spaces">
-          {SPACE_LINKS.map(({ label, tone }) => (
-            <button key={label} type="button" className={`sidebar-link sidebar-${tone}`}>
-              <span className={`nav-glyph nav-${tone}`} aria-hidden="true" />
-              {label}
+              <span className="sidebar-label">{label}</span>
+              <span className="sidebar-live-pulse" aria-hidden="true" />
             </button>
           ))}
         </nav>
@@ -70,7 +59,7 @@ export function FloatingDock() {
             <span className="creator-avatar">LM<span /></span>
             <span>
               <strong>Luca Moretti</strong>
-              <small>Creator</small>
+              <small>Creator / Visionary</small>
             </span>
             <span className="creator-chevron" aria-hidden="true" />
           </button>

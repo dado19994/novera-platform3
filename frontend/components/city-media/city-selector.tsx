@@ -2,6 +2,7 @@
 
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useCallback, useEffect, useId, useRef, useState, type CSSProperties } from "react";
+import { createPortal } from "react-dom";
 import { CITY_MEDIA, CITY_ORDER, type CityId } from "@/lib/city-media";
 import { MOCK_ECOSYSTEM } from "@/lib/mock-data";
 import { useCityMedia } from "@/components/city-media/city-media-provider";
@@ -14,15 +15,18 @@ export function CitySelector() {
   const reducedMotion = useReducedMotion();
   const panelId = useId();
   const rootRef = useRef<HTMLDivElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);
   const [expanded, setExpanded] = useState(false);
   const [query, setQuery] = useState("");
+  const [panelStyle, setPanelStyle] = useState<CSSProperties>({});
   const normalizedQuery = query.trim().toLowerCase();
   const availableCities = normalizedQuery
     ? CITY_ORDER.filter((id) => CITY_MEDIA[id].city.toLowerCase().includes(normalizedQuery))
     : MORE_CITIES;
   const isMoreSelected = MORE_CITIES.includes(city);
+  const portalTarget = typeof document === "undefined" ? null : document.body;
 
   const closePanel = useCallback((restoreFocus = true) => {
     setExpanded(false);
@@ -33,15 +37,36 @@ export function CitySelector() {
     }
   }, []);
 
+  const updatePanelGeometry = useCallback(() => {
+    const trigger = triggerRef.current;
+
+    if (!trigger || typeof window === "undefined") {
+      return;
+    }
+
+    const rect = trigger.getBoundingClientRect();
+    const panelWidth = Math.min(544, window.innerWidth - 32);
+    const left = Math.max(16, Math.min(rect.left, window.innerWidth - panelWidth - 16));
+
+    setPanelStyle({
+      "--city-panel-left": `${left}px`,
+      "--city-panel-top": `${rect.bottom + 12}px`,
+      "--city-panel-width": `${panelWidth}px`,
+    } as CSSProperties);
+  }, []);
+
   useEffect(() => {
     if (!expanded) {
       return;
     }
 
+    updatePanelGeometry();
     searchRef.current?.focus();
 
     function closeOnOutsidePress(event: PointerEvent) {
-      if (!rootRef.current?.contains(event.target as Node)) {
+      const target = event.target as Node;
+
+      if (!rootRef.current?.contains(target) && !panelRef.current?.contains(target)) {
         closePanel();
       }
     }
@@ -54,12 +79,16 @@ export function CitySelector() {
 
     document.addEventListener("pointerdown", closeOnOutsidePress);
     document.addEventListener("keydown", closeOnEscape);
+    window.addEventListener("resize", updatePanelGeometry);
+    window.addEventListener("scroll", updatePanelGeometry, true);
 
     return () => {
       document.removeEventListener("pointerdown", closeOnOutsidePress);
       document.removeEventListener("keydown", closeOnEscape);
+      window.removeEventListener("resize", updatePanelGeometry);
+      window.removeEventListener("scroll", updatePanelGeometry, true);
     };
-  }, [expanded, closePanel]);
+  }, [expanded, closePanel, updatePanelGeometry]);
 
   function selectCity(nextCity: CityId) {
     setCity(nextCity);
@@ -113,6 +142,7 @@ export function CitySelector() {
             if (expanded) {
               closePanel(false);
             } else {
+              updatePanelGeometry();
               setExpanded(true);
             }
           }}
@@ -125,87 +155,92 @@ export function CitySelector() {
         </button>
       </div>
 
-      <AnimatePresence>
-        {expanded && (
-          <>
-            <motion.button
-              type="button"
-              aria-label="Close city selector"
-              className="city-sheet-backdrop"
-              onClick={() => closePanel()}
-              initial={reducedMotion ? false : { opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={reducedMotion ? undefined : { opacity: 0 }}
-            />
-            <motion.div
-              id={panelId}
-              role="dialog"
-              aria-label="Choose a city"
-              className="city-more-panel absolute right-0 top-[calc(100%+0.8rem)] z-20 w-[min(34rem,calc(100vw-2.5rem))] rounded-[1.55rem] p-3"
-              initial={reducedMotion ? false : { opacity: 0, y: -6, scale: 0.985 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={reducedMotion ? undefined : { opacity: 0, y: -5, scale: 0.985 }}
-              transition={{ duration: reducedMotion ? 0 : 0.2, ease: "easeOut" }}
-            >
-              <span className="city-sheet-handle" aria-hidden="true" />
-              <label className="city-search mb-3 flex items-center gap-2 rounded-full px-3 py-2.5">
-                <span className="text-xs text-(--muted-ivory)" aria-hidden="true">/</span>
-                <span className="sr-only">Search cities</span>
-                <input
-                  ref={searchRef}
-                  type="search"
-                  placeholder="Search all cities"
-                  value={query}
-                  onChange={(event) => setQuery(event.target.value)}
-                  className="min-w-0 flex-1 bg-transparent text-xs text-(--soft-ivory) placeholder:text-(--muted-ivory) outline-none"
-                />
-              </label>
-              <div className="city-results grid max-h-[27rem] grid-cols-1 gap-1.5 overflow-y-auto sm:grid-cols-2">
-                {availableCities.map((cityId) => {
-                  const selected = cityId === city;
-                  const preview = CITY_MEDIA[cityId];
-                  const pulse = MOCK_ECOSYSTEM[cityId].livePulse[0];
+      {portalTarget && createPortal(
+        <AnimatePresence>
+          {expanded && (
+            <>
+              <motion.button
+                type="button"
+                aria-label="Close city selector"
+                className="city-sheet-backdrop"
+                onClick={() => closePanel()}
+                initial={reducedMotion ? false : { opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={reducedMotion ? undefined : { opacity: 0 }}
+              />
+              <motion.div
+                ref={panelRef}
+                id={panelId}
+                role="dialog"
+                aria-label="Choose a city"
+                className="city-more-panel rounded-[1.55rem] p-3"
+                style={panelStyle}
+                initial={reducedMotion ? false : { opacity: 0, y: -6, scale: 0.985 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={reducedMotion ? undefined : { opacity: 0, y: -5, scale: 0.985 }}
+                transition={{ duration: reducedMotion ? 0 : 0.2, ease: "easeOut" }}
+              >
+                <span className="city-sheet-handle" aria-hidden="true" />
+                <label className="city-search mb-3 flex items-center gap-2 rounded-full px-3 py-2.5">
+                  <span className="text-xs text-(--muted-ivory)" aria-hidden="true">/</span>
+                  <span className="sr-only">Search cities</span>
+                  <input
+                    ref={searchRef}
+                    type="search"
+                    placeholder="Search all cities"
+                    value={query}
+                    onChange={(event) => setQuery(event.target.value)}
+                    className="min-w-0 flex-1 bg-transparent text-xs text-(--soft-ivory) placeholder:text-(--muted-ivory) outline-none"
+                  />
+                </label>
+                <div className="city-results grid max-h-[27rem] grid-cols-1 gap-1.5 overflow-y-auto sm:grid-cols-2">
+                  {availableCities.map((cityId) => {
+                    const selected = cityId === city;
+                    const preview = CITY_MEDIA[cityId];
+                    const pulse = MOCK_ECOSYSTEM[cityId].livePulse[0];
 
-                  return (
-                    <button
-                      key={cityId}
-                      type="button"
-                      onClick={() => selectCity(cityId)}
-                      className={`city-result group relative min-h-[5.8rem] overflow-hidden rounded-[1.05rem] p-3 text-left ${selected ? "is-selected" : ""}`}
-                      style={cityPreviewStyle(cityId)}
-                    >
-                      <span className="city-result-glow absolute inset-y-0 left-0 w-px" />
-                      <span className="relative flex h-full flex-col justify-between gap-3">
-                        <span className="flex items-start justify-between gap-2">
-                          <span>
-                            <span className="block truncate text-sm font-medium text-(--soft-ivory)">{preview.city}</span>
-                            <span className="mt-0.5 block truncate text-[0.62rem] uppercase tracking-[0.15em] text-(--muted-ivory)">
-                              {preview.country}
+                    return (
+                      <button
+                        key={cityId}
+                        type="button"
+                        onClick={() => selectCity(cityId)}
+                        className={`city-result group relative min-h-[5.8rem] overflow-hidden rounded-[1.05rem] p-3 text-left ${selected ? "is-selected" : ""}`}
+                        style={cityPreviewStyle(cityId)}
+                      >
+                        <span className="city-result-glow absolute inset-y-0 left-0 w-px" />
+                        <span className="relative flex h-full flex-col justify-between gap-3">
+                          <span className="flex items-start justify-between gap-2">
+                            <span>
+                              <span className="block truncate text-sm font-medium text-(--soft-ivory)">{preview.city}</span>
+                              <span className="mt-0.5 block truncate text-[0.62rem] uppercase tracking-[0.15em] text-(--muted-ivory)">
+                                {preview.country}
+                              </span>
+                            </span>
+                            <span className="city-result-live flex shrink-0 items-center gap-1.5 text-[0.56rem] uppercase tracking-[0.16em]">
+                              <span className="h-1.5 w-1.5 rounded-full" />
+                              Live
                             </span>
                           </span>
-                          <span className="city-result-live flex shrink-0 items-center gap-1.5 text-[0.56rem] uppercase tracking-[0.16em]">
-                            <span className="h-1.5 w-1.5 rounded-full" />
-                            Live
+                          <span className="flex items-end justify-between gap-3">
+                            <span className="truncate text-[0.62rem] text-(--muted-ivory)">{preview.character}</span>
+                            <span className="shrink-0 font-[family-name:var(--font-mono)] text-[0.62rem] text-(--soft-ivory)">
+                              {pulse.value} active
+                            </span>
                           </span>
                         </span>
-                        <span className="flex items-end justify-between gap-3">
-                          <span className="truncate text-[0.62rem] text-(--muted-ivory)">{preview.character}</span>
-                          <span className="shrink-0 font-[family-name:var(--font-mono)] text-[0.62rem] text-(--soft-ivory)">
-                            {pulse.value} active
-                          </span>
-                        </span>
-                      </span>
-                    </button>
-                  );
-                })}
-                {availableCities.length === 0 && (
-                  <p className="col-span-full py-5 text-center text-xs text-(--muted-ivory)">No cities found</p>
-                )}
-              </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
+                      </button>
+                    );
+                  })}
+                  {availableCities.length === 0 && (
+                    <p className="col-span-full py-5 text-center text-xs text-(--muted-ivory)">No cities found</p>
+                  )}
+                </div>
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>,
+        portalTarget,
+      )}
     </div>
   );
 }

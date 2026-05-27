@@ -11,9 +11,9 @@
   --color-teal: #00D4B4;
   --color-ice: #F2F0FA;
   --color-muted: #8A88A8;
-  --font-sans: "Instrument Sans", "Segoe UI", Arial, sans-serif;
-  --font-display: "Bebas Neue", "Impact", "Arial Black", sans-serif;
-  --font-mono: "Space Mono", "JetBrains Mono", monospace;
+  --font-sans: "Inter", "Segoe UI", Arial, sans-serif;
+  --font-display: "Clash Display", "Inter", "Arial Black", sans-serif;
+  --font-mono: "Space Grotesk", "Inter", sans-serif;
 }
 
 :root {
@@ -36,9 +36,20 @@
    * Energy roles keep illumination intentional: hero objects lead, editorial
    * actions support, and utility surfaces retain only an ambient response.
    */
-  --energy-primary: 30%;
-  --energy-secondary: 15%;
-  --energy-ambient: 7%;
+  --energy-primary: 25%;
+  --energy-secondary: 12%;
+  --energy-ambient: 4%;
+  --motion-ease-cinematic: cubic-bezier(0.18, 0.72, 0.2, 1);
+  --motion-ease-ui: cubic-bezier(0.22, 0.8, 0.28, 1);
+  --motion-fast: 180ms;
+  --motion-medium: 320ms;
+  --motion-slow: 720ms;
+  --surface-primary: rgba(9, 10, 16, 0.86);
+  --surface-secondary: rgba(7, 8, 13, 0.72);
+  --surface-ambient: rgba(5, 6, 10, 0.48);
+  --surface-edge: rgba(242, 240, 250, 0.075);
+  --glow-primary: color-mix(in srgb, var(--scene-primary, #FF3D7F) 24%, transparent);
+  --glow-secondary: color-mix(in srgb, var(--scene-secondary, #00D4B4) 12%, transparent);
   /* alias backward-compat */
   --amber-glow: #F59B3D;
   --coral-emotion: #FF3D7F;
@@ -61,10 +72,22 @@ body {
   color: var(--ice);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
 }
 
 button {
   font: inherit;
+}
+
+button,
+.depth-card,
+.quick-access-card,
+.activity-item,
+.sidebar-link,
+.creator-card,
+.movement-card,
+.practice-signal {
+  transition-timing-function: var(--motion-ease-ui);
 }
 
 :where(button, input):focus-visible {
@@ -89,12 +112,12 @@ a {
   --scene-secondary: #C8F000;
   min-height: 100vh;
   background:
-    radial-gradient(circle at 51% 16%, color-mix(in srgb, var(--scene-primary) 11%, transparent), transparent 34rem),
-    radial-gradient(circle at 77% 34%, color-mix(in srgb, var(--scene-secondary) 8%, transparent), transparent 31rem),
-    linear-gradient(150deg, var(--scene-from), var(--scene-middle) 42%, var(--scene-to));
+    radial-gradient(circle at 51% 16%, color-mix(in srgb, var(--scene-primary) 6%, transparent), transparent 32rem),
+    radial-gradient(circle at 77% 34%, color-mix(in srgb, var(--scene-secondary) 4%, transparent), transparent 28rem),
+    linear-gradient(150deg, #07070b, color-mix(in srgb, var(--scene-middle) 62%, #08080c) 42%, #050609);
   background-size: 118% 118%, 114% 114%, 100% 100%;
   transition: background 700ms ease;
-  animation: sceneGradientDrift 30s ease-in-out infinite alternate;
+  animation: sceneGradientDrift 42s ease-in-out infinite alternate;
 }
 
 .city-media-root::after {
@@ -103,10 +126,10 @@ a {
   inset: 0;
   pointer-events: none;
   background:
-    radial-gradient(circle at 50% 31%, color-mix(in srgb, var(--scene-primary) 5%, transparent), transparent 30%),
-    linear-gradient(to bottom, rgba(6, 5, 12, 0.16), rgba(6, 5, 12, 0.48) 80%);
+    radial-gradient(circle at 50% 31%, color-mix(in srgb, var(--scene-primary) 2.5%, transparent), transparent 29%),
+    linear-gradient(to bottom, rgba(5, 5, 8, 0.29), rgba(4, 4, 7, 0.64) 80%);
   transition: background 800ms ease;
-  animation: atmosphericPulse 15s ease-in-out infinite;
+  animation: atmosphericPulse 22s ease-in-out infinite;
 }
 
 .city-media-visual {
@@ -115,7 +138,7 @@ a {
   height: 106%;
   width: 106%;
   object-fit: cover;
-  opacity: 0.76;
+  opacity: 0.68;
   transition: opacity 600ms ease;
   will-change: opacity, transform;
 }
@@ -133,8 +156,8 @@ a {
 }
 
 .city-media-soft-blur {
-  background: linear-gradient(to bottom, rgba(8, 7, 14, 0.24), rgba(8, 7, 14, 0.42) 38%, rgba(8, 7, 14, 0.84));
-  backdrop-filter: blur(0.3px);
+  background: linear-gradient(to bottom, rgba(6, 6, 9, 0.29), rgba(6, 6, 9, 0.5) 38%, rgba(5, 5, 8, 0.9));
+  backdrop-filter: none;
 }
 
 .city-media-grade {
@@ -144,17 +167,16 @@ a {
 
 .city-media-glow {
   z-index: 2;
-  opacity: 0.34;
-  animation: glowOscillation 13s ease-in-out infinite;
+  opacity: 0.2;
 }
 
 .city-media-volume {
   z-index: 2;
   background:
-    linear-gradient(116deg, transparent 9%, color-mix(in srgb, var(--scene-primary) 7%, transparent) 24%, transparent 46%),
-    conic-gradient(from 217deg at 51% 8%, transparent 0deg, rgba(242, 240, 250, 0.06) 11deg, transparent 27deg);
-  filter: blur(13px);
-  opacity: 0.38;
+    linear-gradient(116deg, transparent 9%, color-mix(in srgb, var(--scene-primary) 3%, transparent) 24%, transparent 46%),
+    conic-gradient(from 217deg at 51% 8%, transparent 0deg, rgba(242, 240, 250, 0.035) 11deg, transparent 27deg);
+  filter: blur(10px);
+  opacity: 0.2;
   transform-origin: 50% 8%;
   animation: volumeSweep 18s ease-in-out infinite alternate;
 }
@@ -178,15 +200,15 @@ a {
 .city-media-interface-veil {
   z-index: 5;
   background:
-    radial-gradient(circle at 34% 26%, color-mix(in srgb, var(--scene-primary) 5%, transparent), transparent 33%),
-    radial-gradient(ellipse at 44% 41%, rgba(8, 7, 14, 0.34), transparent 47%),
-    linear-gradient(90deg, rgba(8, 7, 14, 0.33), transparent 37%, rgba(8, 7, 14, 0.28));
+    radial-gradient(circle at 34% 26%, color-mix(in srgb, var(--scene-primary) 2%, transparent), transparent 30%),
+    radial-gradient(ellipse at 44% 41%, rgba(7, 7, 10, 0.43), transparent 45%),
+    linear-gradient(90deg, rgba(6, 6, 9, 0.45), transparent 37%, rgba(6, 6, 9, 0.39));
   animation: veilFloat 21s ease-in-out infinite alternate;
 }
 
 .city-media-grain {
   z-index: 6;
-  opacity: 0.13;
+  opacity: 0.075;
   background-image:
     radial-gradient(rgba(242, 240, 250, 0.38) 0.58px, transparent 0.62px),
     radial-gradient(rgba(4, 3, 10, 0.52) 0.58px, transparent 0.62px);
@@ -198,7 +220,7 @@ a {
 
 .city-particle-overlay {
   z-index: 7;
-  opacity: 0.28;
+  opacity: 0.13;
   mask-image: linear-gradient(to bottom, #000, #000 58%, transparent 92%);
   animation: particleAtmosphere 16s ease-in-out infinite alternate;
 }
@@ -229,13 +251,15 @@ a {
 
 .glass-panel {
   border: 1px solid rgba(242, 232, 210, 0.1);
-  background: linear-gradient(132deg, rgba(17, 15, 22, 0.93), rgba(7, 7, 11, 0.95));
+  background:
+    linear-gradient(135deg, rgba(242, 232, 210, 0.025), transparent 26%),
+    linear-gradient(132deg, rgba(13, 13, 16, 0.98), rgba(5, 5, 8, 0.995));
   box-shadow:
-    inset 0 1px 0 rgba(242, 232, 210, 0.1),
+    inset 0 1px 0 rgba(242, 232, 210, 0.075),
     inset 0 -1px 0 rgba(0, 0, 0, 0.48),
-    0 8px 17px rgba(3, 3, 7, 0.34),
-    0 30px 58px rgba(3, 3, 7, 0.44);
-  backdrop-filter: blur(7px) saturate(0.9);
+    0 7px 16px rgba(3, 3, 7, 0.38),
+    0 27px 54px rgba(3, 3, 7, 0.47);
+  backdrop-filter: none;
 }
 
 .scene-header {
@@ -295,9 +319,16 @@ a {
 }
 
 .city-more-panel {
+  position: fixed !important;
   overflow: hidden;
-  width: min(34rem, calc(100vw - 2rem));
-  max-height: min(68vh, 35rem);
+  top: var(--city-panel-top, 5rem) !important;
+  right: auto !important;
+  bottom: auto !important;
+  left: var(--city-panel-left, 1rem) !important;
+  z-index: 51;
+  width: var(--city-panel-width, min(34rem, calc(100vw - 2rem))) !important;
+  max-width: calc(100vw - 2rem);
+  max-height: min(68vh, calc(100vh - var(--city-panel-top, 5rem) - 1rem), 35rem);
   border: 1px solid color-mix(in srgb, var(--scene-primary) 22%, rgba(242, 240, 250, 0.11));
   background: linear-gradient(145deg, rgba(19, 16, 32, 0.98), rgba(8, 7, 14, 0.98));
   box-shadow:
@@ -305,6 +336,13 @@ a {
     0 0 42px color-mix(in srgb, var(--scene-primary) 9%, transparent),
     inset 0 1px 0 rgba(242, 240, 250, 0.07);
   backdrop-filter: blur(28px) saturate(0.9);
+}
+
+.city-more-panel .city-results {
+  max-height: min(27rem, calc(100vh - var(--city-panel-top, 5rem) - 6.5rem));
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--scene-primary) 35%, transparent) transparent;
 }
 
 .city-more-panel::before {
@@ -342,16 +380,16 @@ a {
   box-shadow:
     inset 0 1px 0 rgba(242, 240, 250, 0.07),
     0 12px 28px rgba(2, 2, 5, 0.38);
-  backdrop-filter: blur(8px);
+  backdrop-filter: none;
   transition: border-color 300ms ease, box-shadow 400ms ease, background 300ms ease;
 }
 
 .city-selector-wrap.is-expanded .city-selector {
-  border-color: color-mix(in srgb, var(--scene-primary) 27%, rgba(242, 240, 250, 0.1));
-  background: color-mix(in srgb, var(--scene-primary) 6%, rgba(8, 7, 12, 0.93));
+  border-color: rgba(242, 232, 210, 0.22);
+  background: rgba(7, 8, 12, 0.94);
   box-shadow:
     inset 0 1px 0 rgba(242, 240, 250, 0.045),
-    0 0 34px color-mix(in srgb, var(--scene-primary) 13%, transparent);
+    0 14px 28px rgba(2, 2, 5, 0.38);
 }
 
 .floating-dock {
@@ -367,9 +405,11 @@ a {
 }
 
 .city-pill[aria-pressed="true"] > span:first-child {
-  border: 1px solid color-mix(in srgb, var(--scene-primary) 35%, rgba(242, 240, 250, 0.08));
-  background: color-mix(in srgb, var(--scene-primary) 16%, rgba(242, 240, 250, 0.035));
-  box-shadow: 0 0 20px color-mix(in srgb, var(--scene-primary) 16%, transparent);
+  border: 1px solid color-mix(in srgb, var(--rose) 34%, rgba(242, 240, 250, 0.08));
+  background:
+    linear-gradient(180deg, rgba(242, 232, 210, 0.055), transparent 62%),
+    color-mix(in srgb, var(--rose) 10%, rgba(242, 240, 250, 0.035));
+  box-shadow: inset 0 1px 0 rgba(242, 232, 210, 0.08), 0 0 14px rgba(255, 61, 127, 0.1);
 }
 
 .city-more-trigger {
@@ -380,8 +420,8 @@ a {
 
 .city-more-trigger:is(:hover, .is-selected),
 .city-more-trigger[aria-expanded="true"] {
-  border-color: color-mix(in srgb, var(--scene-primary) 35%, rgba(242, 240, 250, 0.08));
-  background: color-mix(in srgb, var(--scene-primary) 10%, transparent);
+  border-color: rgba(242, 232, 210, 0.22);
+  background: rgba(242, 232, 210, 0.055);
   color: var(--soft-ivory);
 }
 
@@ -495,16 +535,30 @@ a {
   z-index: -1;
   pointer-events: none;
   background:
-    radial-gradient(ellipse at 35% 26%, color-mix(in srgb, var(--scene-primary) 7%, transparent), transparent 43%),
-    radial-gradient(ellipse at 87% 34%, color-mix(in srgb, var(--teal) 4%, transparent), transparent 28%),
-    radial-gradient(ellipse at 42% 82%, color-mix(in srgb, var(--collective) 4%, transparent), transparent 39%);
-  filter: blur(22px);
-  opacity: 0.85;
+    radial-gradient(ellipse at 35% 26%, color-mix(in srgb, var(--scene-primary) 3%, transparent), transparent 43%),
+    radial-gradient(ellipse at 87% 34%, color-mix(in srgb, var(--teal) 2%, transparent), transparent 28%),
+    radial-gradient(ellipse at 42% 82%, color-mix(in srgb, var(--collective) 2%, transparent), transparent 39%);
+  filter: blur(18px);
+  opacity: 0.48;
 }
 
 .experience-flow {
   position: relative;
   filter: drop-shadow(0 34px 64px rgba(4, 3, 10, 0.16));
+}
+
+.experience-flow::before {
+  content: "";
+  position: absolute;
+  inset: 18rem -1.2rem 4rem;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    linear-gradient(to bottom, transparent, color-mix(in srgb, var(--scene-primary) 3.5%, transparent) 10%, transparent 24%, color-mix(in srgb, var(--scene-secondary) 2.4%, transparent) 48%, transparent 76%),
+    repeating-linear-gradient(112deg, transparent 0 3.8rem, rgba(242, 240, 250, 0.016) 3.86rem 3.91rem, transparent 3.98rem 8.8rem);
+  mask-image: linear-gradient(to bottom, transparent, #000 7%, #000 92%, transparent);
+  opacity: 0.9;
+  animation: ecosystemContinuity 46s ease-in-out infinite alternate;
 }
 
 .scene-intro {
@@ -533,12 +587,12 @@ a {
 
 .cinematic-card {
   background:
-    radial-gradient(circle at 12% 10%, color-mix(in srgb, var(--scene-primary) 15%, transparent), transparent 45%),
-    linear-gradient(145deg, rgba(22, 18, 38, 0.82), rgba(10, 8, 18, 0.70));
+    linear-gradient(135deg, rgba(242, 232, 210, 0.028), transparent 30%),
+    linear-gradient(145deg, rgba(14, 14, 17, 0.98), rgba(5, 5, 8, 0.995));
 }
 
 .card-breathe {
-  animation: cardBreathe 6.2s ease-in-out infinite;
+  animation: cardBreathe 9s ease-in-out infinite;
 }
 
 .brand-orbit {
@@ -564,7 +618,7 @@ a {
   background:
     linear-gradient(180deg, rgba(8, 8, 13, 0.94), rgba(6, 6, 10, 0.99));
   padding: 0.36rem 0.55rem calc(0.4rem + env(safe-area-inset-bottom));
-  backdrop-filter: blur(22px);
+  backdrop-filter: blur(9px);
   box-shadow: 0 -18px 40px rgba(2, 2, 6, 0.32);
 }
 
@@ -661,19 +715,18 @@ a {
 }
 
 .map-panel {
-  border: 1px solid rgba(242, 232, 210, 0.145);
+  border: 1px solid rgba(242, 232, 210, 0.13);
   background:
-    radial-gradient(circle at 40% 31%, color-mix(in srgb, var(--scene-primary) 14%, transparent), transparent 43%),
-    radial-gradient(ellipse at 74% 84%, color-mix(in srgb, var(--scene-secondary) 5%, transparent), transparent 29%),
-    linear-gradient(132deg, rgba(14, 13, 21, 0.975), rgba(4, 5, 9, 0.99));
+    radial-gradient(circle at 40% 31%, color-mix(in srgb, var(--scene-primary) 8%, transparent), transparent 42%),
+    radial-gradient(ellipse at 74% 84%, color-mix(in srgb, var(--scene-secondary) 3%, transparent), transparent 27%),
+    linear-gradient(132deg, rgba(11, 11, 16, 0.99), rgba(3, 4, 7, 0.998));
   box-shadow:
-    inset 0 1px 0 rgba(242, 232, 210, 0.19),
+    inset 0 1px 0 rgba(242, 232, 210, 0.14),
     inset 0 -1px 0 rgba(0, 0, 0, 0.72),
-    inset 0 0 58px color-mix(in srgb, var(--scene-primary) var(--energy-ambient), transparent),
+    inset 0 0 46px color-mix(in srgb, var(--scene-primary) var(--energy-ambient), transparent),
     0 12px 26px rgba(2, 2, 5, 0.52),
-    0 48px 90px rgba(2, 2, 6, 0.66),
-    0 0 38px color-mix(in srgb, var(--scene-primary) var(--energy-ambient), transparent);
-  backdrop-filter: blur(4px) saturate(0.92);
+    0 42px 82px rgba(2, 2, 6, 0.63);
+  backdrop-filter: none;
   isolation: isolate;
 }
 
@@ -688,10 +741,10 @@ a {
   z-index: 0;
   pointer-events: none;
   background:
-    conic-gradient(from 218deg at 50% 10%, transparent, color-mix(in srgb, var(--scene-primary) 11%, transparent), transparent 28%),
-    radial-gradient(ellipse at 45% 35%, color-mix(in srgb, var(--scene-primary) 16%, transparent), transparent 55%);
+    conic-gradient(from 218deg at 50% 10%, transparent, color-mix(in srgb, var(--scene-primary) 7%, transparent), transparent 28%),
+    radial-gradient(ellipse at 45% 35%, color-mix(in srgb, var(--scene-primary) 10%, transparent), transparent 53%);
   border-radius: inherit;
-  filter: blur(11px);
+  filter: blur(8px);
   animation: mapLightSweep 19s ease-in-out infinite alternate;
 }
 
@@ -703,9 +756,9 @@ a {
   z-index: 0;
   pointer-events: none;
   background:
-    radial-gradient(ellipse, color-mix(in srgb, var(--scene-primary) 13%, transparent), transparent 65%),
-    radial-gradient(ellipse at 72% 52%, color-mix(in srgb, var(--scene-secondary) 5%, transparent), transparent 45%);
-  filter: blur(15px);
+    radial-gradient(ellipse, color-mix(in srgb, var(--scene-primary) 7%, transparent), transparent 65%),
+    radial-gradient(ellipse at 72% 52%, color-mix(in srgb, var(--scene-secondary) 3%, transparent), transparent 45%);
+  filter: blur(10px);
 }
 
 .map-overflow-atmosphere {
@@ -715,10 +768,10 @@ a {
   pointer-events: none;
   border-radius: 2rem;
   background:
-    radial-gradient(ellipse at 18% 88%, color-mix(in srgb, var(--scene-primary) 14%, transparent), transparent 28%),
-    radial-gradient(ellipse at 73% 93%, color-mix(in srgb, var(--scene-secondary) 7%, transparent), transparent 24%);
-  filter: blur(7px);
-  opacity: 0.48;
+    radial-gradient(ellipse at 18% 88%, color-mix(in srgb, var(--scene-primary) 7%, transparent), transparent 28%),
+    radial-gradient(ellipse at 73% 93%, color-mix(in srgb, var(--scene-secondary) 4%, transparent), transparent 24%);
+  filter: blur(6px);
+  opacity: 0.32;
 }
 
 .map-overflow-route {
@@ -753,9 +806,9 @@ a {
   isolation: isolate;
   border: 1px solid rgba(242, 232, 210, 0.1);
   background:
-    radial-gradient(circle at 34% 14%, color-mix(in srgb, var(--scene-primary) 8%, transparent), transparent 26%),
-    radial-gradient(circle at 46% 45%, color-mix(in srgb, var(--scene-primary) 9%, transparent), transparent 48%),
-    linear-gradient(164deg, rgba(15, 13, 24, 0.42), rgba(3, 4, 8, 0.94));
+    radial-gradient(circle at 34% 14%, color-mix(in srgb, var(--scene-primary) 5%, transparent), transparent 26%),
+    radial-gradient(circle at 46% 45%, color-mix(in srgb, var(--scene-primary) 5%, transparent), transparent 48%),
+    linear-gradient(164deg, rgba(11, 11, 16, 0.46), rgba(2, 3, 6, 0.96));
   box-shadow:
     inset 0 2px 8px rgba(0, 0, 0, 0.68),
     inset 0 1px 0 rgba(242, 232, 210, 0.11),
@@ -767,17 +820,17 @@ a {
 .map-city-layer {
   background-repeat: no-repeat;
   background-size: cover;
-  filter: saturate(0.91) contrast(1.18) brightness(0.53);
-  opacity: 0.5;
+  filter: saturate(0.82) contrast(1.2) brightness(0.5);
+  opacity: 0.54;
   transform: scale(1.06);
   animation: mapParallax 22s ease-in-out infinite alternate;
 }
 
 .map-volume {
   background:
-    conic-gradient(from 205deg at 40% -12%, transparent 0deg, color-mix(in srgb, var(--scene-secondary) 12%, transparent) 13deg, transparent 31deg),
-    radial-gradient(ellipse at 50% 34%, color-mix(in srgb, var(--scene-primary) 18%, transparent), transparent 53%);
-  filter: blur(13px);
+    conic-gradient(from 205deg at 40% -12%, transparent 0deg, color-mix(in srgb, var(--scene-secondary) 8%, transparent) 13deg, transparent 31deg),
+    radial-gradient(ellipse at 50% 34%, color-mix(in srgb, var(--scene-primary) 11%, transparent), transparent 53%);
+  filter: blur(9px);
   mix-blend-mode: screen;
   animation: mapVolumeDrift 17s ease-in-out infinite alternate;
 }
@@ -803,7 +856,7 @@ a {
     repeating-radial-gradient(ellipse at 73% 39%, transparent 0 1.6rem, color-mix(in srgb, var(--scene-primary) 9%, transparent) 1.65rem 1.7rem, transparent 1.75rem 2.9rem),
     linear-gradient(28deg, transparent 20%, rgba(242, 232, 210, 0.022) 20.5%, transparent 21%, transparent 51%, rgba(242, 232, 210, 0.025) 51.5%, transparent 52%);
   mask-image: linear-gradient(to top, rgba(0, 0, 0, 0.94), rgba(0, 0, 0, 0.2) 86%);
-  opacity: 0.82;
+  opacity: 0.64;
   filter: drop-shadow(0 6px 8px rgba(2, 2, 6, 0.3));
   transform: perspective(44rem) rotateX(21deg) translateY(7%);
   transform-origin: 50% 100%;
@@ -812,12 +865,12 @@ a {
 .map-transient-light {
   pointer-events: none;
   background:
-    radial-gradient(circle at 26% 68%, color-mix(in srgb, var(--scene-primary) 18%, transparent), transparent 10%),
-    radial-gradient(circle at 65% 48%, color-mix(in srgb, var(--scene-secondary) 13%, transparent), transparent 11%),
+    radial-gradient(circle at 26% 68%, color-mix(in srgb, var(--scene-primary) 11%, transparent), transparent 10%),
+    radial-gradient(circle at 65% 48%, color-mix(in srgb, var(--scene-secondary) 8%, transparent), transparent 11%),
     linear-gradient(111deg, transparent 25%, rgba(242, 232, 210, 0.038) 40%, transparent 52%);
   filter: blur(9px);
   mix-blend-mode: screen;
-  opacity: 0.65;
+  opacity: 0.42;
   animation: transientMapSweep 13s ease-in-out infinite alternate;
 }
 
@@ -911,13 +964,36 @@ a {
   animation: routeFlow 8s linear infinite;
 }
 
-.ambient-signal {
-  height: 0.29rem;
-  width: 0.29rem;
-  background: var(--acid);
-  box-shadow: 0 0 5px rgba(200, 240, 0, 0.76), 0 0 13px rgba(200, 240, 0, 0.3);
+.map-route-transmission {
   pointer-events: none;
-  animation: ambientSignal 4.8s ease-in-out infinite;
+  stroke-linecap: round;
+  animation: liveRouteTravel 4.4s linear infinite;
+}
+
+.map-route-transmission-primary {
+  stroke: var(--rose);
+  stroke-width: 0.62;
+  stroke-dasharray: 0.55 8.5;
+  filter: drop-shadow(0 0 6px rgba(255, 61, 127, 0.95));
+}
+
+.map-route-transmission-secondary {
+  stroke: var(--teal);
+  stroke-width: 0.46;
+  stroke-dasharray: 0.48 12;
+  stroke-dashoffset: -8;
+  opacity: 0.84;
+  filter: drop-shadow(0 0 6px rgba(0, 212, 180, 0.9));
+  animation-duration: 5.9s;
+}
+
+.ambient-signal {
+  height: 0.33rem;
+  width: 0.33rem;
+  background: var(--acid);
+  box-shadow: 0 0 7px rgba(200, 240, 0, 0.82), 0 0 16px rgba(200, 240, 0, 0.34);
+  pointer-events: none;
+  animation: ambientSignal 3.6s ease-in-out infinite;
   transition: background 260ms ease, box-shadow 260ms ease, transform 260ms ease;
 }
 
@@ -966,6 +1042,13 @@ a {
 .map-hotspot:is(:hover, :focus-visible, .is-active) .signal-node {
   filter: saturate(1.2) brightness(1.3);
   transform: scale(1.12);
+}
+
+.map-hotspot.is-active .signal-node {
+  box-shadow:
+    0 0 0 0.24rem color-mix(in srgb, var(--scene-primary) 13%, transparent),
+    0 0 16px color-mix(in srgb, var(--scene-primary) 76%, transparent),
+    0 0 34px color-mix(in srgb, var(--scene-primary) 38%, transparent);
 }
 
 .map-hotspot.is-major .signal-node {
@@ -1023,9 +1106,9 @@ a {
 
 .map-haze {
   background:
-    radial-gradient(circle at 50% 47%, color-mix(in srgb, var(--scene-primary) 11%, transparent), transparent 48%),
-    radial-gradient(ellipse at 22% 88%, color-mix(in srgb, var(--scene-secondary) 5%, transparent), transparent 29%),
-    linear-gradient(to top, rgba(6, 5, 12, 0.62), transparent 42%);
+    radial-gradient(circle at 50% 47%, color-mix(in srgb, var(--scene-primary) 6%, transparent), transparent 48%),
+    radial-gradient(ellipse at 22% 88%, color-mix(in srgb, var(--scene-secondary) 3%, transparent), transparent 29%),
+    linear-gradient(to top, rgba(5, 5, 8, 0.67), transparent 42%);
 }
 
 .map-foreground-light {
@@ -1041,10 +1124,11 @@ a {
 .map-spatial-fog {
   pointer-events: none;
   background:
-    radial-gradient(ellipse at 18% 64%, color-mix(in srgb, var(--scene-primary) 12%, transparent), transparent 30%),
+    radial-gradient(ellipse at 18% 64%, color-mix(in srgb, var(--scene-primary) 7%, transparent), transparent 30%),
     radial-gradient(ellipse at 77% 29%, rgba(242, 240, 250, 0.042), transparent 35%),
     linear-gradient(103deg, transparent 12%, rgba(242, 240, 250, 0.018) 40%, transparent 67%);
-  filter: blur(12px);
+  filter: blur(8px);
+  opacity: 0.55;
   mix-blend-mode: screen;
   animation: spatialFogDrift 23s ease-in-out infinite alternate;
 }
@@ -1056,8 +1140,8 @@ a {
   background:
     radial-gradient(circle at var(--focus-x) var(--focus-y), color-mix(in srgb, var(--scene-primary) var(--energy-primary), transparent), transparent 12%),
     radial-gradient(circle at var(--focus-x) var(--focus-y), color-mix(in srgb, var(--scene-secondary) 11%, transparent), transparent 25%);
-  filter: blur(7px);
-  opacity: 0.86;
+  filter: blur(5px);
+  opacity: 0.8;
   transition: background 420ms ease, opacity 320ms ease;
   animation: focusBloom 4.6s ease-in-out infinite;
 }
@@ -1086,7 +1170,7 @@ a {
 }
 
 .signal-node {
-  animation: nodeHover 4.2s ease-in-out infinite;
+  animation: nodeHover 3.45s ease-in-out infinite;
   transition: filter 260ms ease, transform 260ms ease, box-shadow 280ms ease;
 }
 
@@ -1289,8 +1373,7 @@ a {
     inset 0 1px 0 rgba(255, 247, 231, 0.24),
     inset 0 -72px 86px rgba(2, 2, 5, 0.64),
     0 11px 23px rgba(2, 2, 5, 0.51),
-    0 42px 78px rgba(2, 2, 5, 0.64),
-    0 0 42px color-mix(in srgb, var(--rose) var(--energy-ambient), transparent);
+    0 42px 78px rgba(2, 2, 5, 0.64);
 }
 
 .featured-moment::before {
@@ -1301,11 +1384,11 @@ a {
   height: 64%;
   pointer-events: none;
   background:
-    radial-gradient(ellipse at 27% 58%, color-mix(in srgb, var(--rose) 27%, transparent), transparent 48%),
-    radial-gradient(ellipse at 67% 54%, color-mix(in srgb, var(--collective) 14%, transparent), transparent 40%),
+    radial-gradient(ellipse at 27% 58%, color-mix(in srgb, var(--rose) 18%, transparent), transparent 48%),
+    radial-gradient(ellipse at 67% 54%, color-mix(in srgb, var(--collective) 8%, transparent), transparent 40%),
     linear-gradient(100deg, transparent, rgba(242, 232, 210, 0.09), transparent 58%);
   filter: blur(10px);
-  opacity: 0.68;
+  opacity: 0.56;
   transition: opacity 450ms ease, transform 650ms ease;
 }
 
@@ -1408,7 +1491,7 @@ a {
     0 4px 9px rgba(2, 2, 5, 0.33),
     0 12px 23px rgba(2, 2, 5, 0.31),
     0 0 15px color-mix(in srgb, var(--cta-accent) var(--energy-ambient), transparent);
-  transition: border-color 280ms ease, background 280ms ease, box-shadow 280ms ease, transform 150ms ease;
+  transition: border-color var(--motion-medium) var(--motion-ease-ui), background var(--motion-medium) var(--motion-ease-ui), box-shadow var(--motion-medium) var(--motion-ease-ui), transform var(--motion-fast) var(--motion-ease-ui);
 }
 
 .portal-cta::before {
@@ -1421,6 +1504,10 @@ a {
   transition: left 440ms ease;
 }
 
+.portal-cta .portal-arrow {
+  will-change: transform;
+}
+
 .portal-cta::after {
   content: "";
   position: absolute;
@@ -1429,7 +1516,7 @@ a {
   pointer-events: none;
   background: radial-gradient(ellipse, color-mix(in srgb, var(--cta-accent) 31%, transparent), transparent 66%);
   filter: blur(8px);
-  opacity: 0.14;
+  opacity: 0.08;
   transition: opacity 300ms ease;
 }
 
@@ -1522,14 +1609,14 @@ a {
 .creative-map-v2 .portal-cta-map {
   border-color: color-mix(in srgb, var(--scene-primary) 68%, rgba(242, 232, 210, 0.12));
   background:
-    radial-gradient(circle at 84% 48%, color-mix(in srgb, var(--scene-primary) 25%, transparent), transparent 30%),
-    linear-gradient(108deg, color-mix(in srgb, var(--scene-primary) 23%, rgba(16, 14, 18, 0.93)), rgba(7, 7, 11, 0.95)),
+    radial-gradient(circle at 84% 48%, color-mix(in srgb, var(--scene-primary) 18%, transparent), transparent 30%),
+    linear-gradient(108deg, color-mix(in srgb, var(--scene-primary) 16%, rgba(16, 14, 18, 0.97)), rgba(7, 7, 11, 0.98)),
     rgba(8, 8, 11, 0.66);
   box-shadow:
     inset 0 1px 0 rgba(242, 232, 210, 0.13),
     inset 0 -1px 3px rgba(0, 0, 0, 0.4),
     0 11px 25px rgba(2, 2, 5, 0.3),
-    0 0 22px color-mix(in srgb, var(--scene-primary) 26%, transparent);
+    0 0 18px color-mix(in srgb, var(--scene-primary) 18%, transparent);
 }
 
 .creative-map-v2 .portal-cta-map::before {
@@ -1571,18 +1658,18 @@ a {
   font-size: 0.73rem;
   border-color: color-mix(in srgb, var(--rose) 68%, rgba(242, 232, 210, 0.16));
   background:
-    radial-gradient(circle at 84% 48%, color-mix(in srgb, var(--rose) 25%, transparent), transparent 31%),
-    linear-gradient(180deg, color-mix(in srgb, var(--rose) 22%, rgba(242, 232, 210, 0.08)), transparent 38%),
-    linear-gradient(105deg, color-mix(in srgb, var(--rose) 21%, rgba(16, 14, 18, 0.98)), rgba(7, 7, 10, 0.98));
+    radial-gradient(circle at 84% 48%, color-mix(in srgb, var(--rose) 19%, transparent), transparent 31%),
+    linear-gradient(180deg, color-mix(in srgb, var(--rose) 16%, rgba(242, 232, 210, 0.08)), transparent 38%),
+    linear-gradient(105deg, color-mix(in srgb, var(--rose) 16%, rgba(16, 14, 18, 0.99)), rgba(7, 7, 10, 0.99));
   box-shadow:
     inset 0 1px 0 rgba(255, 240, 232, 0.23),
-    inset 0 0 18px color-mix(in srgb, var(--rose) 18%, transparent),
+    inset 0 0 18px color-mix(in srgb, var(--rose) 14%, transparent),
     0 10px 24px rgba(2, 2, 5, 0.4),
     0 0 27px color-mix(in srgb, var(--rose) var(--energy-primary), transparent);
 }
 
 .featured-action::after {
-  opacity: 0.48;
+  opacity: 0.34;
 }
 
 .featured-action .portal-arrow {
@@ -1603,9 +1690,8 @@ a {
 
 .activity-panel {
   background:
-    radial-gradient(circle at 12% 0%, color-mix(in srgb, var(--rose) var(--energy-ambient), transparent), transparent 40%),
     linear-gradient(114deg, rgba(242, 232, 210, 0.028), transparent 32%),
-    linear-gradient(132deg, rgba(17, 15, 20, 0.98), rgba(7, 7, 10, 0.99));
+    linear-gradient(132deg, rgba(13, 13, 16, 0.99), rgba(5, 5, 8, 1));
 }
 
 .activity-list {
@@ -1621,7 +1707,6 @@ a {
   border: 1px solid rgba(242, 232, 210, 0.035);
   border-radius: 0.9rem;
   background:
-    radial-gradient(ellipse at 0 50%, color-mix(in srgb, var(--scene-primary) 4%, transparent), transparent 36%),
     linear-gradient(130deg, rgba(242, 232, 210, 0.025), rgba(4, 4, 7, 0.08));
   transition: background 260ms ease, transform 260ms ease;
 }
@@ -1890,10 +1975,10 @@ a {
   height: 2.35rem;
   width: 2.35rem;
   place-items: center;
-  border: 1px solid rgba(245, 155, 61, 0.42);
+  border: 1px solid rgba(245, 155, 61, 0.29);
   border-radius: 50%;
-  background: rgba(245, 155, 61, 0.07);
-  box-shadow: inset 0 1px 0 rgba(255, 245, 228, 0.13), 0 0 24px rgba(245, 155, 61, 0.13);
+  background: rgba(245, 155, 61, 0.045);
+  box-shadow: inset 0 1px 0 rgba(255, 245, 228, 0.08);
 }
 
 .sidebar-brand-mark span {
@@ -1901,7 +1986,7 @@ a {
   width: 0.65rem;
   border: 2px solid var(--collective);
   border-radius: 50%;
-  box-shadow: 0 0 12px rgba(245, 155, 61, 0.72);
+  box-shadow: 0 0 8px rgba(245, 155, 61, 0.5);
 }
 
 .sidebar-wordmark {
@@ -1942,6 +2027,11 @@ a {
   transition: color 220ms ease, background 260ms ease, box-shadow 280ms ease;
 }
 
+.sidebar-label {
+  position: relative;
+  z-index: 1;
+}
+
 .sidebar-link::before {
   content: "";
   position: absolute;
@@ -1955,23 +2045,66 @@ a {
   opacity: 0;
 }
 
+.sidebar-link::after {
+  content: "";
+  position: absolute;
+  inset: 0.25rem 0.35rem;
+  border-radius: 0.72rem;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 20% 50%, color-mix(in srgb, currentColor 12%, transparent), transparent 58%),
+    linear-gradient(90deg, color-mix(in srgb, currentColor 8%, transparent), transparent 72%);
+  opacity: 0;
+  transform: translateX(-0.28rem);
+  transition: opacity var(--motion-medium) var(--motion-ease-ui), transform var(--motion-medium) var(--motion-ease-ui);
+}
+
 .sidebar-link:is(:hover, :focus-visible, .is-active) {
   color: var(--soft-ivory);
   background: rgba(242, 232, 210, 0.035);
 }
 
+.sidebar-link:is(:hover, :focus-visible, .is-active)::after {
+  opacity: 1;
+  transform: translateX(0);
+}
+
 .sidebar-link.is-active {
   background:
-    radial-gradient(circle at 0 50%, rgba(255, 61, 127, 0.18), transparent 48%),
-    rgba(255, 61, 127, 0.065);
+    linear-gradient(90deg, rgba(255, 61, 127, 0.12), rgba(255, 61, 127, 0.035) 64%, transparent),
+    rgba(242, 232, 210, 0.02);
   box-shadow:
     inset 0 1px 0 rgba(242, 232, 210, 0.055),
-    inset 2px 0 17px rgba(255, 61, 127, 0.06);
+    inset 2px 0 12px rgba(255, 61, 127, 0.045);
 }
 
 .sidebar-link.is-active::before {
   opacity: 1;
-  box-shadow: 0 0 9px var(--rose), 0 0 20px rgba(255, 61, 127, 0.3);
+  box-shadow: 0 0 9px rgba(255, 61, 127, 0.64);
+}
+
+.sidebar-live-pulse {
+  position: relative;
+  z-index: 1;
+  margin-left: auto;
+  height: 0.34rem;
+  width: 0.34rem;
+  border-radius: 999px;
+  background: currentColor;
+  opacity: 0;
+  box-shadow: 0 0 10px currentColor;
+  transform: scale(0.62);
+  transition: opacity var(--motion-medium) ease, transform var(--motion-medium) var(--motion-ease-ui);
+}
+
+.sidebar-link:is(:hover, :focus-visible, .is-active) .sidebar-live-pulse {
+  opacity: 0.55;
+  transform: scale(1);
+  animation: sidebarSignal 3.8s ease-in-out infinite;
+}
+
+.sidebar-link.is-active .sidebar-live-pulse {
+  opacity: 0.95;
 }
 
 .nav-glyph,
@@ -2124,6 +2257,8 @@ a {
 }
 
 .creator-card {
+  position: relative;
+  overflow: hidden;
   display: flex;
   width: 100%;
   align-items: center;
@@ -2131,12 +2266,35 @@ a {
   border: 1px solid rgba(242, 232, 210, 0.075);
   border-radius: 1rem;
   background:
-    radial-gradient(circle at 9% 40%, rgba(155, 127, 255, 0.065), transparent 34%),
-    linear-gradient(132deg, rgba(242, 232, 210, 0.04), rgba(242, 232, 210, 0.012));
+    linear-gradient(132deg, rgba(242, 232, 210, 0.045), rgba(242, 232, 210, 0.014)),
+    rgba(6, 6, 9, 0.74);
   padding: 0.7rem;
   color: var(--soft-ivory);
   text-align: left;
   box-shadow: inset 0 1px 0 rgba(242, 232, 210, 0.055);
+  transition: border-color var(--motion-medium) var(--motion-ease-ui), background var(--motion-medium) var(--motion-ease-ui), box-shadow var(--motion-medium) var(--motion-ease-ui), transform var(--motion-fast) var(--motion-ease-ui);
+}
+
+.creator-card::before {
+  content: "";
+  position: absolute;
+  inset: -40% -20% auto;
+  height: 80%;
+  pointer-events: none;
+  background: radial-gradient(ellipse, color-mix(in srgb, var(--scene-primary) 11%, transparent), transparent 68%);
+  opacity: 0.45;
+  transform: translateY(18%);
+}
+
+.creator-card:is(:hover, :focus-visible) {
+  border-color: color-mix(in srgb, var(--scene-primary) 28%, rgba(242, 240, 250, 0.12));
+  background:
+    linear-gradient(132deg, color-mix(in srgb, var(--scene-primary) 7%, rgba(242, 232, 210, 0.025)), rgba(242, 232, 210, 0.01)),
+    rgba(6, 7, 10, 0.82);
+  box-shadow:
+    inset 0 1px 0 rgba(242, 232, 210, 0.07),
+    0 0 20px color-mix(in srgb, var(--scene-primary) 9%, transparent);
+  transform: translateY(-1px);
 }
 
 .creator-avatar {
@@ -2145,9 +2303,9 @@ a {
   height: 2rem;
   width: 2rem;
   place-items: center;
-  border: 1px solid rgba(155, 127, 255, 0.37);
+  border: 1px solid rgba(155, 127, 255, 0.25);
   border-radius: 50%;
-  background: rgba(155, 127, 255, 0.1);
+  background: rgba(155, 127, 255, 0.065);
   color: var(--violet-mist);
   font-size: 0.6rem;
 }
@@ -2247,9 +2405,9 @@ a {
   position: relative;
   isolation: isolate;
   background:
-    radial-gradient(circle at 17% 70%, color-mix(in srgb, var(--teal) 24%, transparent), transparent 37%),
-    linear-gradient(101deg, transparent 18%, color-mix(in srgb, var(--teal) 8%, transparent) 45%, transparent 68%),
-    linear-gradient(132deg, rgba(10, 20, 24, 0.98), rgba(5, 8, 11, 0.99));
+    radial-gradient(circle at 17% 70%, color-mix(in srgb, var(--teal) 16%, transparent), transparent 35%),
+    linear-gradient(101deg, transparent 18%, color-mix(in srgb, var(--teal) 4%, transparent) 45%, transparent 68%),
+    linear-gradient(132deg, rgba(8, 15, 17, 0.99), rgba(4, 7, 9, 1));
 }
 
 .audio-presence::after {
@@ -2261,7 +2419,7 @@ a {
   pointer-events: none;
   background: radial-gradient(ellipse, color-mix(in srgb, var(--teal) var(--energy-primary), transparent), transparent 65%);
   filter: blur(10px);
-  opacity: 0.72;
+  opacity: 0.44;
   animation: audioAtmosphere 5.8s ease-in-out infinite;
 }
 
@@ -2384,8 +2542,7 @@ a {
   overflow: visible;
   border: 1px solid rgba(242, 232, 210, 0.105);
   background:
-    radial-gradient(circle at 18% 5%, color-mix(in srgb, var(--rose) var(--energy-ambient), transparent), transparent 40%),
-    linear-gradient(122deg, rgba(15, 14, 18, 0.97), rgba(6, 6, 10, 0.98));
+    linear-gradient(122deg, rgba(13, 13, 16, 0.99), rgba(5, 5, 8, 1));
 }
 
 .movement-panel > * {
@@ -2403,10 +2560,9 @@ a {
   z-index: 0;
   pointer-events: none;
   background:
-    radial-gradient(ellipse, color-mix(in srgb, var(--scene-primary) 14%, transparent), transparent 70%),
-    linear-gradient(90deg, transparent, color-mix(in srgb, var(--scene-primary) 14%, transparent), transparent);
-  filter: blur(9px);
-  opacity: 0.45;
+    linear-gradient(90deg, transparent, rgba(242, 232, 210, 0.06), transparent);
+  filter: blur(5px);
+  opacity: 0.32;
 }
 
 .movement-panel::before {
@@ -2415,9 +2571,9 @@ a {
   inset: 26% 0.85rem 12%;
   z-index: 0;
   pointer-events: none;
-  background: radial-gradient(ellipse, color-mix(in srgb, var(--scene-primary) 7%, transparent), transparent 67%);
-  filter: blur(14px);
-  opacity: 0.5;
+  background: none;
+  filter: none;
+  opacity: 0;
 }
 
 .movement-gallery {
@@ -2449,12 +2605,11 @@ a {
   flex-direction: column;
   border: 1px solid rgba(242, 232, 210, 0.1);
   background:
-    radial-gradient(circle at 14% 0%, rgba(242, 232, 210, 0.075), transparent 36%),
-    radial-gradient(ellipse at 50% 12%, color-mix(in srgb, var(--card-accent) 5%, transparent), transparent 40%),
-    linear-gradient(150deg, rgba(16, 15, 19, 0.99), rgba(5, 5, 8, 0.99));
+    linear-gradient(145deg, rgba(242, 232, 210, 0.038), transparent 30%),
+    linear-gradient(150deg, rgba(12, 12, 15, 1), rgba(4, 4, 7, 1));
   box-shadow:
     inset 0 1px 0 rgba(242, 232, 210, 0.15),
-    inset 0 1px 16px color-mix(in srgb, var(--card-accent) var(--energy-ambient), transparent),
+    inset 0 1px 12px color-mix(in srgb, var(--card-accent) var(--energy-ambient), transparent),
     inset 0 -1px 0 rgba(0, 0, 0, 0.62),
     0 6px 13px rgba(2, 2, 5, 0.46),
     0 27px 46px rgba(2, 2, 5, 0.51);
@@ -2468,9 +2623,8 @@ a {
   pointer-events: none;
   border-radius: inherit;
   box-shadow:
-    inset 0 1px 0 color-mix(in srgb, var(--card-accent) 44%, rgba(242, 232, 210, 0.12)),
-    inset 1px 0 0 color-mix(in srgb, var(--card-accent) 9%, transparent),
-    inset 0 0 19px color-mix(in srgb, var(--card-accent) 6%, transparent);
+    inset 0 1px 0 color-mix(in srgb, var(--card-accent) 32%, rgba(242, 232, 210, 0.12)),
+    inset 1px 0 0 color-mix(in srgb, var(--card-accent) 6%, transparent);
 }
 
 .movement-cover {
@@ -2651,9 +2805,8 @@ a {
   position: relative;
   background:
     radial-gradient(circle at 8% 30%, rgba(242, 232, 210, 0.04), transparent 37%),
-    radial-gradient(ellipse at 42% -18%, color-mix(in srgb, var(--scene-primary) var(--energy-ambient), transparent), transparent 42%),
     linear-gradient(102deg, rgba(242, 232, 210, 0.022), transparent 31%),
-    linear-gradient(112deg, rgba(15, 14, 18, 0.96), rgba(6, 6, 10, 0.98));
+    linear-gradient(112deg, rgba(12, 12, 15, 0.99), rgba(5, 5, 8, 1));
 }
 
 .practice-strip::before {
@@ -2664,9 +2817,8 @@ a {
   left: 8%;
   height: 2.5rem;
   pointer-events: none;
-  background: radial-gradient(ellipse, color-mix(in srgb, var(--scene-primary) var(--energy-ambient), transparent), transparent 68%);
-  filter: blur(9px);
-  opacity: 0.34;
+  background: none;
+  opacity: 0;
 }
 
 .practice-signal {
@@ -2674,9 +2826,8 @@ a {
   min-height: 7.7rem;
   border-color: color-mix(in srgb, var(--practice-accent) 12%, rgba(242, 232, 210, 0.08));
   background:
-    radial-gradient(circle at 100% 0%, color-mix(in srgb, var(--practice-accent) 5%, transparent), transparent 34%),
     linear-gradient(118deg, rgba(242, 232, 210, 0.025), transparent 34%),
-    linear-gradient(145deg, rgba(17, 16, 20, 0.98), rgba(6, 6, 9, 0.99));
+    linear-gradient(145deg, rgba(11, 11, 14, 1), rgba(4, 4, 7, 1));
   box-shadow:
     inset 0 1px 0 color-mix(in srgb, var(--practice-accent) 10%, rgba(242, 232, 210, 0.08)),
     inset 0 0 16px color-mix(in srgb, var(--practice-accent) 3%, transparent);
@@ -2703,7 +2854,12 @@ a {
 }
 
 .practice-match {
-  color: var(--violet-mist);
+  color: color-mix(in srgb, var(--practice-accent) 58%, var(--ice));
+  font-weight: 600;
+}
+
+.practice-title {
+  letter-spacing: 0.01em;
 }
 
 .practice-footer {
@@ -2726,6 +2882,13 @@ a {
     inset 0 1px 0 color-mix(in srgb, var(--practice-accent) 15%, rgba(242, 232, 210, 0.1)),
     0 0 12px color-mix(in srgb, var(--practice-accent) var(--energy-ambient), transparent);
   transition: border-color 180ms ease, background 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+}
+
+.practice-signal:first-child {
+  border-color: color-mix(in srgb, var(--practice-accent) 22%, rgba(242, 232, 210, 0.08));
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--practice-accent) 17%, rgba(242, 232, 210, 0.08)),
+    inset 0 0 15px color-mix(in srgb, var(--practice-accent) 4%, transparent);
 }
 
 .practice-action:is(:hover, :focus-visible) {
@@ -2772,7 +2935,9 @@ a {
 .glass-panel.editorial-panel {
   border: 1px solid rgba(242, 232, 210, 0.09);
   border-radius: 1.15rem;
-  background: linear-gradient(118deg, rgba(15, 14, 18, 0.97), rgba(6, 6, 10, 0.99));
+  background:
+    linear-gradient(118deg, rgba(242, 232, 210, 0.025), transparent 26%),
+    linear-gradient(118deg, rgba(12, 12, 15, 0.99), rgba(5, 5, 8, 1));
   box-shadow:
     inset 0 1px 0 rgba(242, 232, 210, 0.08),
     inset 0 -1px 0 rgba(0, 0, 0, 0.52),
@@ -2782,35 +2947,35 @@ a {
 }
 
 .glass-panel.activity-panel {
-  border-color: color-mix(in srgb, var(--rose) 9%, rgba(242, 232, 210, 0.1));
+  border-color: rgba(242, 232, 210, 0.085);
   background:
     linear-gradient(122deg, rgba(17, 15, 20, 0.99), rgba(6, 6, 9, 1));
 }
 
 .glass-panel.opportunity-panel {
-  border-color: color-mix(in srgb, var(--collective) 14%, rgba(242, 232, 210, 0.1));
+  border-color: color-mix(in srgb, var(--collective) 9%, rgba(242, 232, 210, 0.1));
   background:
-    radial-gradient(ellipse at 18% 100%, color-mix(in srgb, var(--collective) 5%, transparent), transparent 45%),
-    linear-gradient(138deg, rgba(16, 14, 12, 0.98), rgba(6, 6, 8, 0.99));
+    linear-gradient(138deg, rgba(14, 13, 12, 0.995), rgba(5, 5, 7, 1));
 }
 
 .glass-panel.audio-presence {
-  border-color: color-mix(in srgb, var(--teal) 37%, rgba(242, 232, 210, 0.1));
+  border-color: color-mix(in srgb, var(--teal) 27%, rgba(242, 232, 210, 0.1));
   border-radius: 1.2rem;
   box-shadow:
     inset 0 1px 0 rgba(242, 232, 210, 0.12),
     inset 0 -1px 0 rgba(0, 0, 0, 0.54),
     0 7px 15px rgba(3, 3, 7, 0.4),
     0 25px 46px rgba(3, 3, 7, 0.47),
-    0 0 35px color-mix(in srgb, var(--teal) 11%, transparent);
+    0 0 25px color-mix(in srgb, var(--teal) 7%, transparent);
 }
 
 /* Material roles: dark structure first, ecosystem color only as signal. */
 .surface-matte {
-  border: 1px solid rgba(242, 232, 210, 0.1);
+  border: 1px solid rgba(242, 232, 210, 0.065);
   background:
-    linear-gradient(142deg, rgba(242, 232, 210, 0.038), transparent 30%),
-    linear-gradient(145deg, rgba(17, 16, 20, 0.96), rgba(6, 6, 9, 0.98));
+    radial-gradient(ellipse at 12% 0%, color-mix(in srgb, var(--scene-primary) 5%, transparent), transparent 44%),
+    linear-gradient(142deg, rgba(242, 232, 210, 0.018), transparent 30%),
+    linear-gradient(145deg, rgba(10, 11, 16, 0.9), rgba(5, 6, 10, 0.94));
   box-shadow:
     inset 0 1px 0 rgba(242, 232, 210, 0.1),
     inset 0 -1px 2px rgba(0, 0, 0, 0.54),
@@ -2820,25 +2985,26 @@ a {
 }
 
 .surface-glass {
-  border: 1px solid rgba(242, 232, 210, 0.12);
+  border: 1px solid rgba(242, 232, 210, 0.075);
   background:
-    linear-gradient(145deg, rgba(242, 232, 210, 0.055), transparent 35%),
-    rgba(7, 7, 11, 0.84);
+    radial-gradient(ellipse at 14% 0%, color-mix(in srgb, var(--scene-primary) 5%, transparent), transparent 44%),
+    linear-gradient(145deg, rgba(242, 232, 210, 0.032), transparent 35%),
+    rgba(6, 7, 11, 0.78);
   box-shadow:
     inset 0 1px 0 rgba(242, 232, 210, 0.075),
     0 12px 27px rgba(3, 3, 7, 0.43);
-  backdrop-filter: blur(7px) saturate(0.86);
+  backdrop-filter: none;
 }
 
 .surface-luminous {
   border: 1px solid color-mix(in srgb, var(--teal) 26%, rgba(242, 232, 210, 0.1));
   background:
-    radial-gradient(circle at 12% 90%, color-mix(in srgb, var(--teal) 11%, transparent), transparent 42%),
-    linear-gradient(142deg, rgba(14, 20, 22, 0.98), rgba(5, 8, 10, 0.99));
+    radial-gradient(circle at 12% 90%, color-mix(in srgb, var(--teal) 8%, transparent), transparent 40%),
+    linear-gradient(142deg, rgba(9, 15, 17, 0.995), rgba(4, 7, 9, 1));
 }
 
 .surface-media {
-  border: 1px solid rgba(242, 232, 210, 0.105);
+  border: 1px solid rgba(242, 232, 210, 0.08);
   box-shadow:
     inset 0 1px 0 rgba(242, 232, 210, 0.15),
     inset 0 -12px 20px rgba(0, 0, 0, 0.26),
@@ -2867,8 +3033,7 @@ a {
     inset 0 1px 0 rgba(242, 232, 210, 0.11),
     inset 0 -1px 0 rgba(0, 0, 0, 0.54),
     0 6px 14px rgba(3, 3, 7, 0.38),
-    0 26px 48px rgba(3, 3, 7, 0.48),
-    0 0 26px color-mix(in srgb, var(--scene-primary) 4%, transparent);
+    0 26px 48px rgba(3, 3, 7, 0.48);
 }
 
 .depth-card {
@@ -2894,7 +3059,7 @@ a {
 
 @media (hover: hover) and (pointer: fine) and (min-width: 768px) {
   .depth-card:hover {
-    transform: translateY(-4px) rotateX(0.6deg) rotateY(-0.45deg);
+    transform: translateY(-3px);
     border-color: rgba(242, 232, 210, 0.115);
     box-shadow:
       inset 0 1px 0 rgba(242, 232, 210, 0.105),
@@ -3399,6 +3564,12 @@ a {
   }
 }
 
+@keyframes liveRouteTravel {
+  to {
+    stroke-dashoffset: -48;
+  }
+}
+
 @keyframes overflowSignal {
   0%,
   100% {
@@ -3484,16 +3655,15 @@ a {
     display: flex;
     width: 13.5rem;
     flex-direction: column;
-    border-right: 1px solid rgba(242, 232, 210, 0.075);
+    border-right: 1px solid rgba(242, 232, 210, 0.06);
     background:
-      radial-gradient(circle at 0 14%, rgba(155, 127, 255, 0.06), transparent 36%),
-      linear-gradient(90deg, rgba(242, 232, 210, 0.035), transparent 18%, transparent 86%, rgba(242, 232, 210, 0.025)),
-      linear-gradient(180deg, rgba(8, 9, 14, 0.94), rgba(8, 8, 12, 0.99));
+      linear-gradient(90deg, rgba(242, 232, 210, 0.022), transparent 18%, transparent 86%, rgba(242, 232, 210, 0.015)),
+      linear-gradient(180deg, rgba(7, 8, 11, 0.99), rgba(5, 5, 8, 1));
     padding: 1.55rem 0.9rem 1.1rem;
-    backdrop-filter: blur(20px);
+    backdrop-filter: none;
     box-shadow:
       inset -1px 0 0 rgba(242, 232, 210, 0.035),
-      13px 0 38px rgba(2, 2, 5, 0.18);
+      13px 0 32px rgba(2, 2, 5, 0.14);
   }
 
   .top-bar {
@@ -3650,17 +3820,19 @@ a {
 
   .city-more-panel {
     position: fixed !important;
-    top: clamp(5.5rem, 14vh, 9.5rem) !important;
+    top: 50% !important;
     right: auto !important;
-    left: max(1rem, calc(50vw - 17rem)) !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
     z-index: 51;
     width: min(34rem, calc(100vw - 2rem)) !important;
-    max-height: min(72vh, 37rem);
+    max-height: min(76vh, 37rem);
     padding: 0.85rem;
   }
 
-  .city-results {
-    max-height: min(55vh, 28rem);
+  .city-more-panel .city-results {
+    max-height: min(58vh, 28rem);
+    overflow-y: auto;
   }
 }
 
@@ -3731,7 +3903,7 @@ a {
   }
 
   .scene-columns {
-    --scene-section-gap: 0.95rem;
+    --scene-section-gap: 0.82rem;
   }
 
   .scene-content {
@@ -3749,7 +3921,7 @@ a {
     max-width: calc(100dvw - 2rem);
     min-width: 0;
     overflow: hidden;
-    gap: 1rem;
+    gap: 0.88rem;
   }
 
   .scene-intro,
@@ -3763,7 +3935,7 @@ a {
   }
 
   .scene-status {
-    margin-top: 1.25rem;
+    margin-top: 1.05rem;
   }
 
   .city-status-strip {
@@ -3779,10 +3951,10 @@ a {
 
   .city-status-cell {
     min-width: 0;
-    min-height: 6.7rem;
+    min-height: 6.25rem;
     border: 1px solid rgba(242, 232, 210, 0.12) !important;
     background: linear-gradient(150deg, rgba(17, 15, 20, 0.97), rgba(6, 6, 9, 0.99));
-    padding: 0.85rem 0.42rem;
+    padding: 0.76rem 0.42rem;
     overflow: hidden;
   }
 
@@ -3817,7 +3989,7 @@ a {
   }
 
   .scene-selector-row {
-    margin-top: 0.9rem;
+    margin-top: 0.72rem;
   }
 
   .city-selector-wrap {
@@ -3838,8 +4010,10 @@ a {
   .city-more-panel {
     position: fixed !important;
     inset: auto 0 0 !important;
+    transform: none !important;
     z-index: 51;
-    width: 100% !important;
+    width: 100vw !important;
+    max-width: none;
     max-height: min(76vh, 38rem);
     border-radius: 1.55rem 1.55rem 0 0;
     padding: 0.58rem 1rem calc(1rem + env(safe-area-inset-bottom));
@@ -3866,8 +4040,9 @@ a {
     box-shadow: 0 0 12px color-mix(in srgb, var(--scene-primary) 28%, transparent);
   }
 
-  .city-results {
+  .city-more-panel .city-results {
     max-height: calc(min(76vh, 38rem) - 5.2rem);
+    overflow-y: auto;
   }
 
   .city-result {
@@ -3901,19 +4076,18 @@ a {
 
   .glass-panel.audio-presence {
     background:
-      radial-gradient(circle at 16% 73%, color-mix(in srgb, var(--teal) 19%, transparent), transparent 39%),
-      linear-gradient(104deg, transparent 12%, color-mix(in srgb, var(--teal) 6%, transparent), transparent 66%),
-      linear-gradient(135deg, rgba(8, 17, 20, 0.99), rgba(4, 7, 9, 1));
+      radial-gradient(circle at 16% 73%, color-mix(in srgb, var(--teal) 13%, transparent), transparent 39%),
+      linear-gradient(104deg, transparent 12%, color-mix(in srgb, var(--teal) 4%, transparent), transparent 66%),
+      linear-gradient(135deg, rgba(7, 14, 16, 0.995), rgba(4, 7, 9, 1));
   }
 
   .movement-panel {
-    background: linear-gradient(143deg, rgba(14, 13, 17, 0.99), rgba(5, 5, 8, 1));
+    background: linear-gradient(143deg, rgba(12, 12, 15, 0.995), rgba(5, 5, 8, 1));
   }
 
   .movement-card {
     background:
-      radial-gradient(ellipse at 50% 9%, color-mix(in srgb, var(--card-accent) 6%, transparent), transparent 42%),
-      linear-gradient(143deg, rgba(14, 13, 17, 0.99), rgba(5, 5, 8, 1));
+      linear-gradient(143deg, rgba(12, 12, 15, 1), rgba(4, 4, 7, 1));
   }
 
   .depth-card,
@@ -3953,15 +4127,14 @@ a {
   }
 
   .creative-map-v2 {
-    min-height: 35rem;
+    min-height: 33.25rem;
     border-radius: 1.5rem;
     padding: 1rem;
     box-shadow:
       inset 0 1px 0 rgba(242, 232, 210, 0.13),
       inset 0 -1px 0 rgba(0, 0, 0, 0.72),
       0 7px 17px rgba(2, 2, 5, 0.43),
-      0 24px 45px rgba(2, 2, 5, 0.54),
-      0 0 29px color-mix(in srgb, var(--scene-primary) var(--energy-ambient), transparent);
+      0 24px 45px rgba(2, 2, 5, 0.54);
   }
 
   .map-overflow-atmosphere {
@@ -4008,10 +4181,10 @@ a {
   }
 
   .activity-item {
-    min-height: 6rem;
+    min-height: 5.45rem;
     gap: 0.8rem;
     border-color: rgba(242, 232, 210, 0.06);
-    padding: 0.9rem 0.8rem;
+    padding: 0.76rem 0.8rem;
   }
 
   .activity-list {
@@ -4025,11 +4198,11 @@ a {
 
   .activity-copy > p:not(.activity-place) {
     font-size: 0.88rem;
-    line-height: 1.55;
+    line-height: 1.45;
   }
 
   .activity-place {
-    margin-top: 0.55rem;
+    margin-top: 0.42rem;
   }
 
   .activity-panel .section-header {
@@ -4037,7 +4210,7 @@ a {
   }
 
   .featured-moment > div:last-child {
-    min-height: 22.5rem;
+    min-height: 21rem;
   }
 
   .featured-moment {
@@ -4048,12 +4221,11 @@ a {
       inset 0 1px 0 rgba(255, 247, 231, 0.22),
       inset 0 -58px 72px rgba(2, 2, 5, 0.63),
       0 9px 19px rgba(2, 2, 5, 0.49),
-      0 27px 48px rgba(2, 2, 5, 0.57),
-      0 0 29px color-mix(in srgb, var(--rose) var(--energy-ambient), transparent);
+      0 27px 48px rgba(2, 2, 5, 0.57);
   }
 
   .featured-content {
-    gap: 2.75rem;
+    gap: 2.05rem;
     padding: 1.05rem;
   }
 
@@ -4078,14 +4250,14 @@ a {
     overflow: hidden;
     margin-top: -0.62rem;
     border-radius: 1.4rem;
-    padding-top: 1.15rem;
+    padding-top: 1.02rem;
     padding-inline: 1rem;
-    padding-bottom: 1rem;
+    padding-bottom: 0.82rem;
   }
 
   .movement-gallery {
     margin-inline: -1rem;
-    padding: 0 1rem 0.5rem;
+    padding: 0 1rem 0.3rem;
     scroll-padding-inline: 1rem;
   }
 
@@ -4096,38 +4268,51 @@ a {
   }
 
   .movement-cover {
-    min-height: 12.2rem;
+    min-height: 11.2rem;
   }
 
   .movement-card {
-    min-height: 27rem;
+    min-height: 25.1rem;
     border-radius: 1.15rem;
   }
 
   .movement-body {
-    padding: 1.15rem 1.05rem 1rem;
+    padding: 1rem 1.05rem 0.92rem;
+  }
+
+  .movement-body > div:last-child {
+    padding-top: 0.92rem;
   }
 
   .movement-title {
-    margin-top: 1.05rem;
+    margin-top: 0.82rem;
     font-size: 1.52rem;
     line-height: 1.08;
   }
 
   .movement-mood {
-    margin-top: 0.7rem;
+    margin-top: 0.52rem;
     font-size: 0.9rem;
   }
 
   .movement-action {
-    min-height: 2.9rem;
-    padding: 0.58rem 0.55rem 0.58rem 0.95rem;
+    min-height: 3.05rem;
+    border-color: color-mix(in srgb, var(--cta-accent) 60%, rgba(242, 232, 210, 0.14));
+    background:
+      radial-gradient(circle at 82% 48%, color-mix(in srgb, var(--cta-highlight) 12%, transparent), transparent 31%),
+      color-mix(in srgb, var(--cta-accent) 11%, rgba(8, 8, 11, 0.98));
+    padding: 0.62rem 0.58rem 0.62rem 1rem;
     font-size: 0.78rem;
+    box-shadow:
+      inset 0 1px 0 color-mix(in srgb, var(--cta-accent) 25%, rgba(242, 232, 210, 0.15)),
+      inset 0 0 15px color-mix(in srgb, var(--cta-accent) 13%, transparent),
+      0 10px 20px rgba(2, 2, 5, 0.33),
+      0 0 16px color-mix(in srgb, var(--cta-accent) var(--energy-secondary), transparent);
   }
 
   .practice-strip {
     border-radius: 1.35rem;
-    padding-inline: 1rem;
+    padding: 0.92rem 1rem;
   }
 
   .practice-intro {
@@ -4137,19 +4322,21 @@ a {
 
   .practice-signals {
     display: grid;
-    gap: 0.7rem;
+    gap: 0.58rem;
   }
 
   .practice-signal {
     min-width: 0;
-    min-height: 7.9rem;
+    min-height: 7.05rem;
+    gap: 0.68rem;
     border-radius: 1rem;
-    padding: 0.9rem;
+    padding: 0.78rem 0.86rem;
   }
 
   .practice-action {
-    min-height: 2.45rem;
-    padding-inline: 0.85rem;
+    min-height: 2.55rem;
+    border-color: color-mix(in srgb, var(--practice-accent) 48%, rgba(242, 232, 210, 0.12));
+    padding-inline: 0.95rem;
   }
 
   .audio-presence .section-header + div {
@@ -4184,10 +4371,2662 @@ a {
   .mobile-navigation {
     padding-top: 0.48rem;
     padding-bottom: calc(0.55rem + env(safe-area-inset-bottom));
-    box-shadow: 0 -20px 42px rgba(2, 2, 6, 0.54);
+    box-shadow: 0 -15px 34px rgba(2, 2, 6, 0.48);
   }
 
   .mobile-nav-link {
     min-height: 4rem;
+  }
+}
+
+/* Structural reboot: modular product flow, with cinematic light confined to active content. */
+.operating-home {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.product-hero {
+  display: grid;
+  gap: 1.1rem;
+}
+
+.hero-narrative {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  border-radius: 1.45rem;
+  padding: clamp(1.2rem, 2.2vw, 2rem);
+}
+
+.hero-editorial {
+  position: relative;
+  border: 0;
+  background:
+    radial-gradient(ellipse at 9% 34%, rgba(255, 61, 127, 0.045), transparent 48%),
+    linear-gradient(90deg, rgba(3, 4, 8, 0.7), transparent 96%);
+  box-shadow: none;
+  padding-left: 0;
+}
+
+.hero-editorial::after {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 -2rem;
+  width: 17rem;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(ellipse, rgba(4, 5, 9, 0.82), transparent 70%);
+}
+
+.hero-copy {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.hero-kicker {
+  margin-bottom: clamp(1rem, 2vw, 1.4rem);
+}
+
+.hero-title {
+  margin: 0;
+  font-size: clamp(2.9rem, 4.55vw, 4.25rem);
+  font-weight: 500;
+  letter-spacing: -0.055em;
+  line-height: 0.9;
+  text-wrap: balance;
+}
+
+.hero-title span {
+  color: var(--violet-soft);
+  text-shadow: 0 0 25px rgba(155, 127, 255, 0.2);
+}
+
+.hero-description {
+  max-width: 26rem;
+  margin-top: 1.1rem;
+  color: color-mix(in srgb, var(--soft-ivory) 72%, var(--muted-ivory));
+  font-size: 0.93rem;
+  line-height: 1.66;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.72rem;
+  margin-top: 1.18rem;
+}
+
+.hero-secondary {
+  min-height: 2.75rem;
+  border: 1px solid rgba(242, 232, 210, 0.14);
+  border-radius: 999px;
+  background: rgba(242, 232, 210, 0.025);
+  padding: 0.7rem 1.15rem;
+  color: var(--soft-ivory);
+  font-size: 0.78rem;
+  transition: border-color 220ms ease, background 220ms ease;
+}
+
+.hero-secondary:is(:hover, :focus-visible) {
+  border-color: rgba(242, 232, 210, 0.28);
+  background: rgba(242, 232, 210, 0.06);
+}
+
+.hero-city {
+  margin-top: 0.9rem;
+}
+
+.hero-pulse {
+  margin-top: 0.85rem;
+}
+
+.hero-pulse .city-status-strip {
+  gap: 0.42rem;
+  background: transparent;
+  padding: 0;
+  box-shadow: none;
+}
+
+.hero-pulse .city-status-cell {
+  border: 0;
+  border-left: 1px solid rgba(242, 232, 210, 0.08);
+  border-radius: 0;
+  background: transparent;
+  padding: 0.45rem 0.72rem;
+}
+
+.hero-pulse .city-status-cell:first-child {
+  border-left: 0;
+  padding-left: 0;
+}
+
+.hero-pulse .city-status-cell > div:last-child p:last-child {
+  display: none;
+}
+
+.hero-pulse .city-status-cell > div:last-child {
+  margin-top: 0.25rem;
+}
+
+.hero-pulse .city-status-cell > div:first-child,
+.hero-pulse .city-status-cell > div:first-child p {
+  min-width: 0;
+}
+
+.hero-pulse .city-status-cell > div:first-child p {
+  min-height: 0;
+  font-size: 0.56rem;
+  line-height: 1.45;
+  letter-spacing: 0.11em;
+  overflow-wrap: normal;
+}
+
+.quick-access {
+  overflow: hidden;
+  padding: 0.72rem 0 0;
+}
+
+.editorial-band {
+  position: relative;
+  border: 0;
+  border-radius: 0 !important;
+  background:
+    linear-gradient(90deg, rgba(242, 232, 210, 0.09), rgba(242, 232, 210, 0.02) 60%, transparent) top / 100% 1px no-repeat,
+    linear-gradient(180deg, rgba(5, 6, 10, 0.24), transparent 4.5rem);
+  box-shadow: none;
+}
+
+.editorial-band::before {
+  content: "";
+  position: absolute;
+  inset: -0.7rem -0.45rem auto;
+  height: 3.4rem;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 14% 0%, color-mix(in srgb, var(--scene-primary) 5%, transparent), transparent 58%),
+    linear-gradient(90deg, rgba(242, 240, 250, 0.025), transparent 68%);
+  opacity: 0.75;
+}
+
+.quick-access-header {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1.2rem;
+  margin-bottom: 0.55rem;
+}
+
+.quick-access-eyebrow {
+  color: var(--muted-ivory);
+  font-size: 0.58rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+.quick-access-header h2 {
+  margin-top: 0.2rem;
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.quick-access-header > p {
+  max-width: 21rem;
+  color: var(--muted-ivory);
+  font-size: 0.72rem;
+  line-height: 1.5;
+  text-align: right;
+}
+
+.quick-access-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.48rem;
+}
+
+.quick-access-card {
+  --access-color: var(--violet-soft);
+  display: grid;
+  min-height: 5.45rem;
+  align-content: center;
+  gap: 0.26rem;
+  border: 1px solid rgba(242, 232, 210, 0.082);
+  border-radius: 0.9rem;
+  background: rgba(4, 4, 7, 0.46);
+  padding: 0.55rem 0.62rem;
+  color: var(--soft-ivory);
+  text-align: left;
+  transition: border-color 220ms ease, background 220ms ease, box-shadow 220ms ease, transform 220ms ease;
+}
+
+.access-glyph {
+  height: 1.05rem;
+  width: 1.05rem;
+  color: var(--access-color);
+  filter: drop-shadow(0 0 10px color-mix(in srgb, var(--access-color) 58%, transparent));
+}
+
+.access-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.45rem;
+  margin-bottom: 0.08rem;
+}
+
+.access-status {
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--access-color) 24%, transparent);
+  background: color-mix(in srgb, var(--access-color) 13%, rgba(3, 4, 8, 0.62));
+  padding: 0.2rem 0.34rem;
+  color: var(--access-color);
+  font-size: 0.49rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.quick-access-card strong {
+  font-size: 0.79rem;
+  font-weight: 500;
+}
+
+.quick-access-card small {
+  color: var(--muted-ivory);
+  font-size: 0.62rem;
+}
+
+.access-artists {
+  --access-color: var(--violet-soft);
+}
+
+.access-events {
+  --access-color: var(--rose);
+}
+
+.access-live,
+.access-audio {
+  --access-color: var(--teal);
+}
+
+.access-spaces {
+  --access-color: #448dff;
+}
+
+.access-collectives,
+.access-opportunities {
+  --access-color: var(--collective);
+}
+
+.access-match {
+  --access-color: var(--acid);
+}
+
+.quick-access-card:is(:hover, :focus-visible) {
+  border-color: color-mix(in srgb, var(--access-color) 48%, rgba(242, 232, 210, 0.08));
+  background: color-mix(in srgb, var(--access-color) 8%, rgba(4, 4, 7, 0.76));
+  transform: translateY(-2px);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--access-color) 22%, transparent),
+    0 0 18px color-mix(in srgb, var(--access-color) 12%, transparent);
+}
+
+.live-discovery,
+.creator-utility {
+  display: grid;
+  gap: 1.1rem;
+  min-width: 0;
+}
+
+.featured-live-now {
+  display: grid;
+  gap: 1.1rem;
+  min-width: 0;
+}
+
+.ecosystem-dashboard {
+  display: grid;
+  min-width: 0;
+  gap: 0.7rem;
+  position: relative;
+  isolation: isolate;
+}
+
+.ecosystem-dashboard::before {
+  content: "";
+  position: absolute;
+  inset: -1rem -1rem 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 18% 5%, rgba(255, 61, 127, 0.045), transparent 24rem),
+    radial-gradient(ellipse at 73% 18%, rgba(245, 155, 61, 0.038), transparent 23rem),
+    radial-gradient(ellipse at 58% 76%, rgba(0, 212, 180, 0.035), transparent 26rem),
+    linear-gradient(to bottom, rgba(4, 5, 10, 0.18), transparent 72%);
+  opacity: 0.95;
+}
+
+.module-panel,
+.ecosystem-dashboard .practice-strip,
+.ecosystem-dashboard .opportunity-panel,
+.ecosystem-dashboard .activity-panel,
+.ecosystem-dashboard .audio-presence {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid rgba(242, 232, 210, 0.052);
+  border-radius: 0.95rem !important;
+  background:
+    radial-gradient(ellipse at 8% 0%, color-mix(in srgb, var(--scene-primary) 4%, transparent), transparent 46%),
+    linear-gradient(120deg, rgba(242, 232, 210, 0.02), transparent 26%),
+    linear-gradient(155deg, rgba(8, 9, 14, 0.82), rgba(3, 4, 8, 0.88));
+  box-shadow:
+    inset 0 1px 0 rgba(242, 232, 210, 0.035),
+    0 18px 38px rgba(2, 2, 6, 0.18);
+  padding: 0.78rem !important;
+}
+
+.featured-live-module .section-header,
+.ecosystem-dashboard .section-header {
+  margin-bottom: 0.45rem;
+}
+
+.featured-live-module .section-purpose,
+.ecosystem-dashboard .section-purpose {
+  margin: 0 0 0.62rem;
+}
+
+.featured-live-cards {
+  display: grid;
+  grid-template-columns: minmax(0, 1.42fr) minmax(0, 1.58fr);
+  gap: 0.58rem;
+}
+
+.featured-live-primary {
+  height: 100%;
+}
+
+.featured-live-module .featured-live-primary > div:last-child {
+  min-height: 12.25rem;
+  padding: 0.72rem;
+}
+
+.featured-live-module .featured-live-primary h2 {
+  font-size: 1.18rem;
+}
+
+.featured-live-module .featured-live-primary .featured-action {
+  min-height: 2rem;
+  padding: 0.32rem 0.52rem 0.32rem 0.72rem;
+  font-size: 0.65rem;
+}
+
+.section-purpose {
+  margin: -0.4rem 0 1.05rem;
+  max-width: 38rem;
+  color: color-mix(in srgb, var(--soft-ivory) 64%, var(--muted-ivory));
+  font-size: 0.73rem;
+  line-height: 1.55;
+}
+
+.signature-map {
+  min-height: 28.5rem !important;
+}
+
+.product-hero .signature-map {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  isolation: isolate;
+  padding: clamp(0.4rem, 1vw, 0.8rem) 0 0;
+}
+
+.hero-network::before {
+  content: "";
+  position: absolute;
+  inset: 2.7rem -0.8rem -0.2rem -1rem;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 39% 46%, color-mix(in srgb, var(--rose) 7%, transparent), transparent 48%),
+    radial-gradient(ellipse at 76% 35%, color-mix(in srgb, var(--teal) 6%, transparent), transparent 42%),
+    linear-gradient(to bottom, rgba(3, 5, 10, 0.06), rgba(3, 4, 8, 0.48));
+  filter: none;
+}
+
+.signature-map .map-surface {
+  top: 10.45rem;
+}
+
+.signature-map .map-purpose {
+  position: relative;
+  z-index: 2;
+  margin-top: -0.8rem;
+  margin-bottom: 0.65rem;
+}
+
+/* The single interactive Creative Map now occupies the hero; no separate preview
+   can diverge from its live state or leave a duplicated module below the fold. */
+.product-hero .signature-map .map-surface {
+  top: 4.6rem;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border: 0;
+  border-radius: 0.65rem;
+  background:
+    radial-gradient(ellipse at 33% 47%, rgba(255, 61, 127, 0.065), transparent 36%),
+    radial-gradient(ellipse at 73% 36%, rgba(0, 212, 180, 0.055), transparent 36%),
+    linear-gradient(164deg, transparent, rgba(2, 3, 7, 0.3));
+  box-shadow: none;
+}
+
+.product-hero .signature-map .map-city-layer {
+  filter: saturate(0.32) contrast(1.45) brightness(0.18);
+  opacity: 0.13;
+  mask-image: radial-gradient(ellipse at 52% 48%, #000 22%, rgba(0, 0, 0, 0.78) 56%, transparent 94%);
+}
+
+.product-hero .signature-map .map-topology {
+  opacity: 1;
+}
+
+.product-hero .signature-map .map-grid {
+  opacity: 0.88;
+}
+
+.product-hero .signature-map .scene-ticker {
+  border-color: rgba(242, 232, 210, 0.075);
+  background: rgba(4, 5, 9, 0.72);
+  backdrop-filter: none;
+}
+
+.map-status-pills {
+  position: absolute;
+  top: 0.72rem;
+  right: 0.75rem;
+  z-index: 8;
+  display: flex;
+  gap: 0.35rem;
+}
+
+.map-state-badge,
+.map-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.38rem;
+  border: 1px solid rgba(242, 232, 210, 0.09);
+  border-radius: 999px;
+  background: rgba(3, 4, 9, 0.78);
+  padding: 0.33rem 0.52rem;
+  color: var(--muted-ivory);
+  font-size: 0.53rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.map-network-link {
+  stroke: var(--rose);
+  filter: drop-shadow(0 0 0.65px currentColor);
+}
+
+.map-network-thread {
+  stroke: rgba(255, 61, 127, 0.54);
+  stroke-width: 0.12;
+  stroke-dasharray: 0.3 1.6;
+  animation: mapNetworkFlow 4.2s linear infinite;
+}
+
+.map-network-link.network-artists,
+.map-network-thread.network-artists {
+  stroke: rgba(155, 127, 255, 0.57);
+}
+
+.map-network-link.network-events,
+.map-network-thread.network-events {
+  stroke: rgba(255, 61, 127, 0.7);
+}
+
+.map-network-link.network-collectives,
+.map-network-thread.network-collectives {
+  stroke: rgba(245, 155, 61, 0.63);
+}
+
+.map-network-link.network-spaces,
+.map-network-thread.network-spaces {
+  stroke: rgba(0, 212, 180, 0.64);
+}
+
+.map-network-link.network-live-rooms,
+.map-network-thread.network-live-rooms {
+  stroke: rgba(134, 100, 255, 0.66);
+}
+
+.ambient-signal.signal-artists,
+.map-legend-dot.signal-artists {
+  background: var(--violet-soft);
+}
+
+.ambient-signal.signal-events,
+.map-legend-dot.signal-events {
+  background: var(--rose);
+}
+
+.ambient-signal.signal-collectives,
+.map-legend-dot.signal-collectives {
+  background: var(--collective);
+}
+
+.ambient-signal.signal-spaces,
+.map-legend-dot.signal-spaces {
+  background: var(--teal);
+}
+
+.ambient-signal.signal-live-rooms,
+.map-legend-dot.signal-live-rooms {
+  background: #8664ff;
+}
+
+.map-legend-dot {
+  display: block;
+  height: 0.38rem;
+  width: 0.38rem;
+  border-radius: 999px;
+  box-shadow: 0 0 8px currentColor;
+}
+
+.map-ecosystem-legend {
+  position: absolute;
+  right: 4.6rem;
+  bottom: 4rem;
+  z-index: 8;
+  display: flex;
+  gap: 0.34rem;
+}
+
+.map-controls {
+  position: absolute;
+  right: 0.72rem;
+  bottom: 4.05rem;
+  z-index: 9;
+  display: grid;
+  gap: 0.3rem;
+}
+
+.map-controls button {
+  display: grid;
+  height: 1.72rem;
+  width: 1.72rem;
+  place-items: center;
+  border: 1px solid rgba(242, 232, 210, 0.16);
+  border-radius: 0.48rem;
+  background: rgba(3, 4, 9, 0.82);
+  color: var(--soft-ivory);
+  font-size: 0.92rem;
+}
+
+@keyframes mapNetworkFlow {
+  to {
+    stroke-dashoffset: -9;
+  }
+}
+
+.featured-live-module .featured-live-primary,
+.featured-live-module .supporting-movement {
+  box-shadow:
+    inset 0 1px 0 rgba(242, 232, 210, 0.065),
+    0 20px 38px rgba(2, 2, 5, 0.3);
+}
+
+.featured-live-module .supporting-movement {
+  border: 0;
+  background:
+    linear-gradient(90deg, rgba(242, 232, 210, 0.09), transparent 72%) top / 100% 1px no-repeat,
+    transparent;
+  box-shadow: none;
+}
+
+.embedded-movement {
+  padding: 0 !important;
+  background: transparent !important;
+}
+
+.embedded-movement .movement-gallery {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+  margin-top: 0 !important;
+}
+
+.embedded-movement .movement-card {
+  min-height: 12.25rem;
+}
+
+.embedded-movement .movement-cover {
+  min-height: 5.45rem;
+  padding: 0.58rem;
+}
+
+.embedded-movement .movement-body {
+  padding: 0.58rem;
+}
+
+.embedded-movement .movement-title {
+  margin-top: 0.55rem;
+  font-size: 1rem;
+}
+
+.embedded-movement .movement-mood {
+  margin-top: 0.3rem;
+  font-size: 0.67rem;
+}
+
+.embedded-movement .movement-body > div:last-child {
+  margin-top: 0.55rem;
+}
+
+.embedded-movement .movement-action {
+  min-height: 2.05rem;
+  padding: 0.34rem 0.42rem 0.34rem 0.68rem;
+  font-size: 0.64rem;
+}
+
+.practice-strip,
+.activity-panel,
+.opportunity-panel {
+  background:
+    linear-gradient(90deg, rgba(242, 232, 210, 0.09), rgba(242, 232, 210, 0.02) 62%, transparent) top / 100% 1px no-repeat,
+    linear-gradient(180deg, rgba(5, 6, 10, 0.22), transparent 5rem);
+  box-shadow: none;
+}
+
+.opportunity-panel::after {
+  content: none;
+}
+
+.practice-strip .practice-signal {
+  min-height: 0;
+  gap: 0.65rem;
+}
+
+.practice-strip .practice-footer {
+  padding-top: 0.55rem;
+}
+
+.practice-strip .practice-action {
+  min-width: 4.5rem;
+  text-align: center;
+}
+
+.ecosystem-dashboard .practice-intro {
+  display: none;
+}
+
+.ecosystem-dashboard .practice-signals {
+  display: flex;
+  flex-direction: column;
+  gap: 0.42rem;
+  margin-top: 0.55rem !important;
+}
+
+.ecosystem-dashboard .practice-signal {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  padding: 0.55rem !important;
+  border-radius: 0.72rem;
+}
+
+.ecosystem-dashboard .practice-title {
+  margin-top: 0.33rem;
+}
+
+.ecosystem-dashboard .practice-footer {
+  align-self: end;
+  flex-direction: column;
+  align-items: end;
+  gap: 0.35rem;
+  border-top: 0;
+  padding-top: 0;
+}
+
+.ecosystem-dashboard .practice-action {
+  padding: 0.4rem 0.58rem;
+  font-size: 0.61rem;
+}
+
+.ecosystem-dashboard .opportunity-panel .space-y-4 {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.ecosystem-dashboard .opportunity-panel .space-y-4 > div {
+  padding-block: 0.62rem !important;
+}
+
+.ecosystem-dashboard .opportunity-panel .space-y-4 > div:first-child {
+  padding-top: 0 !important;
+}
+
+.ecosystem-dashboard .opportunity-panel .space-y-4 p:nth-child(2) {
+  margin-top: 0.25rem;
+}
+
+.ecosystem-dashboard .opportunity-panel .space-y-4 p:nth-child(3) {
+  margin-top: 0.4rem;
+}
+
+.ecosystem-dashboard .activity-panel .section-purpose {
+  display: none;
+}
+
+.ecosystem-dashboard .activity-panel .activity-list {
+  margin-top: 0.4rem;
+}
+
+.ecosystem-dashboard .activity-item {
+  padding: 0.55rem;
+}
+
+.ecosystem-dashboard .audio-presence .audio-energy {
+  margin-top: 0.8rem;
+}
+
+.ecosystem-dashboard .audio-presence::after {
+  opacity: 0.34;
+}
+
+.portal-cta-primary,
+.product-hero .signature-map .portal-cta-map {
+  --cta-accent: var(--rose);
+  --cta-highlight: var(--rose);
+  border-color: rgba(255, 61, 127, 0.56);
+  background:
+    radial-gradient(circle at 84% 48%, rgba(255, 104, 160, 0.3), transparent 32%),
+    linear-gradient(112deg, rgba(255, 61, 127, 0.28), rgba(67, 15, 43, 0.5)),
+    rgba(12, 8, 14, 0.94);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 210, 226, 0.24),
+    inset 0 0 16px rgba(255, 61, 127, 0.16),
+    0 10px 22px rgba(3, 2, 6, 0.4),
+    0 0 21px rgba(255, 61, 127, 0.25);
+}
+
+.portal-cta-secondary {
+  --cta-accent: var(--soft-ivory);
+  --cta-highlight: var(--soft-ivory);
+  border-color: rgba(242, 232, 210, 0.14);
+  background: rgba(8, 8, 11, 0.78);
+  box-shadow:
+    inset 0 1px 0 rgba(242, 232, 210, 0.08),
+    0 8px 18px rgba(2, 2, 5, 0.24);
+}
+
+.portal-cta-secondary::after {
+  opacity: 0;
+}
+
+.top-actions .portal-cta-secondary,
+.hero-secondary,
+.ecosystem-dashboard .portal-cta-events,
+.practice-strip .portal-cta-opportunities,
+.opportunity-panel .portal-cta-opportunities {
+  border-color: rgba(242, 232, 210, 0.13);
+  background:
+    linear-gradient(180deg, rgba(242, 232, 210, 0.035), transparent 44%),
+    rgba(6, 7, 11, 0.76);
+  color: color-mix(in srgb, var(--soft-ivory) 86%, var(--muted-ivory));
+  box-shadow:
+    inset 0 1px 0 rgba(242, 232, 210, 0.065),
+    0 7px 16px rgba(2, 2, 5, 0.22);
+}
+
+.ecosystem-dashboard .portal-cta-events {
+  --cta-accent: var(--rose);
+  --cta-highlight: var(--rose);
+}
+
+.top-actions .portal-cta-secondary:is(:hover, :focus-visible),
+.hero-secondary:is(:hover, :focus-visible),
+.ecosystem-dashboard .portal-cta-events:is(:hover, :focus-visible),
+.practice-strip .portal-cta-opportunities:is(:hover, :focus-visible),
+.opportunity-panel .portal-cta-opportunities:is(:hover, :focus-visible) {
+  border-color: color-mix(in srgb, var(--cta-accent, var(--soft-ivory)) 34%, rgba(242, 232, 210, 0.16));
+  background: color-mix(in srgb, var(--cta-accent, var(--soft-ivory)) 7%, rgba(7, 8, 12, 0.86));
+  box-shadow:
+    inset 0 1px 0 rgba(242, 232, 210, 0.09),
+    0 10px 20px rgba(2, 2, 5, 0.28);
+}
+
+.hero-city .city-selector {
+  border-color: rgba(242, 232, 210, 0.1);
+  background: rgba(4, 5, 9, 0.55);
+  box-shadow: inset 0 1px 0 rgba(242, 232, 210, 0.045);
+}
+
+.hero-city .city-selector-wrap::after {
+  display: none;
+}
+
+.hero-city .city-pill[aria-pressed="true"] {
+  padding-right: 1.65rem;
+  color: var(--soft-ivory);
+  text-shadow: 0 0 14px rgba(255, 61, 127, 0.26);
+}
+
+.hero-city .city-pill[aria-pressed="true"]::after {
+  content: "";
+  position: absolute;
+  right: 0.7rem;
+  top: 50%;
+  height: 0.3rem;
+  width: 0.3rem;
+  border-radius: 999px;
+  background: var(--rose);
+  box-shadow: 0 0 9px rgba(255, 61, 127, 0.72);
+  transform: translateY(-50%);
+}
+
+.hero-city .city-pill[aria-pressed="true"] > span:first-child {
+  border-color: rgba(255, 61, 127, 0.32);
+  background: rgba(255, 61, 127, 0.12);
+  box-shadow: inset 0 1px 0 rgba(255, 180, 207, 0.16), 0 0 12px rgba(255, 61, 127, 0.11);
+}
+
+.practice-strip .portal-cta-opportunities .portal-arrow,
+.opportunity-panel .portal-cta-opportunities .portal-arrow {
+  background: color-mix(in srgb, var(--collective) 12%, rgba(242, 232, 210, 0.04));
+}
+
+.activity-panel {
+  min-width: 0;
+}
+
+.nav-explore::before {
+  inset: 0.15rem;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+}
+
+.nav-explore::after {
+  top: 0.36rem;
+  left: 0.36rem;
+  height: 0.32rem;
+  width: 0.32rem;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+}
+
+.nav-artists::before,
+.nav-collectives::before {
+  top: 0.08rem;
+  left: 0.36rem;
+  height: 0.34rem;
+  width: 0.34rem;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+}
+
+.nav-artists::after,
+.nav-collectives::after {
+  left: 0.17rem;
+  bottom: 0.08rem;
+  height: 0.43rem;
+  width: 0.72rem;
+  border: 1px solid currentColor;
+  border-radius: 0.6rem 0.6rem 0.16rem 0.16rem;
+}
+
+.nav-collectives::before {
+  box-shadow: 0.3rem 0.12rem 0 -1px currentColor;
+}
+
+.nav-events::before {
+  inset: 0.16rem 0.13rem;
+  border: 1px solid currentColor;
+  border-radius: 0.15rem;
+}
+
+.nav-events::after {
+  top: 0.36rem;
+  right: 0.26rem;
+  left: 0.26rem;
+  height: 1px;
+  background: currentColor;
+}
+
+.nav-spaces::before {
+  inset: 0.17rem;
+  border: 1px solid currentColor;
+  transform: rotate(30deg);
+}
+
+.nav-audio::before {
+  top: 0.27rem;
+  left: 0.16rem;
+  height: 0.54rem;
+  width: 0.1rem;
+  background: currentColor;
+  box-shadow: 0.21rem -0.13rem currentColor, 0.42rem 0.08rem currentColor, 0.63rem -0.1rem currentColor;
+}
+
+.nav-match::before {
+  inset: 0.17rem;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+}
+
+.nav-match::after {
+  inset: 0.39rem;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.sidebar-explore:is(:hover, :focus-visible) .nav-glyph,
+.sidebar-artists:is(:hover, :focus-visible) .nav-glyph {
+  color: var(--violet-soft);
+}
+
+.sidebar-events:is(:hover, :focus-visible) .nav-glyph {
+  color: var(--rose);
+}
+
+.sidebar-spaces:is(:hover, :focus-visible) .nav-glyph {
+  color: #448dff;
+}
+
+.sidebar-collectives:is(:hover, :focus-visible) .nav-glyph {
+  color: var(--collective);
+}
+
+.sidebar-match:is(:hover, :focus-visible) .nav-glyph {
+  color: var(--acid);
+}
+
+@media (min-width: 1280px) {
+  .app-shell {
+    padding-left: 12.75rem;
+  }
+
+  .desktop-sidebar {
+    width: 12.75rem;
+    padding-top: 1.35rem;
+  }
+
+  .sidebar-brand {
+    padding-bottom: 1.3rem;
+  }
+
+  .sidebar-nav {
+    gap: 0.14rem;
+  }
+
+  .sidebar-link {
+    min-height: 2.42rem;
+    font-size: 0.77rem;
+  }
+
+  .scene-content {
+    max-width: 95rem;
+    padding-left: 1.45rem;
+    padding-top: 0.75rem;
+  }
+
+  .top-bar {
+    min-height: 2.35rem;
+    margin-bottom: 0;
+  }
+
+  .scene-content > main {
+    padding-top: 0.58rem !important;
+  }
+
+  .product-hero {
+    grid-template-columns: minmax(21rem, 0.58fr) minmax(44rem, 1.42fr);
+    align-items: stretch;
+    gap: 0.85rem 1.05rem;
+  }
+
+  .product-hero .hero-narrative {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .product-hero .hero-title {
+    font-size: clamp(2.9rem, 3.15vw, 3.18rem);
+    line-height: 0.91;
+  }
+
+  .product-hero .hero-kicker {
+    margin-bottom: 0.72rem;
+  }
+
+  .product-hero .hero-description {
+    max-width: 22rem;
+    margin-top: 0.8rem;
+    font-size: 0.8rem;
+    line-height: 1.47;
+  }
+
+  .product-hero .hero-actions {
+    margin-top: 0.88rem;
+  }
+
+  .product-hero .hero-city {
+    margin-top: 0.7rem;
+  }
+
+  .product-hero .hero-pulse {
+    margin-top: 0.42rem;
+  }
+
+  .product-hero .city-status-cell {
+    padding-top: 0.2rem;
+    padding-bottom: 0.2rem;
+  }
+
+  .product-hero .city-status-cell > div:last-child p:first-child {
+    font-size: 1.62rem;
+  }
+
+  /* Legacy desktop placement anchored Creative Map to column one; inside the
+     hero it must sit on the right so the value proposition leads the reading flow. */
+  .product-hero .signature-map {
+    grid-column: 2;
+    grid-row: 1;
+    min-height: 24.5rem !important;
+  }
+
+  .product-hero .signature-map .map-surface {
+    top: 4.4rem;
+  }
+
+  .product-hero .signature-map .map-purpose {
+    display: none;
+  }
+
+  .product-hero .quick-access {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .product-hero .hero-actions {
+    flex-wrap: nowrap;
+    gap: 0.55rem;
+  }
+
+  .product-hero .hero-secondary {
+    padding-inline: 0.9rem;
+    font-size: 0.72rem;
+  }
+
+  .hero-pulse .city-status-strip {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .quick-access-grid {
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+  }
+
+  .ecosystem-dashboard {
+    grid-template-columns: minmax(30rem, 1.62fr) minmax(17rem, 0.92fr) minmax(16rem, 0.82fr);
+    grid-template-areas:
+      "featured matches opportunities"
+      "activity activity audio";
+    align-items: stretch;
+    gap: 0.68rem;
+  }
+
+  .featured-live-module {
+    grid-area: featured;
+  }
+
+  .ecosystem-dashboard .practice-strip {
+    grid-area: matches;
+  }
+
+  .ecosystem-dashboard .opportunity-panel {
+    grid-area: opportunities;
+  }
+
+  .ecosystem-dashboard .activity-panel {
+    grid-area: activity;
+  }
+
+  .ecosystem-dashboard .audio-presence {
+    grid-area: audio;
+  }
+
+  .featured-live-module .section-header h2,
+  .ecosystem-dashboard .section-header h2 {
+    font-size: 1.05rem;
+  }
+
+  .featured-live-module .movement-panel {
+    min-width: 0;
+  }
+
+  .featured-live-module .movement-gallery {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .featured-live-module .movement-card {
+    min-height: 12.25rem;
+  }
+
+  .activity-panel .activity-list {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.4rem;
+  }
+}
+
+@media (max-width: 1279px) {
+  .operating-home {
+    gap: 0.9rem;
+  }
+
+  .product-hero {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .product-hero .hero-narrative {
+    order: 1;
+  }
+
+  .product-hero .quick-access {
+    order: 2;
+  }
+
+  .product-hero .signature-map {
+    order: 3;
+  }
+}
+
+@media (max-width: 639px) {
+  .hero-narrative {
+    padding: 1.05rem;
+  }
+
+  .hero-editorial {
+    padding-inline: 0;
+    background: linear-gradient(90deg, rgba(3, 4, 8, 0.66), transparent);
+  }
+
+  .hero-title {
+    font-size: clamp(2.55rem, 13vw, 3.15rem);
+  }
+
+  .hero-description {
+    margin-top: 1rem;
+    font-size: 0.83rem;
+  }
+
+  .hero-actions {
+    margin-top: 1.1rem;
+  }
+
+  .hero-city {
+    margin-top: 0.9rem;
+  }
+
+  .hero-pulse {
+    margin-top: 1rem;
+  }
+
+  .hero-pulse .city-status-cell {
+    min-height: 4.8rem;
+    border: 0 !important;
+    border-left: 1px solid rgba(242, 232, 210, 0.08) !important;
+    border-radius: 0;
+    background: transparent;
+    padding: 0.62rem 0.45rem;
+  }
+
+  .hero-pulse .city-status-cell:first-child {
+    border-left: 0 !important;
+  }
+
+  .quick-access {
+    padding: 0.9rem 0 0;
+  }
+
+  .quick-access-header > p {
+    display: none;
+  }
+
+  .quick-access-grid {
+    display: flex;
+    overflow-x: auto;
+    gap: 0.5rem;
+    margin-inline: -0.9rem;
+    padding: 0 0.9rem 0.18rem;
+    scrollbar-width: none;
+  }
+
+  .quick-access-grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .quick-access-card {
+    min-width: 6.55rem;
+    min-height: 5.7rem;
+    scroll-snap-align: start;
+  }
+
+  .signature-map .section-header,
+  .featured-live-module .section-header,
+  .ecosystem-dashboard .section-header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.45rem;
+  }
+
+  .signature-map .section-header .portal-cta,
+  .featured-live-module .section-header .portal-cta,
+  .ecosystem-dashboard .section-header .portal-cta {
+    min-height: 2.1rem;
+    gap: 0.35rem;
+    padding: 0.27rem 0.32rem 0.27rem 0.62rem;
+    font-size: 0.62rem;
+  }
+
+  .signature-map .section-header .portal-arrow,
+  .featured-live-module .section-header .portal-arrow,
+  .ecosystem-dashboard .section-header .portal-arrow {
+    height: 1.42rem;
+    width: 1.42rem;
+  }
+
+  .signature-map {
+    min-height: 32rem !important;
+  }
+
+  .product-hero .signature-map {
+    min-height: 33rem !important;
+    padding: 0.72rem 0 0;
+  }
+
+  .signature-map .map-surface {
+    top: 10rem;
+  }
+
+  .product-hero .signature-map .map-surface {
+    top: 9.05rem;
+  }
+
+  .map-status-pills {
+    display: none;
+  }
+
+  .map-ecosystem-legend {
+    right: auto;
+    bottom: 3.65rem;
+    left: 0.6rem;
+    max-width: calc(100% - 3.35rem);
+    flex-wrap: wrap;
+    gap: 0.25rem;
+  }
+
+  .map-legend-item {
+    padding: 0.25rem 0.36rem;
+    font-size: 0.47rem;
+  }
+
+  .map-controls {
+    right: 0.55rem;
+    bottom: 3.72rem;
+  }
+
+  .product-hero .signature-map .ambient-signal:nth-of-type(n) {
+    display: block;
+  }
+
+  .product-hero .signature-map .ambient-signal:nth-of-type(n + 19) {
+    display: none;
+  }
+
+  .section-purpose {
+    margin-bottom: 0.85rem;
+    font-size: 0.7rem;
+  }
+
+  .featured-live-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .featured-live-module .featured-live-primary > div:last-child {
+    min-height: 17rem;
+  }
+
+  .featured-live-module .featured-live-primary .featured-content > div:last-child > div:last-child {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.55rem;
+  }
+
+  .featured-live-module .featured-live-primary .featured-action {
+    min-height: 2.55rem;
+    padding-inline: 0.82rem 0.48rem;
+    align-self: flex-start;
+  }
+
+  .embedded-movement .movement-card {
+    min-height: 13rem;
+  }
+
+  .embedded-movement .movement-meta span:last-child {
+    display: none;
+  }
+
+  .embedded-movement .movement-body > div:last-child {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .embedded-movement .movement-action {
+    min-width: 0;
+    min-height: 2.35rem;
+    padding-inline: 0.66rem;
+  }
+
+  .embedded-movement .movement-action .portal-arrow {
+    display: none;
+  }
+
+  .ecosystem-dashboard .practice-footer {
+    align-items: center;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 0.18rem;
+  }
+
+  .ecosystem-dashboard .practice-signal {
+    display: flex;
+    min-height: 6.45rem;
+    flex-direction: column;
+  }
+
+  .ecosystem-dashboard .practice-footer {
+    width: 100%;
+    margin-top: 0.22rem;
+    padding-top: 0.38rem;
+  }
+
+  .ecosystem-dashboard .practice-action {
+    display: block !important;
+    visibility: visible;
+    min-height: 1.9rem;
+    min-width: 4rem;
+    padding-inline: 0.4rem;
+    font-size: 0.55rem;
+  }
+
+  .ecosystem-dashboard {
+    gap: 0.72rem;
+  }
+}
+
+/* City layer pass: keep the current structure, but let the cultural network
+   continue under the full homepage instead of living only inside the map. */
+.city-media-root {
+  --city-atmosphere: color-mix(in srgb, var(--scene-primary) 8%, transparent);
+  --city-topology: rgba(242, 240, 250, 0.032);
+  --city-route-primary: var(--rose);
+  --city-route-secondary: var(--teal);
+}
+
+.city-rome,
+.city-default {
+  --district-san-lorenzo: var(--rose);
+  --district-ostiense: var(--collective);
+  --district-pigneto: #8664ff;
+  --district-trastevere: var(--teal);
+  --district-testaccio: var(--violet-soft);
+}
+
+.city-berlin {
+  --city-atmosphere: rgba(0, 212, 180, 0.08);
+  --city-route-primary: #7dd3fc;
+  --city-route-secondary: var(--acid);
+}
+
+.city-barcelona {
+  --city-atmosphere: rgba(245, 155, 61, 0.09);
+  --city-route-primary: var(--collective);
+  --city-route-secondary: var(--rose);
+}
+
+.app-shell::before,
+.app-shell::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.app-shell::before {
+  background:
+    radial-gradient(ellipse at 56% 8%, color-mix(in srgb, var(--scene-primary) 11%, transparent), transparent 36rem),
+    radial-gradient(ellipse at 82% 52%, color-mix(in srgb, var(--scene-secondary) 5%, transparent), transparent 34rem),
+    radial-gradient(ellipse at 38% 86%, rgba(255, 61, 127, 0.045), transparent 30rem),
+    repeating-linear-gradient(116deg, transparent 0 2.15rem, rgba(242, 240, 250, 0.018) 2.18rem 2.23rem, transparent 2.28rem 4.9rem);
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.62) 72%, rgba(0, 0, 0, 0.88));
+  opacity: 0.72;
+  transform: translateZ(0);
+  animation: cityLayerDrift 38s ease-in-out infinite alternate;
+}
+
+.app-shell::after {
+  background:
+    radial-gradient(circle at 23% 22%, rgba(255, 61, 127, 0.09) 0 0.08rem, transparent 0.11rem),
+    radial-gradient(circle at 66% 34%, rgba(0, 212, 180, 0.08) 0 0.08rem, transparent 0.11rem),
+    radial-gradient(circle at 78% 72%, rgba(245, 155, 61, 0.08) 0 0.08rem, transparent 0.11rem),
+    linear-gradient(100deg, transparent 18%, rgba(255, 61, 127, 0.05) 18.2%, transparent 18.65%, transparent 42%, rgba(0, 212, 180, 0.045) 42.2%, transparent 42.6%, transparent 71%, rgba(155, 127, 255, 0.045) 71.2%, transparent 71.55%);
+  background-size: 28rem 18rem, 31rem 21rem, 24rem 17rem, 100% 100%;
+  background-position: 0 0, 7rem 4rem, 2rem 9rem, 0 0;
+  mix-blend-mode: screen;
+  opacity: 0.32;
+  animation: cityTransmissionDrift 18s linear infinite;
+}
+
+.scene-content {
+  position: relative;
+}
+
+.scene-content::before {
+  content: "";
+  position: absolute;
+  inset: 7.5rem 0 auto;
+  height: min(82rem, 72%);
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 69% 0%, color-mix(in srgb, var(--scene-primary) 8%, transparent), transparent 29rem),
+    radial-gradient(ellipse at 30% 44%, rgba(0, 212, 180, 0.035), transparent 31rem),
+    linear-gradient(to bottom, transparent, rgba(4, 5, 9, 0.34) 22%, transparent 82%);
+  opacity: 0.9;
+}
+
+.hero-title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.07em;
+}
+
+.hero-kicker,
+.quick-access-eyebrow,
+.section-header p,
+.section-purpose,
+.map-state-badge,
+.map-legend-item,
+.district-name,
+.movement-meta,
+.activity-category,
+.activity-time,
+.practice-match {
+  font-family: var(--font-mono);
+}
+
+.section-header h2,
+.quick-access-header h2,
+.movement-title,
+.featured-live-module .featured-live-primary h2 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+}
+
+.hero-description,
+.section-purpose,
+.quick-access-card small,
+.movement-mood,
+.activity-copy,
+.practice-title,
+.practice-intro {
+  font-family: var(--font-sans);
+}
+
+.product-hero {
+  position: relative;
+  isolation: isolate;
+}
+
+.product-hero::before {
+  content: "";
+  position: absolute;
+  inset: -1.2rem -1.5rem -0.8rem;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 32% 36%, rgba(255, 61, 127, 0.08), transparent 23rem),
+    radial-gradient(ellipse at 61% 34%, color-mix(in srgb, var(--scene-primary) 10%, transparent), transparent 31rem),
+    radial-gradient(ellipse at 82% 47%, rgba(0, 212, 180, 0.06), transparent 26rem),
+    linear-gradient(100deg, rgba(4, 5, 10, 0.5), transparent 32%, transparent 70%, rgba(3, 5, 9, 0.42));
+  opacity: 0.96;
+}
+
+.hero-editorial {
+  background:
+    linear-gradient(96deg, rgba(3, 4, 9, 0.72), rgba(3, 4, 9, 0.38) 43%, transparent 77%);
+}
+
+.hero-copy {
+  position: relative;
+}
+
+.hero-copy::after {
+  content: "";
+  position: absolute;
+  right: -5.5rem;
+  bottom: 5.2rem;
+  width: 8rem;
+  height: 1px;
+  pointer-events: none;
+  background: linear-gradient(90deg, rgba(255, 61, 127, 0.42), rgba(0, 212, 180, 0.18), transparent);
+  opacity: 0.72;
+  box-shadow: 0 0 18px rgba(255, 61, 127, 0.15);
+}
+
+.product-hero .signature-map {
+  overflow: visible;
+}
+
+.hero-network::before {
+  inset: 1.8rem -1.6rem -1.2rem -2.6rem;
+  background:
+    radial-gradient(ellipse at 35% 45%, rgba(255, 61, 127, 0.1), transparent 44%),
+    radial-gradient(ellipse at 76% 35%, rgba(0, 212, 180, 0.08), transparent 44%),
+    linear-gradient(to bottom, transparent, rgba(3, 4, 8, 0.42));
+}
+
+.product-hero .signature-map .map-surface {
+  overflow: visible;
+  border-radius: 0;
+  mask-image: radial-gradient(ellipse at 54% 48%, #000 32%, rgba(0, 0, 0, 0.92) 62%, rgba(0, 0, 0, 0.18) 93%, transparent 100%);
+}
+
+.product-hero .signature-map .map-city-layer {
+  filter: saturate(0.22) contrast(1.65) brightness(0.16);
+  opacity: 0.19;
+  transform: scale(1.1) translateY(0);
+}
+
+.map-grid {
+  background:
+    linear-gradient(rgba(0, 212, 180, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(155, 127, 255, 0.032) 1px, transparent 1px);
+  background-size: 2.8rem 2.8rem, 2.8rem 2.8rem;
+  mask-image: radial-gradient(ellipse at 55% 51%, rgba(0, 0, 0, 0.86), transparent 78%);
+  transform: perspective(44rem) rotateX(58deg) translateY(18%) scale(1.16);
+  transform-origin: 50% 100%;
+  animation: gridParallax 21s ease-in-out infinite alternate;
+}
+
+.product-hero .map-topology {
+  opacity: 1;
+  background:
+    radial-gradient(circle at 18% 35%, rgba(255, 61, 127, 0.075) 0 0.08rem, transparent 0.13rem),
+    radial-gradient(circle at 66% 28%, rgba(0, 212, 180, 0.075) 0 0.08rem, transparent 0.13rem),
+    radial-gradient(circle at 74% 65%, rgba(245, 155, 61, 0.07) 0 0.08rem, transparent 0.13rem),
+    repeating-radial-gradient(ellipse at 52% 64%, transparent 0 1.35rem, var(--city-topology) 1.39rem 1.43rem, transparent 1.5rem 2.7rem),
+    repeating-linear-gradient(24deg, transparent 0 2.1rem, rgba(242, 240, 250, 0.024) 2.13rem 2.18rem, transparent 2.22rem 4.8rem);
+  background-size: 12rem 9rem, 15rem 11rem, 14rem 10rem, auto, auto;
+  filter: drop-shadow(0 0 10px rgba(0, 212, 180, 0.08));
+}
+
+.map-route-transmission {
+  animation-duration: 3.75s;
+}
+
+.map-route-transmission-primary {
+  stroke: var(--city-route-primary);
+  stroke-width: 0.7;
+  stroke-dasharray: 0.7 7.2;
+  filter:
+    drop-shadow(0 0 7px rgba(255, 61, 127, 0.95))
+    drop-shadow(0 0 18px rgba(255, 61, 127, 0.35));
+}
+
+.map-route-transmission-secondary {
+  stroke: var(--city-route-secondary);
+  stroke-width: 0.52;
+  stroke-dasharray: 0.55 9.5;
+  opacity: 0.95;
+  animation-duration: 5.15s;
+  filter:
+    drop-shadow(0 0 7px rgba(0, 212, 180, 0.92))
+    drop-shadow(0 0 17px rgba(0, 212, 180, 0.3));
+}
+
+.map-network-link,
+.map-network-thread {
+  stroke-linecap: round;
+}
+
+.map-network-thread {
+  stroke-width: 0.15;
+  opacity: 0.76;
+  animation-duration: 3.6s;
+}
+
+.ambient-signal {
+  animation-name: ambientSignal, microSignalFlicker;
+  animation-duration: 3.25s, 7.6s;
+  animation-timing-function: ease-in-out, steps(1, end);
+  animation-iteration-count: infinite, infinite;
+}
+
+.district-0 {
+  --district-color: var(--district-san-lorenzo);
+  animation-duration: 6.2s;
+}
+
+.district-1 {
+  --district-color: var(--district-ostiense);
+  animation-duration: 7.4s;
+}
+
+.district-2 {
+  --district-color: var(--district-pigneto);
+  animation-duration: 6.8s;
+}
+
+.district-3 {
+  --district-color: var(--district-trastevere);
+  animation-duration: 8.1s;
+}
+
+.district-4 {
+  --district-color: var(--district-testaccio);
+  animation-duration: 7.1s;
+}
+
+.district-zone {
+  border-color: color-mix(in srgb, var(--district-color, var(--scene-primary)) 17%, transparent);
+  background:
+    radial-gradient(ellipse at 47% 54%, color-mix(in srgb, var(--district-color, var(--scene-primary)) 9%, transparent), transparent 66%),
+    rgba(200, 190, 255, 0.008);
+  animation: districtEnergy 9s ease-in-out infinite alternate;
+}
+
+.district-zone::after {
+  border-color: color-mix(in srgb, var(--district-color, var(--scene-primary)) 32%, transparent);
+}
+
+.district-zone.is-active {
+  border-color: color-mix(in srgb, var(--district-color, var(--scene-primary)) 58%, transparent);
+  background:
+    radial-gradient(ellipse at 47% 54%, color-mix(in srgb, var(--district-color, var(--scene-primary)) 25%, transparent), transparent 49%),
+    radial-gradient(ellipse at 47% 54%, color-mix(in srgb, var(--scene-secondary) 8%, transparent), transparent 67%);
+  box-shadow:
+    inset 0 0 24px color-mix(in srgb, var(--district-color, var(--scene-primary)) 14%, transparent),
+    0 0 46px color-mix(in srgb, var(--district-color, var(--scene-primary)) 24%, transparent);
+}
+
+.district-name {
+  border: 1px solid rgba(242, 240, 250, 0.09);
+  border-radius: 999px;
+  background: rgba(3, 4, 9, 0.62);
+  padding: 0.22rem 0.42rem;
+  color: color-mix(in srgb, var(--soft-ivory) 68%, var(--district-color, var(--scene-primary)));
+  text-shadow: 0 0 12px color-mix(in srgb, var(--district-color, var(--scene-primary)) 26%, transparent);
+}
+
+.map-hotspot.is-active .signal-node {
+  box-shadow:
+    0 0 0 0.27rem color-mix(in srgb, var(--scene-primary) 14%, transparent),
+    0 0 18px color-mix(in srgb, var(--scene-primary) 82%, transparent),
+    0 0 42px color-mix(in srgb, var(--scene-primary) 44%, transparent);
+}
+
+.map-ecosystem-legend {
+  bottom: 3.55rem;
+  padding: 0.2rem;
+  border-radius: 999px;
+  background: rgba(3, 4, 9, 0.42);
+  box-shadow: 0 0 24px rgba(0, 0, 0, 0.24);
+}
+
+.map-state-badge,
+.map-legend-item {
+  letter-spacing: 0.18em;
+}
+
+.quick-access {
+  background:
+    linear-gradient(90deg, rgba(242, 232, 210, 0.1), rgba(242, 232, 210, 0.02) 64%, transparent) top / 100% 1px no-repeat,
+    radial-gradient(ellipse at 18% 100%, rgba(255, 61, 127, 0.045), transparent 24rem),
+    radial-gradient(ellipse at 78% 18%, rgba(0, 212, 180, 0.035), transparent 24rem);
+}
+
+.quick-access-card {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 13% 12%, color-mix(in srgb, var(--access-color) 12%, transparent), transparent 42%),
+    linear-gradient(145deg, rgba(9, 10, 16, 0.78), rgba(3, 4, 8, 0.68));
+}
+
+.quick-access-card::before {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--access-color) 42%, transparent), transparent);
+  opacity: 0.65;
+}
+
+.quick-access-card::after {
+  content: "";
+  position: absolute;
+  right: 0.62rem;
+  bottom: 0.62rem;
+  width: 0.38rem;
+  height: 0.38rem;
+  border-radius: 999px;
+  background: var(--access-color);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--access-color) 52%, transparent);
+  opacity: 0.42;
+}
+
+.quick-access-card:is(:hover, :focus-visible) .access-glyph {
+  transform: translateY(-1px) scale(1.08);
+  filter: drop-shadow(0 0 13px color-mix(in srgb, var(--access-color) 76%, transparent));
+}
+
+.quick-access-card:is(:hover, :focus-visible)::after {
+  opacity: 0.9;
+  animation: ecosystemDot 2.6s ease-in-out infinite;
+}
+
+.movement-card {
+  position: relative;
+  background:
+    radial-gradient(circle at 16% 0%, color-mix(in srgb, var(--scene-primary) 8%, transparent), transparent 48%),
+    linear-gradient(180deg, rgba(14, 14, 20, 0.94), rgba(4, 5, 9, 0.98));
+}
+
+.movement-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background:
+    linear-gradient(120deg, rgba(242, 240, 250, 0.09), transparent 24%),
+    radial-gradient(circle at 82% 18%, color-mix(in srgb, var(--scene-primary) 10%, transparent), transparent 34%);
+  opacity: 0.62;
+  transition: opacity 260ms ease;
+}
+
+.movement-card:is(:hover, :focus-within)::after {
+  opacity: 0.9;
+}
+
+.movement-card:is(:hover, :focus-within) {
+  transform: translateY(-2px);
+}
+
+.movement-image {
+  filter: saturate(1.12) contrast(1.22) brightness(0.78);
+}
+
+.movement-cover::after {
+  background:
+    linear-gradient(180deg, rgba(4, 5, 9, 0.04), rgba(4, 5, 9, 0.24) 48%, rgba(4, 5, 9, 0.84)),
+    radial-gradient(ellipse at 22% 20%, color-mix(in srgb, var(--scene-primary) 12%, transparent), transparent 38%);
+}
+
+.embedded-movement .movement-body {
+  position: relative;
+  z-index: 1;
+}
+
+.activity-panel {
+  background:
+    linear-gradient(90deg, rgba(242, 232, 210, 0.09), rgba(242, 232, 210, 0.018) 62%, transparent) top / 100% 1px no-repeat,
+    radial-gradient(ellipse at 12% 30%, rgba(255, 61, 127, 0.045), transparent 19rem),
+    radial-gradient(ellipse at 82% 72%, rgba(0, 212, 180, 0.035), transparent 21rem),
+    linear-gradient(180deg, rgba(5, 6, 10, 0.34), transparent 5rem);
+}
+
+.activity-item {
+  position: relative;
+}
+
+.activity-item::after {
+  content: "";
+  position: absolute;
+  right: 0.72rem;
+  top: 0.82rem;
+  width: 1.7rem;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--scene-primary) 36%, transparent));
+  opacity: 0.38;
+  animation: transmissionBlink 5.8s ease-in-out infinite;
+}
+
+.activity-item:is(:hover, :focus-within)::after {
+  opacity: 0.72;
+  animation-duration: 2.6s;
+}
+
+.activity-mark {
+  box-shadow:
+    0 0 8px currentColor,
+    0 0 18px color-mix(in srgb, currentColor 38%, transparent);
+  animation: activitySignal 4.3s ease-in-out infinite;
+}
+
+.ecosystem-dashboard .practice-strip,
+.ecosystem-dashboard .opportunity-panel,
+.ecosystem-dashboard .audio-presence {
+  background:
+    linear-gradient(90deg, rgba(242, 232, 210, 0.08), rgba(242, 232, 210, 0.015) 64%, transparent) top / 100% 1px no-repeat,
+    radial-gradient(ellipse at 12% 4%, color-mix(in srgb, var(--scene-primary) 5%, transparent), transparent 16rem),
+    linear-gradient(155deg, rgba(8, 9, 14, 0.88), rgba(3, 4, 8, 0.92));
+}
+
+@keyframes cityLayerDrift {
+  from {
+    background-position: 0 0, 0 0, 0 0, 0 0;
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    background-position: 2rem 1.4rem, -1.2rem 1rem, 0.8rem -1rem, 1.8rem 2.6rem;
+    transform: translate3d(0, -0.6rem, 0);
+  }
+}
+
+@keyframes cityTransmissionDrift {
+  to {
+    background-position: 28rem 18rem, -24rem 21rem, 20rem -17rem, 0 0;
+  }
+}
+
+@keyframes districtEnergy {
+  from {
+    filter: saturate(0.92) brightness(0.92);
+  }
+  to {
+    filter: saturate(1.12) brightness(1.06);
+  }
+}
+
+@keyframes microSignalFlicker {
+  0%,
+  100% {
+    opacity: 0.9;
+  }
+  47% {
+    opacity: 0.52;
+  }
+  48% {
+    opacity: 1;
+  }
+}
+
+@keyframes transmissionBlink {
+  0%,
+  72%,
+  100% {
+    opacity: 0.22;
+    transform: scaleX(0.72);
+  }
+  38% {
+    opacity: 0.58;
+    transform: scaleX(1);
+  }
+}
+
+@keyframes activitySignal {
+  0%,
+  100% {
+    transform: scale(0.9);
+  }
+  48% {
+    transform: scale(1.12);
+  }
+}
+
+@keyframes ecosystemContinuity {
+  from {
+    opacity: 0.68;
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, -0.9rem, 0);
+  }
+}
+
+@keyframes sidebarSignal {
+  0%,
+  100% {
+    box-shadow: 0 0 7px currentColor;
+  }
+  48% {
+    box-shadow: 0 0 15px currentColor, 0 0 24px color-mix(in srgb, currentColor 28%, transparent);
+  }
+}
+
+@keyframes ecosystemDot {
+  0%,
+  100% {
+    transform: scale(0.82);
+  }
+  50% {
+    transform: scale(1.12);
+  }
+}
+
+@media (max-width: 1279px) {
+  .hero-copy::after {
+    display: none;
+  }
+
+  .product-hero::before {
+    inset: -1rem -0.75rem;
+  }
+
+  .product-hero .signature-map .map-surface {
+    overflow: hidden;
+    mask-image: radial-gradient(ellipse at 54% 48%, #000 36%, rgba(0, 0, 0, 0.92) 72%, rgba(0, 0, 0, 0.35) 95%);
+  }
+}
+
+@media (max-width: 639px) {
+  .experience-flow::before {
+    inset: 14rem -0.6rem 5rem;
+    opacity: 0.58;
+  }
+
+  .ecosystem-dashboard::before {
+    inset: -0.6rem -0.4rem 0;
+    opacity: 0.72;
+  }
+
+  .hero-editorial {
+    background:
+      radial-gradient(ellipse at 12% 16%, rgba(255, 61, 127, 0.09), transparent 17rem),
+      linear-gradient(96deg, rgba(3, 4, 9, 0.72), rgba(3, 4, 9, 0.2) 72%, transparent);
+  }
+
+  .app-shell::before {
+    opacity: 0.5;
+  }
+
+  .app-shell::after {
+    opacity: 0.2;
+  }
+
+  .map-grid {
+    background-size: 2.25rem 2.25rem, 2.25rem 2.25rem;
+  }
+
+  .district-name {
+    font-size: 0.48rem;
+    letter-spacing: 0.2em;
+  }
+}
+
+/* Cinematic refinement pass: subtract visual mud. These overrides intentionally
+   quiet non-primary surfaces so the city, map and active actions carry focus. */
+.city-media-root {
+  background:
+    radial-gradient(circle at 55% 11%, color-mix(in srgb, var(--scene-primary) 3.5%, transparent), transparent 33rem),
+    linear-gradient(158deg, #050609, color-mix(in srgb, var(--scene-middle) 34%, #06070a) 44%, #030407);
+  animation-duration: 72s;
+}
+
+.city-media-root::after {
+  background:
+    radial-gradient(circle at 54% 25%, color-mix(in srgb, var(--scene-primary) 1.4%, transparent), transparent 31%),
+    linear-gradient(to bottom, rgba(4, 5, 8, 0.2), rgba(3, 4, 7, 0.52) 82%);
+  animation-duration: 38s;
+}
+
+.city-media-visual {
+  opacity: 0.44;
+  filter: saturate(0.72) contrast(1.08) brightness(0.52);
+}
+
+.city-media-glow,
+.city-media-volume,
+.city-media-interface-veil {
+  opacity: 0.08;
+}
+
+.city-media-directional-shadow {
+  background:
+    linear-gradient(112deg, rgba(4, 4, 8, 0.48), transparent 31%, transparent 67%, rgba(4, 4, 8, 0.42)),
+    radial-gradient(ellipse at 52% 32%, transparent 25%, rgba(3, 4, 7, 0.34) 78%);
+}
+
+.city-media-edge-mask {
+  background:
+    radial-gradient(ellipse at 50% 40%, transparent 26%, rgba(3, 4, 8, 0.48) 75%, rgba(3, 4, 8, 0.78) 100%),
+    linear-gradient(to top, rgba(3, 4, 8, 0.9) 0%, rgba(3, 4, 8, 0.6) 28%, transparent 57%);
+}
+
+.city-media-grain,
+.city-particle-overlay {
+  opacity: 0.035;
+}
+
+.app-shell::before {
+  background:
+    radial-gradient(ellipse at 58% 8%, color-mix(in srgb, var(--scene-primary) 4.5%, transparent), transparent 38rem),
+    radial-gradient(ellipse at 78% 52%, color-mix(in srgb, var(--scene-secondary) 2%, transparent), transparent 34rem),
+    repeating-linear-gradient(116deg, transparent 0 4.8rem, rgba(242, 240, 250, 0.007) 4.86rem 4.91rem, transparent 4.98rem 10rem);
+  opacity: 0.38;
+  animation-duration: 70s;
+}
+
+.app-shell::after {
+  background:
+    radial-gradient(circle at 25% 22%, rgba(255, 61, 127, 0.04) 0 0.06rem, transparent 0.1rem),
+    radial-gradient(circle at 66% 34%, rgba(0, 212, 180, 0.035) 0 0.06rem, transparent 0.1rem);
+  background-size: 34rem 24rem, 39rem 27rem;
+  opacity: 0.12;
+  animation-duration: 42s;
+}
+
+.scene-content::before,
+.experience-flow::before,
+.ecosystem-dashboard::before,
+.product-hero::before,
+.editorial-band::before {
+  opacity: 0.28;
+}
+
+.experience-flow {
+  filter: none;
+}
+
+.hero-editorial,
+.hero-editorial::after {
+  background:
+    linear-gradient(96deg, rgba(3, 4, 8, 0.52), rgba(3, 4, 8, 0.16) 58%, transparent 86%);
+}
+
+.hero-copy::after {
+  opacity: 0.38;
+  box-shadow: none;
+}
+
+.hero-title span {
+  text-shadow: 0 0 18px rgba(155, 127, 255, 0.12);
+}
+
+.editorial-band,
+.quick-access,
+.practice-strip,
+.activity-panel,
+.opportunity-panel {
+  background:
+    linear-gradient(90deg, rgba(242, 240, 250, 0.045), rgba(242, 240, 250, 0.01) 58%, transparent) top / 100% 1px no-repeat,
+    transparent;
+}
+
+.module-panel,
+.ecosystem-dashboard .practice-strip,
+.ecosystem-dashboard .opportunity-panel,
+.ecosystem-dashboard .activity-panel,
+.ecosystem-dashboard .audio-presence,
+.glass-panel.editorial-panel {
+  border-color: rgba(242, 240, 250, 0.035);
+  background:
+    linear-gradient(145deg, rgba(8, 9, 14, 0.52), rgba(3, 4, 8, 0.7));
+  box-shadow: inset 0 1px 0 rgba(242, 240, 250, 0.025);
+}
+
+.section-header::after {
+  opacity: 0.22;
+  background: linear-gradient(90deg, rgba(242, 240, 250, 0.06), transparent 58%);
+}
+
+.surface-matte,
+.surface-glass,
+.surface-media,
+.surface-luminous,
+.cinematic-card {
+  border-color: rgba(242, 240, 250, 0.045);
+  box-shadow:
+    inset 0 1px 0 rgba(242, 240, 250, 0.04),
+    0 18px 36px rgba(2, 2, 5, 0.18);
+}
+
+.quick-access-card {
+  border-color: rgba(242, 240, 250, 0.045);
+  background:
+    radial-gradient(circle at 16% 8%, color-mix(in srgb, var(--access-color) 5%, transparent), transparent 44%),
+    linear-gradient(145deg, rgba(8, 9, 14, 0.48), rgba(3, 4, 8, 0.52));
+  box-shadow: none;
+}
+
+.quick-access-card::before {
+  opacity: 0.32;
+}
+
+.quick-access-card::after {
+  opacity: 0.2;
+  box-shadow: 0 0 8px color-mix(in srgb, var(--access-color) 30%, transparent);
+}
+
+.quick-access-card:is(:hover, :focus-visible) {
+  border-color: color-mix(in srgb, var(--access-color) 25%, rgba(242, 240, 250, 0.05));
+  background: color-mix(in srgb, var(--access-color) 4%, rgba(4, 5, 9, 0.58));
+  box-shadow: 0 0 14px color-mix(in srgb, var(--access-color) 6%, transparent);
+}
+
+.product-hero .signature-map .map-surface {
+  background:
+    radial-gradient(ellipse at 38% 47%, rgba(255, 61, 127, 0.04), transparent 38%),
+    radial-gradient(ellipse at 72% 39%, rgba(0, 212, 180, 0.035), transparent 38%),
+    linear-gradient(164deg, transparent, rgba(2, 3, 7, 0.2));
+}
+
+.product-hero .signature-map .map-city-layer {
+  opacity: 0.145;
+  filter: saturate(0.18) contrast(1.55) brightness(0.14);
+}
+
+.product-hero .map-topology {
+  opacity: 0.62;
+  filter: none;
+}
+
+.product-hero .signature-map .map-grid {
+  opacity: 0.42;
+}
+
+.map-volume,
+.map-transient-light,
+.map-foreground-light,
+.map-spatial-fog,
+.map-focus-bloom,
+.map-overflow-atmosphere {
+  opacity: 0.32;
+}
+
+.map-haze {
+  opacity: 0.42;
+}
+
+.map-route-transmission {
+  animation-duration: 7.2s;
+}
+
+.map-route-transmission-primary {
+  stroke-width: 0.48;
+  stroke-dasharray: 0.55 9.4;
+  filter: drop-shadow(0 0 5px rgba(255, 61, 127, 0.62));
+}
+
+.map-route-transmission-secondary {
+  stroke-width: 0.36;
+  stroke-dasharray: 0.45 11.5;
+  opacity: 0.68;
+  filter: drop-shadow(0 0 5px rgba(0, 212, 180, 0.52));
+  animation-duration: 8.8s;
+}
+
+.map-network-thread,
+.map-network-link {
+  opacity: 0.48;
+  filter: none;
+}
+
+.ambient-signal {
+  animation-duration: 5.8s, 12s;
+  opacity: 0.72;
+}
+
+.district-zone {
+  border-color: color-mix(in srgb, var(--district-color, var(--scene-primary)) 10%, transparent);
+  background:
+    radial-gradient(ellipse at 47% 54%, color-mix(in srgb, var(--district-color, var(--scene-primary)) 5%, transparent), transparent 68%),
+    transparent;
+}
+
+.district-zone::after {
+  opacity: 0.18;
+  animation-duration: 9s;
+}
+
+.district-zone.is-active {
+  border-color: color-mix(in srgb, var(--district-color, var(--scene-primary)) 34%, transparent);
+  background:
+    radial-gradient(ellipse at 47% 54%, color-mix(in srgb, var(--district-color, var(--scene-primary)) 15%, transparent), transparent 56%);
+  box-shadow: 0 0 24px color-mix(in srgb, var(--district-color, var(--scene-primary)) 13%, transparent);
+}
+
+.district-name,
+.map-state-badge,
+.map-legend-item,
+.scene-ticker {
+  border-color: rgba(242, 240, 250, 0.055);
+  background: rgba(3, 4, 9, 0.5);
+  box-shadow: none;
+}
+
+.map-hotspot.is-active .signal-node {
+  box-shadow:
+    0 0 0 0.18rem color-mix(in srgb, var(--scene-primary) 9%, transparent),
+    0 0 16px color-mix(in srgb, var(--scene-primary) 64%, transparent),
+    0 0 32px color-mix(in srgb, var(--scene-primary) 26%, transparent);
+}
+
+.density-ring,
+.density-ring-wide,
+.district-orbit {
+  opacity: 0.28;
+}
+
+.movement-card {
+  background:
+    radial-gradient(circle at 16% 0%, color-mix(in srgb, var(--card-accent, var(--scene-primary)) 4.5%, transparent), transparent 48%),
+    linear-gradient(180deg, rgba(9, 10, 15, 0.7), rgba(4, 5, 9, 0.82));
+}
+
+.movement-card::after {
+  opacity: 0.34;
+  background:
+    linear-gradient(120deg, rgba(242, 240, 250, 0.045), transparent 24%),
+    radial-gradient(circle at 82% 18%, color-mix(in srgb, var(--card-accent, var(--scene-primary)) 5%, transparent), transparent 34%);
+}
+
+.movement-card:is(:hover, :focus-within)::after {
+  opacity: 0.55;
+}
+
+.movement-cover::after {
+  background:
+    linear-gradient(180deg, rgba(4, 5, 9, 0.02), rgba(4, 5, 9, 0.2) 52%, rgba(4, 5, 9, 0.78));
+}
+
+.featured-moment {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 247, 231, 0.12),
+    inset 0 -60px 80px rgba(2, 2, 5, 0.55),
+    0 30px 58px rgba(2, 2, 5, 0.34);
+}
+
+.featured-moment::before {
+  opacity: 0.32;
+}
+
+.activity-item,
+.practice-signal {
+  border-color: rgba(242, 240, 250, 0.032);
+  background:
+    linear-gradient(130deg, rgba(242, 240, 250, 0.018), rgba(4, 5, 9, 0.06));
+}
+
+.activity-item::after {
+  opacity: 0.22;
+  animation-duration: 9s;
+}
+
+.activity-mark {
+  animation-duration: 7s;
+}
+
+.portal-cta {
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--cta-accent) 16%, rgba(242, 232, 210, 0.1)),
+    inset 0 0 10px color-mix(in srgb, var(--cta-accent) 5%, transparent),
+    0 10px 20px rgba(2, 2, 5, 0.22);
+}
+
+.portal-cta:is(:hover, :focus-visible) {
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--cta-highlight) 26%, rgba(242, 232, 210, 0.13)),
+    inset 0 0 14px color-mix(in srgb, var(--cta-accent) 13%, transparent),
+    0 14px 24px rgba(2, 2, 5, 0.24),
+    0 0 20px color-mix(in srgb, var(--cta-accent) 18%, transparent);
+}
+
+.portal-cta::after {
+  opacity: 0.04;
+}
+
+.portal-cta:is(:hover, :focus-visible)::after {
+  opacity: 0.36;
+}
+
+.sidebar-link::after,
+.creator-card::before {
+  opacity: 0.18;
+}
+
+.sidebar-link:is(:hover, :focus-visible, .is-active)::after {
+  opacity: 0.42;
+}
+
+@media (hover: hover) and (pointer: fine) and (min-width: 768px) {
+  .depth-card:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      inset 0 1px 0 rgba(242, 232, 210, 0.06),
+      0 24px 48px rgba(2, 2, 5, 0.25);
+  }
+
+  .movement-card:hover {
+    box-shadow:
+      inset 0 1px 0 rgba(242, 232, 210, 0.08),
+      0 26px 52px rgba(2, 2, 5, 0.28),
+      0 0 18px color-mix(in srgb, var(--card-accent) 9%, transparent);
+  }
+}
+
+@media (max-width: 639px) {
+  .app-shell::before,
+  .app-shell::after,
+  .experience-flow::before,
+  .ecosystem-dashboard::before {
+    opacity: 0.18;
+  }
+
+  .hero-editorial {
+    background:
+      linear-gradient(96deg, rgba(3, 4, 8, 0.58), rgba(3, 4, 8, 0.18) 76%, transparent);
+  }
+}
+
+/* Global spatial refactor: one environmental surface, not stacked sections. */
+.global-ecosystem-field {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.global-ecosystem-field::before,
+.global-ecosystem-field::after {
+  content: "";
+  position: absolute;
+  inset: -4rem -6vw;
+  pointer-events: none;
+}
+
+.global-ecosystem-field::before {
+  background:
+    radial-gradient(ellipse at 61% 8%, rgba(255, 61, 127, 0.1), transparent 34rem),
+    radial-gradient(ellipse at 69% 30%, rgba(0, 212, 180, 0.048), transparent 31rem),
+    radial-gradient(ellipse at 42% 58%, rgba(245, 155, 61, 0.035), transparent 34rem),
+    radial-gradient(ellipse at 77% 88%, rgba(155, 127, 255, 0.04), transparent 28rem),
+    linear-gradient(180deg, transparent 0%, rgba(5, 7, 11, 0.18) 28%, rgba(5, 7, 11, 0.1) 62%, transparent 100%);
+  opacity: 0.78;
+  animation: ecosystemFieldDrift 70s ease-in-out infinite alternate;
+}
+
+.global-ecosystem-field::after {
+  background:
+    repeating-linear-gradient(116deg, transparent 0 7.5rem, rgba(255, 61, 127, 0.032) 7.56rem 7.61rem, transparent 7.68rem 16rem),
+    repeating-linear-gradient(28deg, transparent 0 9rem, rgba(0, 212, 180, 0.022) 9.05rem 9.1rem, transparent 9.18rem 18rem),
+    radial-gradient(circle at 23% 19%, rgba(255, 61, 127, 0.07) 0 0.055rem, transparent 0.095rem),
+    radial-gradient(circle at 73% 44%, rgba(0, 212, 180, 0.055) 0 0.055rem, transparent 0.095rem),
+    radial-gradient(circle at 55% 76%, rgba(245, 155, 61, 0.055) 0 0.055rem, transparent 0.095rem);
+  background-size: auto, auto, 30rem 22rem, 34rem 25rem, 28rem 21rem;
+  mask-image: linear-gradient(to bottom, transparent, #000 7rem, #000 calc(100% - 8rem), transparent);
+  opacity: 0.3;
+  mix-blend-mode: screen;
+  animation: ecosystemTraceDrift 84s linear infinite;
+}
+
+.scene-content {
+  isolation: isolate;
+}
+
+.operating-home {
+  position: relative;
+}
+
+.operating-home::before {
+  content: "";
+  position: absolute;
+  inset: 19rem -2vw 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    linear-gradient(155deg, transparent 0 18%, rgba(255, 61, 127, 0.07) 18.2%, transparent 18.7%, transparent 47%, rgba(0, 212, 180, 0.052) 47.15%, transparent 47.55%, transparent 74%, rgba(245, 155, 61, 0.044) 74.15%, transparent 74.55%),
+    radial-gradient(ellipse at 60% 0%, rgba(255, 61, 127, 0.07), transparent 22rem),
+    radial-gradient(ellipse at 70% 34%, rgba(0, 212, 180, 0.04), transparent 24rem);
+  opacity: 0.46;
+  mask-image: linear-gradient(to bottom, transparent, #000 6rem, #000 82%, transparent);
+}
+
+.product-hero::before {
+  opacity: 0.5;
+  background:
+    radial-gradient(ellipse at 58% 34%, rgba(255, 61, 127, 0.105), transparent 34rem),
+    radial-gradient(ellipse at 82% 42%, rgba(0, 212, 180, 0.055), transparent 30rem);
+}
+
+.hero-network::before {
+  inset: 0 -10vw -4rem -10vw;
+  background:
+    radial-gradient(ellipse at 60% 35%, rgba(255, 61, 127, 0.11), transparent 37rem),
+    radial-gradient(ellipse at 80% 42%, rgba(0, 212, 180, 0.06), transparent 34rem),
+    linear-gradient(to bottom, transparent, rgba(3, 5, 9, 0.12));
+}
+
+.hero-editorial,
+.hero-editorial::after,
+.quick-access,
+.activity-panel,
+.practice-strip,
+.opportunity-panel {
+  background: transparent;
+}
+
+.quick-access,
+.featured-live-module,
+.ecosystem-dashboard .practice-strip,
+.ecosystem-dashboard .opportunity-panel,
+.ecosystem-dashboard .activity-panel,
+.ecosystem-dashboard .audio-presence {
+  position: relative;
+}
+
+.quick-access::after,
+.featured-live-module::after,
+.ecosystem-dashboard .practice-strip::after,
+.ecosystem-dashboard .opportunity-panel::before,
+.ecosystem-dashboard .activity-panel::before,
+.ecosystem-dashboard .audio-presence::before {
+  content: "";
+  position: absolute;
+  inset: -0.7rem -0.5rem;
+  z-index: -1;
+  pointer-events: none;
+  border-radius: 1.4rem;
+  background:
+    radial-gradient(ellipse at 24% 0%, color-mix(in srgb, var(--scene-primary) 4.5%, transparent), transparent 58%),
+    linear-gradient(180deg, rgba(6, 8, 13, 0.22), transparent 68%);
+  opacity: 0.46;
+}
+
+.module-panel,
+.ecosystem-dashboard .practice-strip,
+.ecosystem-dashboard .opportunity-panel,
+.ecosystem-dashboard .activity-panel,
+.ecosystem-dashboard .audio-presence,
+.glass-panel.editorial-panel {
+  border-color: rgba(242, 240, 250, 0.022);
+  background:
+    linear-gradient(145deg, rgba(8, 10, 15, 0.34), rgba(3, 4, 8, 0.5));
+  box-shadow: none;
+}
+
+.quick-access-card,
+.activity-item,
+.practice-signal,
+.opportunity-panel > div > div,
+.movement-card {
+  border-color: rgba(242, 240, 250, 0.028);
+  background:
+    linear-gradient(145deg, rgba(10, 12, 18, 0.36), rgba(3, 4, 8, 0.5));
+  box-shadow: none;
+}
+
+.quick-access-card,
+.movement-card,
+.activity-item,
+.practice-signal {
+  backdrop-filter: none;
+}
+
+.quick-access-card::before,
+.movement-card::after,
+.activity-item::after,
+.section-header::after {
+  opacity: 0.16;
+}
+
+.quick-access-card::after {
+  opacity: 0.13;
+}
+
+.featured-live-module .featured-live-primary,
+.featured-live-module .supporting-movement,
+.featured-moment,
+.surface-media {
+  box-shadow:
+    inset 0 1px 0 rgba(242, 240, 250, 0.045),
+    0 24px 52px rgba(2, 2, 5, 0.22);
+}
+
+.product-hero .signature-map .map-surface {
+  mask-image: radial-gradient(ellipse at 54% 48%, #000 28%, rgba(0, 0, 0, 0.9) 59%, rgba(0, 0, 0, 0.32) 84%, transparent 100%);
+}
+
+.product-hero .signature-map::after {
+  content: "";
+  position: absolute;
+  left: -8vw;
+  right: -8vw;
+  bottom: -5.5rem;
+  height: 9rem;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(158deg, transparent 18%, rgba(255, 61, 127, 0.09) 18.3%, transparent 18.75%, transparent 54%, rgba(0, 212, 180, 0.065) 54.2%, transparent 54.65%),
+    radial-gradient(ellipse at 61% 0%, rgba(255, 61, 127, 0.08), transparent 34rem);
+  opacity: 0.62;
+  mask-image: linear-gradient(to bottom, #000, transparent 82%);
+}
+
+.product-hero .signature-map .map-city-layer {
+  opacity: 0.2;
+}
+
+.product-hero .signature-map .map-grid,
+.product-hero .map-topology {
+  opacity: 0.5;
+}
+
+.map-network-thread,
+.map-network-link {
+  opacity: 0.55;
+}
+
+.map-route-transmission-primary {
+  stroke-width: 0.54;
+  filter: drop-shadow(0 0 6px rgba(255, 61, 127, 0.58));
+}
+
+.map-route-transmission-secondary {
+  stroke-width: 0.4;
+  filter: drop-shadow(0 0 6px rgba(0, 212, 180, 0.46));
+}
+
+.desktop-sidebar {
+  background:
+    radial-gradient(ellipse at 100% 18%, color-mix(in srgb, var(--scene-primary) 7%, transparent), transparent 14rem),
+    linear-gradient(180deg, rgba(5, 7, 11, 0.84), rgba(4, 5, 9, 0.92));
+  border-right-color: rgba(242, 240, 250, 0.035);
+  box-shadow: none;
+}
+
+.desktop-sidebar::before {
+  content: "";
+  position: absolute;
+  inset: 0 -2rem 0 0;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(116deg, transparent 0 6rem, rgba(255, 61, 127, 0.018) 6.05rem 6.1rem, transparent 6.2rem 13rem),
+    radial-gradient(ellipse at 100% 24%, rgba(255, 61, 127, 0.06), transparent 12rem);
+  opacity: 0.7;
+}
+
+.sidebar-link.is-active {
+  background:
+    linear-gradient(90deg, rgba(255, 61, 127, 0.08), rgba(255, 61, 127, 0.018) 68%, transparent);
+  box-shadow: none;
+}
+
+.creator-card {
+  border-color: rgba(242, 240, 250, 0.038);
+  background: rgba(5, 7, 11, 0.42);
+  box-shadow: none;
+}
+
+@keyframes ecosystemFieldDrift {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(0, -1.2rem, 0);
+  }
+}
+
+@keyframes ecosystemTraceDrift {
+  to {
+    background-position: 0 0, 0 0, 30rem 22rem, -34rem 25rem, 28rem -21rem;
+  }
+}
+
+@media (max-width: 1279px) {
+  .global-ecosystem-field::before {
+    opacity: 0.72;
+  }
+
+  .global-ecosystem-field::after {
+    opacity: 0.22;
+  }
+}
+
+@media (max-width: 639px) {
+  .global-ecosystem-field::before {
+    background:
+      radial-gradient(ellipse at 58% 10%, rgba(255, 61, 127, 0.075), transparent 24rem),
+      radial-gradient(ellipse at 76% 40%, rgba(0, 212, 180, 0.04), transparent 21rem),
+      linear-gradient(180deg, transparent, rgba(5, 7, 11, 0.12) 44%, transparent);
+  }
+
+  .global-ecosystem-field::after {
+    opacity: 0.16;
+  }
+
+  .quick-access::after,
+  .featured-live-module::after,
+  .ecosystem-dashboard .practice-strip::after,
+  .ecosystem-dashboard .opportunity-panel::before,
+  .ecosystem-dashboard .activity-panel::before,
+  .ecosystem-dashboard .audio-presence::before {
+    opacity: 0.32;
   }
 }
