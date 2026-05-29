@@ -1,11 +1,16 @@
+import Link from "next/link";
+
 interface SectionHeaderProps {
   eyebrow?: string;
   title: string;
   action?: string;
+  actionHref?: string;
   actionTone?: "map" | "events" | "opportunities" | "audio";
 }
 
-export function SectionHeader({ eyebrow, title, action, actionTone = "map" }: SectionHeaderProps) {
+export function SectionHeader({ eyebrow, title, action, actionHref, actionTone = "map" }: SectionHeaderProps) {
+  const actionClassName = `portal-cta portal-cta-${actionTone} text-xs tracking-wide`;
+
   return (
     <header className="section-header mb-5 flex items-end justify-between gap-4">
       <div>
@@ -15,10 +20,17 @@ export function SectionHeader({ eyebrow, title, action, actionTone = "map" }: Se
         </h2>
       </div>
       {action && (
-        <button className={`portal-cta portal-cta-${actionTone} text-xs tracking-wide`}>
-          <span>{action}</span>
-          <span className="portal-arrow" aria-hidden="true">+</span>
-        </button>
+        actionHref ? (
+          <Link href={actionHref} className={actionClassName}>
+            <span>{action}</span>
+            <span className="portal-arrow" aria-hidden="true">+</span>
+          </Link>
+        ) : (
+          <button className={actionClassName}>
+            <span>{action}</span>
+            <span className="portal-arrow" aria-hidden="true">+</span>
+          </button>
+        )
       )}
     </header>
   );

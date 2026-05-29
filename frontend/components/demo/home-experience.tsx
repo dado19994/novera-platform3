@@ -1,14 +1,14 @@
 "use client";
 
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { useState, type CSSProperties } from "react";
 import { CitySelector } from "@/components/city-media/city-selector";
+import { CreativeMapPreview } from "@/components/map/CreativeMapPreview";
 import { useCityMedia } from "@/components/city-media/city-media-provider";
 import { CinematicCard } from "@/components/ui/cinematic-card";
 import { GlassPanel } from "@/components/ui/glass-panel";
 import { SectionHeader } from "@/components/ui/section-header";
 import type { CityMedia } from "@/lib/city-media";
-import { MOCK_ACTIVITY_FEED, MOCK_ECOSYSTEM, type ActivityState, type AmbientActivity, type CityEcosystem, type CulturalMoment } from "@/lib/mock-data";
+import { MOCK_ACTIVITY_FEED, MOCK_ECOSYSTEM, type AmbientActivity, type CityEcosystem, type CulturalMoment } from "@/lib/mock-data";
 
 export function HomeExperience() {
   const { city, media } = useCityMedia();
@@ -34,7 +34,7 @@ export function HomeExperience() {
           >
             <section className="product-hero">
               <HeroNarrative media={media} ecosystem={ecosystem} />
-              <CreativeMap ecosystem={ecosystem} media={media} reducedMotion={Boolean(reducedMotion)} />
+              <CreativeMapPreview ecosystem={ecosystem} media={media} reducedMotion={Boolean(reducedMotion)} />
               <QuickAccess />
             </section>
 
@@ -108,7 +108,7 @@ function HeroNarrative({ media, ecosystem }: { media: CityMedia; ecosystem: City
             <span>Explore ecosystem</span>
             <span className="portal-arrow" aria-hidden="true">+</span>
           </button>
-          <button className="hero-secondary" type="button">Start a collaboration</button>
+          <button className="hero-secondary" type="button">Start collaboration</button>
         </div>
         <div className="hero-city">
           <CitySelector />
@@ -246,301 +246,6 @@ function FeaturedSceneMoment({
       </div>
     </article>
   );
-}
-
-function CreativeMap({ ecosystem, media, reducedMotion }: {
-  ecosystem: CityEcosystem;
-  media: CityMedia;
-  reducedMotion: boolean;
-}) {
-  const [activeNode, setActiveNode] = useState<number | null>(0);
-  const pathPoints = ecosystem.mapNodes.map((node) => `${node.x},${node.y}`).join(" ");
-  const selectedNode = activeNode === null ? null : ecosystem.mapNodes[activeNode];
-  const networkOffsets = [
-    [-15, -13], [-10, 8], [-6, -20], [6, -15],
-    [14, -7], [16, 11], [4, 15], [-13, 17],
-  ] as const;
-  const networkTones = ["artists", "events", "collectives", "spaces", "live-rooms"] as const;
-  const ambientSignals = ecosystem.mapNodes.flatMap((node, anchor) =>
-    networkOffsets.map(([xOffset, yOffset], index) => ({
-      id: `${node.label}-signal-${index}`,
-      anchor,
-      tone: networkTones[(anchor + index) % networkTones.length],
-      x: Math.max(5, Math.min(95, node.x + xOffset)),
-      y: Math.max(7, Math.min(90, node.y + yOffset)),
-    })),
-  );
-
-  return (
-    <section className="creative-map-v2 signature-map hero-network relative min-h-[640px] rounded-[2rem] p-5 sm:min-h-[735px] sm:p-7 xl:min-h-[820px]">
-      <div className="relative z-10">
-        <SectionHeader eyebrow="Live ecosystem map" title={`${media.city} is moving now`} action="Open live map" actionTone="map" />
-      </div>
-      <p className="section-purpose map-purpose">Navigate live rooms, open calls and active districts across the cultural city layer.</p>
-      <div className="map-overflow-atmosphere" aria-hidden="true">
-        <span className="map-overflow-route" />
-        <span className="map-overflow-pulse" />
-      </div>
-      <div className="map-surface absolute inset-x-3 bottom-3 top-[9.75rem] overflow-hidden rounded-[1.4rem] sm:inset-x-6 sm:bottom-6 sm:rounded-[1.65rem]">
-        <div
-          className="map-city-layer absolute inset-0"
-          style={{ backgroundImage: `url("${media.imageSrc}")`, backgroundPosition: media.focalPoint }}
-        />
-        <div className="map-volume absolute inset-0" />
-        <div className="map-depth-horizon absolute inset-0" />
-        <div className="map-floor absolute inset-0" />
-        <div className="map-topology absolute inset-0" />
-        <div className="map-grid absolute inset-0" />
-        <div className="map-haze absolute inset-0" />
-        <div className="map-transient-light absolute inset-0" />
-        <div className="map-foreground-light absolute inset-0" />
-        <div className="map-spatial-fog absolute inset-0" />
-        <div
-          className="map-focus-bloom absolute inset-0"
-          style={selectedNode
-            ? {
-                "--focus-x": `${selectedNode.x}%`,
-                "--focus-y": `${selectedNode.y}%`,
-              } as CSSProperties
-            : undefined}
-        />
-        <div className="map-status-pills">
-          <MapStatus state="live room" />
-          <MapStatus state="open call" />
-          <MapStatus state="starting soon" />
-        </div>
-        {ecosystem.mapNodes.map((node, index) => (
-          <div
-            key={`${node.label}-district`}
-            className={`district-zone district-${index} ${activeNode === index ? "is-active" : ""}`}
-            style={{ left: `${node.x}%`, top: `${node.y}%` }}
-          >
-            <span className="district-name">{node.label}</span>
-          </div>
-        ))}
-        <svg className="map-connections absolute inset-0 h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-          <polyline
-            className="map-route-depth"
-            points={pathPoints}
-            fill="none"
-            stroke="var(--scene-shadow)"
-            strokeWidth="1.05"
-          />
-          <motion.polyline
-            className="map-primary-route"
-            points={pathPoints}
-            fill="none"
-            stroke="var(--scene-primary)"
-            strokeWidth="0.24"
-            strokeDasharray="1.2 1.8"
-            initial={reducedMotion ? false : { pathLength: 0, opacity: 0, strokeOpacity: 0 }}
-            animate={{ pathLength: 1, opacity: 1, strokeOpacity: activeNode === null ? 0.42 : 0.6 }}
-            transition={{ duration: reducedMotion ? 0 : 1.45, ease: "easeInOut" }}
-          />
-          <polyline className="map-route-transmission map-route-transmission-primary" points={pathPoints} fill="none" />
-          <polyline className="map-route-transmission map-route-transmission-secondary" points={pathPoints} fill="none" />
-          {ecosystem.mapNodes.slice(0, -1).map((node, index) => {
-            const next = ecosystem.mapNodes[index + 1];
-
-            return (
-              <motion.line
-                key={`${node.label}-${next.label}`}
-                x1={node.x}
-                y1={node.y}
-                x2={next.x}
-                y2={next.y}
-                stroke="var(--scene-secondary)"
-                strokeWidth="0.23"
-                initial={reducedMotion ? false : { pathLength: 0, strokeOpacity: 0 }}
-                animate={{ pathLength: 1, strokeOpacity: activeNode === null ? 0.3 : activeNode === index || activeNode === index + 1 ? 0.74 : 0.1 }}
-                transition={{ duration: reducedMotion ? 0 : 0.5, delay: activeNode === null ? index * 0.08 : 0 }}
-              />
-            );
-          })}
-          {ambientSignals.map((signal, index) => {
-            const anchor = ecosystem.mapNodes[signal.anchor];
-            const linked = activeNode === signal.anchor;
-
-            return (
-              <motion.line
-                key={`${signal.id}-path`}
-                className={`map-network-link network-${signal.tone}`}
-                x1={signal.x}
-                y1={signal.y}
-                x2={anchor.x}
-                y2={anchor.y}
-                strokeWidth="0.12"
-                strokeDasharray="0.6 2"
-                initial={reducedMotion ? false : { pathLength: 0, strokeOpacity: 0 }}
-                animate={{ pathLength: 1, strokeOpacity: linked ? 0.68 : 0.23 }}
-                transition={{ duration: reducedMotion ? 0 : 0.7, delay: linked ? 0 : index * 0.04 }}
-              />
-            );
-          })}
-          {ambientSignals.map((signal, index) => {
-            if (index % 2 !== 0) {
-              return null;
-            }
-
-            const next = ambientSignals[(index + 5) % ambientSignals.length];
-
-            return (
-              <line
-                key={`${signal.id}-network`}
-                className={`map-network-thread network-${signal.tone}`}
-                x1={signal.x}
-                y1={signal.y}
-                x2={next.x}
-                y2={next.y}
-              />
-            );
-          })}
-        </svg>
-        {ambientSignals.map((signal, index) => (
-          <motion.span
-            key={signal.id}
-            className={`ambient-signal signal-${signal.tone} absolute rounded-full ${activeNode === signal.anchor ? "is-linked" : ""}`}
-            style={{ left: `${signal.x}%`, top: `${signal.y}%`, animationDelay: `${index * 320}ms` }}
-            initial={reducedMotion ? false : { opacity: 0, scale: 0.7 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: reducedMotion ? 0 : 0.2 + index * 0.045, duration: reducedMotion ? 0 : 0.45 }}
-          />
-        ))}
-        {ecosystem.mapNodes.map((node, index) => {
-          const selected = activeNode === index;
-          const nearby = activeNode !== null && Math.abs(activeNode - index) === 1;
-
-          return (
-          <motion.button
-            key={node.label}
-            type="button"
-            aria-label={`${node.label}: ${mapStateLabel(node.state)}, ${discoveryHint(node.state)}`}
-            className={`map-hotspot absolute text-left ${selected ? "is-active" : ""} ${nearby ? "is-nearby" : ""} ${node.strength >= 78 ? "is-major" : node.strength < 60 ? "is-subtle" : ""}`}
-            style={{ left: `${node.x}%`, top: `${node.y}%` }}
-            initial={reducedMotion ? false : { opacity: 0, scale: 0.92 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: reducedMotion ? 0 : 0.45, delay: 0.18 + index * 0.09 }}
-            onPointerEnter={() => setActiveNode(index)}
-            onFocus={() => setActiveNode(index)}
-            onClick={() => setActiveNode(index)}
-          >
-            <span className="density-ring density-ring-wide" />
-            <span className="density-ring" />
-            <span className="district-orbit district-orbit-halo">
-              <span />
-            </span>
-            <span className="district-orbit district-orbit-outer">
-              <span />
-            </span>
-            <span className="district-orbit district-orbit-inner">
-              <span />
-            </span>
-            <span className="cluster-dot cluster-a" />
-            <span className="cluster-dot cluster-b" />
-            <span
-              className={`signal-node node-${stateClass(node.state)} relative block rounded-full`}
-              style={{
-                height: `${10 + node.strength / 8}px`,
-                width: `${10 + node.strength / 8}px`,
-              }}
-            />
-            <div className={`map-preview-card ${node.x > 55 ? "map-preview-left" : ""}`}>
-              <p className="flex items-center gap-2 text-[0.66rem] uppercase tracking-[0.17em] text-(--muted-ivory)">
-                <span className={`h-1.5 w-1.5 rounded-full node-${stateClass(node.state)}`} />
-                {mapStateLabel(node.state)}
-              </p>
-              <p className="mt-1.5 text-sm font-medium text-(--soft-ivory)">{node.label}</p>
-              <p className="mt-1 text-[0.68rem] text-(--muted-ivory)">
-                {mapSignalType(node.state)} / {node.type}
-              </p>
-              <p className="mt-1 text-[0.67rem] text-(--soft-ivory)">{node.activity}</p>
-              <p className="map-action mt-2 text-[0.63rem] uppercase tracking-[0.18em]">{discoveryHint(node.state)}</p>
-            </div>
-          </motion.button>
-        );
-        })}
-        <nav className="map-controls" aria-label="Creative map controls">
-          <button type="button" aria-label="Zoom in">+</button>
-          <button type="button" aria-label="Zoom out">&minus;</button>
-          <button type="button" aria-label="Center active district">&#8599;</button>
-        </nav>
-        <div className="map-ecosystem-legend" aria-label="Map ecosystem legend">
-          {networkTones.map((tone) => <MapLegend key={tone} tone={tone} />)}
-        </div>
-        <div className="scene-ticker surface-glass absolute inset-x-4 bottom-4 flex items-center justify-between gap-4 rounded-full px-4 py-3 text-[0.68rem] text-(--muted-ivory) sm:inset-x-6">
-          <span className="uppercase tracking-[0.22em] text-(--soft-ivory)">Scene transmission</span>
-          <AnimatePresence mode="wait" initial={false}>
-            <motion.span
-              key={selectedNode?.label ?? "city-scene"}
-              className="truncate"
-              initial={reducedMotion ? false : { opacity: 0, y: 4 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={reducedMotion ? undefined : { opacity: 0, y: -4 }}
-              transition={{ duration: reducedMotion ? 0 : 0.24 }}
-            >
-              {selectedNode
-                ? `${selectedNode.label} / ${discoveryHint(selectedNode.state)} / ${selectedNode.activity}`
-                : `${ecosystem.livePulse[2].detail} / ${ecosystem.audio.artist} is live in audio`}
-            </motion.span>
-          </AnimatePresence>
-          <span className="scene-active hidden shrink-0 text-(--acid) sm:block">Scene active</span>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-type DisplayMapState = "live room" | "open call" | "starting soon";
-type MapTone = "artists" | "events" | "collectives" | "spaces" | "live-rooms";
-
-function MapStatus({ state }: { state: DisplayMapState }) {
-  return (
-    <span className="map-state-badge">
-      <span className={`h-1.5 w-1.5 rounded-full node-${stateClass(state)}`} />
-      {state}
-    </span>
-  );
-}
-
-function MapLegend({ tone }: { tone: MapTone }) {
-  return (
-    <span className="map-legend-item">
-      <span className={`map-legend-dot signal-${tone}`} />
-      {tone.replace("-", " ")}
-    </span>
-  );
-}
-
-function stateClass(state: ActivityState | DisplayMapState) {
-  return state.replaceAll(" ", "-");
-}
-
-function mapStateLabel(state: ActivityState): DisplayMapState | "listening room" {
-  if (state === "live now") {
-    return "live room";
-  }
-
-  if (state === "studio open") {
-    return "starting soon";
-  }
-
-  return state;
-}
-
-function mapSignalType(state: ActivityState) {
-  return state === "open call" ? "Opportunity" : "Event";
-}
-
-function discoveryHint(state: ActivityState) {
-  if (state === "open call") {
-    return "Open collaboration";
-  }
-
-  if (state === "studio open") {
-    return "2 nearby artists";
-  }
-
-  return state === "live now" ? "Explore room" : "Live now";
 }
 
 function activityBadgeStyle(kind: AmbientActivity["kind"]): { [key: string]: string } {
