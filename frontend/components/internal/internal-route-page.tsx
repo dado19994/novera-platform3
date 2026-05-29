@@ -1,6 +1,6 @@
 import { CityMediaProvider } from "@/components/city-media/city-media-provider";
-import { CitySelector } from "@/components/city-media/city-selector";
 import { AppShell } from "@/components/layout/app-shell";
+import { CreativeMapFull } from "@/components/map/CreativeMapFull";
 import { CITY_MEDIA } from "@/lib/city-media";
 import { MOCK_ACTIVITY_FEED, MOCK_ECOSYSTEM } from "@/lib/mock-data";
 import type { ReactNode } from "react";
@@ -175,7 +175,7 @@ function InternalExperience({ config }: { config: PageConfig }) {
       {config.kind === "explore" && <ExplorePage cityImage={city.imageSrc} />}
       {config.kind === "artists" && <ArtistsPage />}
       {config.kind === "events" && <EventsPage cityImage={city.imageSrc} />}
-      {config.kind === "creative-map" && <CreativeMapPage cityImage={city.imageSrc} ecosystem={ecosystem} />}
+      {config.kind === "creative-map" && <CreativeMapFull cityImage={city.imageSrc} ecosystem={ecosystem} />}
       {config.kind === "live-rooms" && <LiveRoomsPage cityImage={city.imageSrc} />}
       {config.kind === "spaces" && <SpacesPage />}
       {config.kind === "collectives" && <CollectivesPage />}
@@ -320,148 +320,6 @@ function EventsPage({ cityImage }: { cityImage: string }) {
         </CardGrid>
       </SectionShell>
     </>
-  );
-}
-
-function CreativeMapPage({ cityImage, ecosystem }: { cityImage: string; ecosystem: typeof MOCK_ECOSYSTEM.rome }) {
-  const baseTones = ["events", "opportunities", "audio", "spaces"] as const;
-
-  // ── Node layout: three intentional clusters ────────────────────────────────
-  // LEFT cluster:   SanLorenzo (0), Monti (7), Prati (9)
-  // CENTER cluster: CentroStorico (4), Ostiense (1), Testaccio (5), Trastevere (3)
-  // RIGHT cluster:  Pigneto (2), Torpignattara (8), Garbatella (6)
-  const expandedNodes = [
-    ...ecosystem.mapNodes.map((node, index) => ({ ...node, tone: (baseTones[index] ?? "neutral") as Tone })),
-    // Center crossroads
-    { label: "Centro Storico", activity: "Cultural route",    x: 47, y: 40, tone: "artists"    as Tone },
-    // South-east cluster
-    { label: "Testaccio",      activity: "Open call",         x: 62, y: 65, tone: "collectives" as Tone },
-    { label: "Garbatella",     activity: "Studio open",       x: 74, y: 55, tone: "spaces"     as Tone },
-    // North-west cluster
-    { label: "Monti",          activity: "Exhibition trail",  x: 32, y: 26, tone: "match"      as Tone },
-    // Far east
-    { label: "Torpignattara",  activity: "Listening cell",    x: 84, y: 40, tone: "audio"      as Tone },
-    // West
-    { label: "Prati",          activity: "Artist cluster",    x: 23, y: 57, tone: "artists"    as Tone },
-  ];
-
-  // Short aliases for readability
-  const [eN0, eN1, eN2, eN3, eN4, eN5, eN6, eN7, eN8, eN9] = expandedNodes;
-
-  // ── 4 Primary routes — intentional network topology ───────────────────────
-  // 1. Cultural spine (rose/events): left cluster → center → right, northern arc
-  // 2. Mid-city spine (teal/audio): west → center → east, horizontal mid-band
-  // 3. Southern circuit (collective/collectives): south-west arc through bottom districts
-  // 4. Diagonal cross (violet/artists): north-west → center → south-west
-  const fullMapPrimaryRoutes = [
-    {
-      id: "cultural-spine",
-      tone: "events",
-      d: `M ${eN0.x} ${eN0.y} C 28 29, 38 34, ${eN4.x} ${eN4.y} C 57 29, 65 25, ${eN2.x} ${eN2.y} C 79 28, 82 34, ${eN8.x} ${eN8.y}`,
-    },
-    {
-      id: "mid-city-spine",
-      tone: "audio",
-      d: `M ${eN9.x} ${eN9.y} C 36 52, 47 54, ${eN1.x} ${eN1.y} C 65 53, 70 54, ${eN6.x} ${eN6.y}`,
-    },
-    {
-      id: "southern-circuit",
-      tone: "collectives",
-      d: `M ${eN3.x} ${eN3.y} C 44 71, 54 68, ${eN5.x} ${eN5.y} C 67 63, 71 59, ${eN6.x} ${eN6.y}`,
-    },
-    {
-      id: "diagonal-cross",
-      tone: "artists",
-      d: `M ${eN7.x} ${eN7.y} C 38 31, 43 36, ${eN4.x} ${eN4.y} C 51 46, 54 50, ${eN1.x} ${eN1.y} C 52 62, 44 67, ${eN3.x} ${eN3.y}`,
-    },
-  ];
-
-  // ── 8 Secondary routes — filling cluster connections ──────────────────────
-  const secondaryRoutes = [
-    // Left cluster internal
-    { id: "sl-monti",      tone: "match",       d: `M ${eN0.x} ${eN0.y} C 23 30, 28 28, ${eN7.x} ${eN7.y}` },
-    { id: "sl-prati",      tone: "events",      d: `M ${eN0.x} ${eN0.y} C 19 43, 21 51, ${eN9.x} ${eN9.y}` },
-    // Left → center bridge
-    { id: "sl-centro",     tone: "artists",     d: `M ${eN0.x} ${eN0.y} C 28 34, 38 37, ${eN4.x} ${eN4.y}` },
-    // Center connections
-    { id: "centro-test",   tone: "collectives", d: `M ${eN4.x} ${eN4.y} C 51 49, 56 58, ${eN5.x} ${eN5.y}` },
-    { id: "os-torpig",     tone: "audio",       d: `M ${eN1.x} ${eN1.y} C 67 47, 76 44, ${eN8.x} ${eN8.y}` },
-    // Right cluster internal
-    { id: "pig-garb",      tone: "audio",       d: `M ${eN2.x} ${eN2.y} C 74 37, 74 46, ${eN6.x} ${eN6.y}` },
-    // South-west connection
-    { id: "prati-trast",   tone: "spaces",      d: `M ${eN9.x} ${eN9.y} C 26 63, 31 67, ${eN3.x} ${eN3.y}` },
-    // Northern arc
-    { id: "monti-pig",     tone: "match",       d: `M ${eN7.x} ${eN7.y} C 45 20, 60 21, ${eN2.x} ${eN2.y}` },
-  ];
-
-  // ── Curated atmospheric signal dots — 2 per hub, placed by composition
-  const microSignalDefs: { n: number; xOff: number; yOff: number }[] = [
-    { n: 0, xOff: -7, yOff: -7 }, { n: 0, xOff:  8, yOff:  6 },
-    { n: 1, xOff: -8, yOff: -7 }, { n: 1, xOff:  9, yOff:  6 },
-    { n: 2, xOff: -8, yOff:  6 }, { n: 2, xOff:  7, yOff: -7 },
-    { n: 3, xOff:  8, yOff: -6 }, { n: 3, xOff: -7, yOff:  6 },
-    { n: 4, xOff: -7, yOff: -6 }, { n: 4, xOff:  6, yOff:  7 },
-    { n: 5, xOff: -6, yOff: -5 }, { n: 5, xOff:  7, yOff:  5 },
-    { n: 6, xOff: -7, yOff: -5 }, { n: 6, xOff:  6, yOff:  6 },
-    { n: 7, xOff:  7, yOff:  5 }, { n: 7, xOff: -7, yOff: -5 },
-    { n: 8, xOff: -8, yOff:  5 }, { n: 8, xOff: -6, yOff: -7 },
-    { n: 9, xOff:  7, yOff: -6 }, { n: 9, xOff: -7, yOff:  6 },
-  ];
-  const microSignals = microSignalDefs.map(({ n, xOff, yOff }, i) => ({
-    id: `ms-${i}`,
-    nodeIndex: n,
-    tone: expandedNodes[n].tone,
-    x: Math.max(7, Math.min(93, expandedNodes[n].x + xOff)),
-    y: Math.max(8, Math.min(88, expandedNodes[n].y + yOff)),
-  }));
-
-  return (
-    <section className="full-map-stage">
-      <div className="full-map-toolbar">
-        <CitySelector />
-        <FilterPills items={["Artists", "Events", "Collectives", "Spaces", "Live rooms"]} />
-      </div>
-      <div className="full-map-canvas">
-        <div className="full-map-image" style={{ backgroundImage: `url("${cityImage}")` }} />
-        <svg className="full-map-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-          {microSignals.map((signal) => {
-            const anchor = expandedNodes[signal.nodeIndex];
-            return <line key={signal.id} className="full-map-route-micro" x1={signal.x} y1={signal.y} x2={anchor.x} y2={anchor.y} />;
-          })}
-          {secondaryRoutes.map((route) => (
-            <path key={route.id} className={`full-map-route-secondary route-${route.tone}`} d={route.d} fill="none" />
-          ))}
-          {fullMapPrimaryRoutes.map((route) => (
-            <path key={route.id} className={`full-map-route-primary route-${route.tone}`} d={route.d} fill="none" />
-          ))}
-          {fullMapPrimaryRoutes.map((route) => (
-            <path key={`${route.id}-pulse`} className={`full-map-route-pulse route-${route.tone}`} d={route.d} fill="none" />
-          ))}
-        </svg>
-        {microSignals.map((signal) => (
-          <span key={signal.id} className="full-map-signal" data-tone={signal.tone} style={{ left: `${signal.x}%`, top: `${signal.y}%` }} />
-        ))}
-        {expandedNodes.map((node) => (
-          <div key={node.label} className="full-map-node" data-tone={node.tone} style={{ left: `${node.x}%`, top: `${node.y}%` }}>
-            <span />
-            <strong>{node.label}</strong>
-            <small>{node.activity}</small>
-          </div>
-        ))}
-        <aside className="map-side-panel">
-          <p className="internal-eyebrow">Selected signal</p>
-          <h2>San Lorenzo</h2>
-          <p>Live room / 42 listening. Projection artists nearby and one open collaboration.</p>
-          <button type="button">Enter room</button>
-        </aside>
-        <div className="map-controls-stack" aria-hidden="true"><span>+</span><span>-</span><span>⌖</span></div>
-      </div>
-      <div className="map-live-ticker">
-        <span>Scene transmission</span>
-        <strong>San Lorenzo / Explore room / 42 listening</strong>
-        <em>Live ecosystem map</em>
-      </div>
-    </section>
   );
 }
 

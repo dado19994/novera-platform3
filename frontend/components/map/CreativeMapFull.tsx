@@ -89,18 +89,28 @@ export function CreativeMapFull({ cityImage, ecosystem }: {
   ecosystem: typeof MOCK_ECOSYSTEM.rome;
 }) {
   const baseTones = ["events", "opportunities", "audio", "spaces"] as const;
-
-  const expandedNodes = [
-    ...ecosystem.mapNodes.map((node, index) => ({ ...node, tone: (baseTones[index] ?? "neutral") as Tone })),
-    { label: "Centro Storico", activity: "Cultural route",   x: 47, y: 40, tone: "artists"     as Tone },
-    { label: "Testaccio",      activity: "Open call",        x: 62, y: 65, tone: "collectives" as Tone },
-    { label: "Garbatella",     activity: "Studio open",      x: 74, y: 55, tone: "spaces"      as Tone },
-    { label: "Monti",          activity: "Exhibition trail", x: 32, y: 26, tone: "match"       as Tone },
-    { label: "Torpignattara",  activity: "Listening cell",   x: 84, y: 40, tone: "audio"       as Tone },
-    { label: "Prati",          activity: "Artist cluster",   x: 23, y: 57, tone: "artists"     as Tone },
+  const primaryNodePositions = [
+    { x: 16, y: 36 },
+    { x: 58, y: 55 },
+    { x: 72, y: 34 },
+    { x: 31, y: 62 },
   ];
 
-  const [eN0, eN1, eN2, eN3, eN4, eN5, eN6, eN7, eN8, eN9] = expandedNodes;
+  const expandedNodes = [
+    ...ecosystem.mapNodes.map((node, index) => ({
+      ...node,
+      ...(primaryNodePositions[index] ?? {}),
+      tone: (baseTones[index] ?? "neutral") as Tone,
+    })),
+    { label: "Centro Storico", activity: "Cultural route",   x: 47, y: 40, tone: "artists"     as Tone },
+    { label: "Testaccio",      activity: "Open call",        x: 62, y: 61, tone: "collectives" as Tone },
+    { label: "Garbatella",     activity: "Studio open",      x: 74, y: 53, tone: "spaces"      as Tone },
+    { label: "Monti",          activity: "Exhibition trail", x: 32, y: 26, tone: "match"       as Tone },
+    { label: "Torpignattara",  activity: "Listening cell",   x: 84, y: 40, tone: "audio"       as Tone },
+    { label: "Prati",          activity: "Artist cluster",   x: 23, y: 55, tone: "artists"     as Tone },
+  ];
+
+  const [eN0, eN1, eN2, , eN4, , eN6, eN7, eN8, eN9] = expandedNodes;
 
   const fullMapPrimaryRoutes = [
     {
@@ -114,24 +124,19 @@ export function CreativeMapFull({ cityImage, ecosystem }: {
       d: `M ${eN1.x} ${eN1.y} C 64 47, 69 43, ${eN2.x} ${eN2.y} C 76 38, 81 39, ${eN8.x} ${eN8.y}`,
     },
     {
-      id: "right-studio-thread",
-      tone: "spaces",
-      d: `M ${eN2.x} ${eN2.y} C 75 36, 77 47, ${eN6.x} ${eN6.y} C 70 59, 66 63, ${eN5.x} ${eN5.y}`,
-    },
-    {
-      id: "left-south-route",
-      tone: "collectives",
-      d: `M ${eN9.x} ${eN9.y} C 27 62, 31 67, ${eN3.x} ${eN3.y} C 43 70, 53 67, ${eN5.x} ${eN5.y}`,
-    },
-    {
       id: "artist-inner-loop",
       tone: "artists",
       d: `M ${eN7.x} ${eN7.y} C 38 30, 43 35, ${eN4.x} ${eN4.y} C 42 47, 32 50, ${eN9.x} ${eN9.y}`,
     },
     {
-      id: "central-south-link",
-      tone: "collectives",
-      d: `M ${eN4.x} ${eN4.y} C 54 48, 59 58, ${eN5.x} ${eN5.y} C 67 61, 70 58, ${eN6.x} ${eN6.y}`,
+      id: "left-local-thread",
+      tone: "events",
+      d: `M ${eN9.x} ${eN9.y} C 25 50, 23 42, ${eN0.x} ${eN0.y} C 24 33, 28 29, ${eN7.x} ${eN7.y}`,
+    },
+    {
+      id: "right-local-thread",
+      tone: "spaces",
+      d: `M ${eN2.x} ${eN2.y} C 75 38, 81 38, ${eN8.x} ${eN8.y} C 82 45, 78 51, ${eN6.x} ${eN6.y}`,
     },
   ];
 
@@ -139,31 +144,23 @@ export function CreativeMapFull({ cityImage, ecosystem }: {
     { id: "sl-monti",    tone: "match",       d: `M ${eN0.x} ${eN0.y} C 23 30, 28 28, ${eN7.x} ${eN7.y}` },
     { id: "sl-prati",    tone: "events",      d: `M ${eN0.x} ${eN0.y} C 19 43, 21 51, ${eN9.x} ${eN9.y}` },
     { id: "sl-centro",   tone: "artists",     d: `M ${eN0.x} ${eN0.y} C 28 34, 38 37, ${eN4.x} ${eN4.y}` },
-    { id: "centro-test", tone: "collectives", d: `M ${eN4.x} ${eN4.y} C 51 49, 56 58, ${eN5.x} ${eN5.y}` },
     { id: "os-torpig",   tone: "audio",       d: `M ${eN1.x} ${eN1.y} C 67 47, 76 44, ${eN8.x} ${eN8.y}` },
-    { id: "pig-garb",    tone: "audio",       d: `M ${eN2.x} ${eN2.y} C 74 37, 74 46, ${eN6.x} ${eN6.y}` },
-    { id: "prati-trast", tone: "spaces",      d: `M ${eN9.x} ${eN9.y} C 26 63, 31 67, ${eN3.x} ${eN3.y}` },
     { id: "monti-pig",   tone: "match",       d: `M ${eN7.x} ${eN7.y} C 45 20, 60 21, ${eN2.x} ${eN2.y}` },
     // New cluster connectors
     { id: "monti-centro",  tone: "artists",     d: `M ${eN7.x} ${eN7.y} C 36 30, 42 34, ${eN4.x} ${eN4.y}` },
-    { id: "test-garb",     tone: "spaces",      d: `M ${eN5.x} ${eN5.y} C 66 62, 70 58, ${eN6.x} ${eN6.y}` },
-    { id: "trast-test",    tone: "collectives", d: `M ${eN3.x} ${eN3.y} C 44 71, 55 67, ${eN5.x} ${eN5.y}` },
     { id: "prati-centro",  tone: "audio",       d: `M ${eN9.x} ${eN9.y} C 30 52, 40 46, ${eN4.x} ${eN4.y}` },
     { id: "torpig-garb",   tone: "events",      d: `M ${eN8.x} ${eN8.y} C 82 44, 78 50, ${eN6.x} ${eN6.y}` },
     { id: "os-centro",     tone: "match",       d: `M ${eN1.x} ${eN1.y} C 54 49, 51 45, ${eN4.x} ${eN4.y}` },
   ];
 
   const topologyCurves = [
-    { id: "left-field-a", tone: "events", d: `M 10 43 C 19 27, 36 28, 48 40` },
-    { id: "left-field-b", tone: "artists", d: `M 17 65 C 23 51, 32 46, 47 41` },
-    { id: "center-field-a", tone: "collectives", d: `M 42 26 C 54 39, 58 52, 62 66` },
-    { id: "center-field-b", tone: "match", d: `M 35 56 C 48 48, 60 49, 76 55` },
-    { id: "right-field-a", tone: "audio", d: `M 65 31 C 73 27, 86 29, 92 42` },
-    { id: "right-field-b", tone: "spaces", d: `M 68 65 C 77 54, 87 48, 92 34` },
-    { id: "south-field-a", tone: "collectives", d: `M 24 78 C 43 82, 60 76, 76 64` },
-    { id: "south-field-b", tone: "events", d: `M 21 36 C 39 49, 59 61, 83 70` },
-    { id: "city-field-a", tone: "artists", d: `M 9 22 C 31 18, 58 18, 86 24` },
-    { id: "city-field-b", tone: "audio", d: `M 8 85 C 33 71, 60 85, 94 74` },
+    { id: "left-field-a", tone: "events", d: `M 10 43 C 19 31, 35 31, 48 40` },
+    { id: "left-field-b", tone: "artists", d: `M 18 62 C 25 52, 34 48, 47 42` },
+    { id: "center-field-a", tone: "collectives", d: `M 41 32 C 51 41, 57 52, 62 64` },
+    { id: "center-field-b", tone: "match", d: `M 36 55 C 48 48, 61 49, 75 55` },
+    { id: "right-field-a", tone: "audio", d: `M 64 32 C 73 29, 84 31, 91 42` },
+    { id: "right-field-b", tone: "spaces", d: `M 69 62 C 77 55, 86 49, 91 36` },
+    { id: "city-field-a", tone: "artists", d: `M 13 24 C 33 20, 58 21, 84 27` },
   ];
 
   const clusterFields = [
@@ -241,7 +238,7 @@ export function CreativeMapFull({ cityImage, ecosystem }: {
               <line key={signal.id} className={styles.fullMicroLink} x1={signal.x} y1={signal.y} x2={anchor.x} y2={anchor.y} />
             );
           })}
-          <path className={styles.selectedSignalThread} d={`M ${eN0.x} ${eN0.y} C 36 42, 59 61, 84 74`} />
+          <path className={styles.selectedSignalThread} d={`M ${eN0.x} ${eN0.y} C 39 42, 62 56, 83 70`} />
           {secondaryRoutes.map((route) => (
             <path
               key={route.id}
